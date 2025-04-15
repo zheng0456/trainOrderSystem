@@ -43,4 +43,4 @@ mybatis:
 #mybatis sql??(???????????Mapper.xml????)
 logging:
   level:
-    com.etc.onlineorderingsys.mapper: debug
+    com.etc.TrainOrderSys.mapper: debug
