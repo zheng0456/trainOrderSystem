@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<!--引入thymeleaf模板引擎-->
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/admin1/img/favicon.png" type="image/png">
+    <title>后台登录</title>
+    <!--static中的静态页面引入-->
+    <link href="/admin1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/admin1/css/font-awesome.min.css?v=4.3.0" rel="stylesheet">
+    <link href="/admin1/css/animate.min.css" rel="stylesheet">
+    <link href="/admin1/css/style.min.css?v=3.3.0" rel="stylesheet">
+    <link href="/admin1/css/login.min.css" rel="stylesheet">
+</head>
+<script type="text/javascript" src="/admin1/js/jquery-3.5.1.js"></script>
+<script type="text/javascript">
+        //登录用户名和密码非空校验
+        function checkUserName(){
+			let username=$("#username").val();
+			if(username.trim()!=""){
+                return true;
+			} else{
+                $("#msg").text("用户名不能为空").css("color","#A00000");
+                return false;
+			}
+		}
+        //密码非空校验
+        function checkPwd(){
+            let pwd=$("#password").val();
+            if(pwd.trim()!=""){
+                return true;
+            } else{
+                $("#msg").text("密码不能为空").css("color","#A00000");
+                return false;
+            }
+        }
+        //表单校验
+        function checkForm(){
+            if (checkUserName()&&checkPwd()){
+                return true;
+            }else {
+                return false;
+            }
+        }
+</script>
+<body class="signin">
+    <div class="signinpanel">
+        <div class="row">
+            <div class="col-sm-7">
+                <div class="signin-info">
+                    <div class="logopanel m-b">
+                    </div>
+                    <div class="m-b"></div>
+                    <h2>欢迎访问 <strong>火车订票后台管理系统</strong></h2>
+                    <ul class="m-b">
+                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> Convenient -便捷（不让客户做重复的事）</li><br>
+                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> Thorough -周全（为客户做一切可能做到的事）</li><br>
+                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> Reliable -可靠（不让客户担一点心）</li><br>
+                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> Intimate -亲切（让客户听到我们的微笑）</li><br>
+                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> Professional -专业（让客户感觉我们个个是专家）</li><br>
+                        <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> Sincere -真诚（全心全意地为客户着想）</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <form action="/system/admin/login" method="post"  onsubmit="return checkForm()" >
+                    <h4 class="no-margins">欢迎登录：</h4>
+                    <p class="m-t-md" id="errormsg" th:text="${errormsg}">用户不存在</p>
+                    <p class="m-t-md" id="msg" th:text="${msg}" style="color: #a10404"></p>
+                    <input type="text"     name="username" id="username" class="form-control uname" style="background-color: lightblue;" placeholder="用户名" />
+                    <input type="password" name="password" id="password" class="form-control pword m-b" style="background-color: lightblue;" placeholder="密码" />
+                    <input type="submit" class="btn btn-success btn-block" id="btn" value="登录">
+                </form>
+            </div>
+        </div>
+        <div class="signup-footer">
+            <div class="pull-left">
+                &copy; 2023 All Rights Reserved. SpringBoot项目3组
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

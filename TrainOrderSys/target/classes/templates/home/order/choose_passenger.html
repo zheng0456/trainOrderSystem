@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<!--引入thymeleaf模板引擎-->
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>中国梦想游网站</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="/home/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="/home/css/common.css" rel="stylesheet" type="text/css"/>
+    <link href="/home/css/order/common_css.css?cssVersion=1.9084" rel="stylesheet"/>
+    <!--引入js文件-->
+    <script type="text/javascript" src="/home/js/jquery-3.5.1.js"></script>
+    <script type="text/javascript">
+        //核对车票信息
+        function checkTicketInfo() {
+            //获取当前所选中的复选框对象(乘客对象)
+            var passengerObj = $("input[name='passenger']:checkbox:checked");
+            //商品总数
+            if (passengerObj.length < 1){
+                alert("请先选择乘车人信息！！！");
+            }else {
+                //提交表单数据,提交订单
+                $("#Form01").submit();
+                //清空复选框对象
+                passengerObj.checked = false;
+            }
+        }
+    </script>
+</head>
+
+<body>
+<!--引入顶部文件-->
+<div th:replace="/home/header"></div>
+<div class="content">
+    <!--列车信息 开始-->
+    <div class="layout t-info" style="background: #0086f6">
+        <div class="lay-hd">
+            列车信息<span class="small">（以下余票信息仅供参考）</span>
+        </div>
+        <div class="lay-bd"><p class="t-tit" id="ticket_tit_id">
+            <strong class="mr5">[[${trainInfos.departure_date}]]</strong>
+            <strong class="ml5">[[${trainInfos.train_number}]]</strong>次<strong title="北京南" class="ml5">[[${trainInfos.start_station}]]</strong>站
+            <strong title="">（[[${trainInfos.start_time}]]开）— [[${trainInfos.end_station}]]</strong>站（[[${trainInfos.arrive_time}]]到）
+        </p>
+            <p class="t-con" id="ticket_con_id">
+                <span id="ticket_status_id" th:each="seat:${trainInfos.seatInfoEntityList}"
+                      class="s1">[[${seat.seatType.seat_type_name}]]（<span class="colorA">￥[[${seat.price}]]</span>）</span>
+            </p>
+            <p style="color: #3177BF;">
+                *显示的卧铺票价均为上铺票价，供您参考。具体票价以您确认支付时实际购买的铺别票价为准。
+            </p>
+        </div>
+    </div>
+    <!--列车信息 结束-->
+
+    <!--多级票价信息 开始-->
+    <div style="display: none;"><input style="display: none;" type="checkbox" id="fczk" aria-label="按空格键进行操作"></div>
+
+
+
+
+    <!--乘客信息 开始-->
+    <div class="layout person">
+        <div class="lay-hd" style="background: #3b99fc">
+            乘客信息<span class="small" id="psInfo">（选择乘车人）</span>
+        </div>
+        <div class="lay-bd">
+            <div class="per-sel">
+                <div class="item clearfix">
+                    <h2 class="cy" id="normal_passenger_image_id" title="乘车人" style="padding: 0px">乘车人:</h2>
+                    <ul id="normal_passenger_id">
+                        <li th:each="p:${passengers}">
+                            <input name="passenger" id="passenger" type="checkbox" class="check"
+                                   th:onclick="addTicket([[${p}]],[[${trainInfos.seatInfoEntityList}]],this)">
+                            <label style="cursor: pointer;">[[${p.passenger_name}]]
+                                <span >([[${p.passenger_type}]])</span>
+                            </label>
+                        </li>
+                    </ul>
+                    <div class="btn-all" style="display: none;" id="btnAll"><a id="show_more_passenger_id" title="展开" href="javascript:" style="" shape="rect">
+                        <label id="gd">更多</label><b></b></a>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!--存放乘客数据，利用表单提交数据（后台使用实体类中的数组获取数据并解析成集合类型）-->
+            <form id="Form01" action="/view/ticketing/checkTicketInfo" method="post">
+                <table class="per-ticket">
+                    <tbody>
+                        <tr align="center">
+                            <th width="28" rowspan="1" colspan="1">序号</th>
+                            <th rowspan="1" colspan="1">票种</th>
+                            <th rowspan="1" colspan="1">席别</th>
+                            <th rowspan="1" colspan="1">姓名</th>
+                            <th rowspan="1" colspan="1">证件类型</th>
+                            <th rowspan="1" colspan="1">证件号码</th>
+                            <th width="70" rowspan="1" colspan="1"></th>
+                            <th width="30" rowspan="1" colspan="1"></th>
+                        </tr>
+                    </tbody>
+                    <tbody id="ticketInfo_id">
+                        <!--起始乘客的数据-->
+                        <tr id="tr_id_0">
+                            <td align="center">1</td>
+
+                            <td>
+                                <select id="ticketType_1" name="confirmTicketType">
+                                    <option name="ticket_type" selected="selected" value="0">成人票</option>
+                                    <option value="1">儿童票</option>
+                                    <option value="2">学生票</option>
+                                    <option value="3">军人票</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select id="seatType_1"  >
+                                    <option  th:each="s:${trainInfos.seatInfoEntityList}" th:if="${s.remain_nums>0}" th:text="${s.seatType.seat_type_name}+'（￥'+${s.price}+'）'"></option>
+                                </select>
+                            </td>
+                            <td>
+                                <div class="pos-rel"><input id="passenger_name_1" class="inptxt w110" value=""
+                                                            title="不允许变更乘车人信息" size="12" maxlength="20"
+                                                            type="text"
+                                                            readonly="readonly">
+                                    <div class="w110-focus" id="passenger_name_1_notice" tabindex="-1"></div>
+                                </div>
+
+                            </td>
+                            <td>
+                                <select id="passenger_id_type_1" title="不允许变更乘车人信息"
+                                        onfocus="this.defaultIndex=this.selectedIndex;"
+                                        onchange="this.selectedIndex=this.defaultIndex;"
+                                        role="combobox" aria-label="中国居民身份证,不允许修改乘车人信息">
+                                    <option value="1" selected="selected">中国居民身份证</option>
+                                    <option value="C">港澳居民来往内地通行证</option>
+                                    <option value="G">台湾居民来往大陆通行证</option>
+                                    <option value="B">护照</option>
+                                    <option value="H">外国人永久居留身份证</option>
+                                </select>
+                            </td>
+                            <td>
+                                <div class="pos-rel"><input id="passenger_id_no_1" class="inptxt w160" value=""
+                                                            title="不允许变更乘车人信息" size="20" maxlength="35"
+                                                            type="text"
+                                                            readonly="readonly">
+                                    <div class="w160-focus" id="passenger_id_no_1_notice" tabindex="-1"></div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!--隐藏域保存列车数据-->
+                <input type="hidden" name="departure_date" th:value="${trainInfos.departure_date}">
+                <input type="hidden" name="departure_time" th:value="${trainInfos.departure_time}">
+                <input type="hidden" name="train_number" th:value="${trainInfos.train_number}">
+                <input type="hidden" name="start_station" th:value="${trainInfos.start_station}">
+                <input type="hidden" name="end_station" th:value="${trainInfos.end_station}">
+                <input type="hidden" name="arrive_time" th:value="${trainInfos.arrive_time}">
+                <input type="hidden" name="id" th:value="${trainInfos.id}">
+
+            </form>
+
+        </div>
+    </div>
+    <div style="line-height: 20px; margin-top: 10px;">提交订单表示已阅读并同意
+        <a id="zl_gz" style="display: none;" target="_blank"
+           href="https://mobile.12306.cn/otsmobile/h5/otsbussiness/zhonglao/international-organizationRules/international-organizationRules.html"
+           shape="rect">《中老铁路跨境旅客联运组织规则》</a>
+        <a target="_blank" href="https://mobile.12306.cn/otsmobile/h5/otsbussiness/info/transportationRules.html"
+           shape="rect">《国铁集团铁路旅客运输规程》</a>
+        <a id="kj_gz" style="display: none;" target="_blank"
+           href="https://mobile.12306.cn/otsmobile/h5/otsbussiness/info/crossBorderPassenger.html" shape="rect">《广深港高速铁路跨境旅客运输组织规则》</a>
+        <a target="_blank" href="https://mobile.12306.cn/otsmobile/h5/otsbussiness/info/serviceAnnouncement.html"
+           shape="rect">《服务条款》</a>
+    </div>
+    <!--乘客信息 结束-->
+
+    <div class="lay-btn">
+        <a href="javascript:void(0);" onclick="history.go(-1)" class="btn92" shape="rect">上一步</a>
+        <a href="javascript:void(0);" onclick="checkTicketInfo()" class="btn92s" shape="rect" style="background: #ffa50a">提交订单</a>
+    </div>
+    <div>
+        <div class="tips-txt">
+            <h2>温馨提示：</h2>
+            <p>1. 一张有效身份证件同一乘车日期同一车次只能购买一张车票，高铁动卧列车除外。</p>
+            <p>2.
+                购买儿童票时，乘车儿童有有效身份证件的，请填写本人有效身份证件信息。自2023年1月1日起，每一名持票成年人旅客可免费携带一名未满6周岁且不单独占用席位的儿童乘车，超过一名时，超过人数应购买儿童优惠票。免费儿童可以在购票成功后添加。</p>
+            <p>3.
+                购买残疾军人（伤残警察）优待票的，须在购票后、开车前办理换票手续方可进站乘车。换票时，不符合规定的减价优待条件，没有有效"中华人民共和国残疾军人证"或"中华人民共和国伤残人民警察证"的，不予换票，所购车票按规定办理退票手续。</p>
+            <p>4.一天内3次申请车票成功后取消订单（包含无座票时取消5次计为取消1次），当日将不能继续购票。</p>
+            <p>5.未尽事宜详见《铁路旅客运输规程》等有关规定和车站公告。</p>
+            <p>6.
+                为确保乘客在旅途中有一个安全、舒适的乘坐环境，自2020年11月17日起，您可选择雪具快运服务，请提前1-2天选择雪具快运“门到站”或“站到站”服务，中铁快运提供雪具到站后3日免费保管，请您根据出行时间，提前咨询和办理。中铁快运客服热线：95572<br
+                        clear="none">
+            </p>
+        </div>
+    </div>
+</div>
+<!--引入底部footer.html文件-->
+<div th:replace="/home/footer"></div>
+</body>
+</html>
+
+<!--添加乘客信息-->
+<script type="text/javascript">
+    //添加车票和乘客信息
+    function addTicket(passengerInfo, seat, obj) {
+        //获取乘客信息
+        var passenger_name = passengerInfo.passenger_name;
+        var card_type = passengerInfo.card_type;
+        var card_code = passengerInfo.card_code;
+        //获取当前所选中的复选框长度
+        var number = $("input[name='passenger']:checkbox:checked").length;
+        //判断当前复选框是否已经选择过
+        if ($(obj).is(":checked")) {  //选中状态
+            var ticketInfo = $("#ticketInfo_id");  //获取要展示的页面数据
+            $("#tr_id_0").remove();  //移除最初的数据
+            ticketInfo.append(
+                "         <tr id=\"tr_id_" + passengerInfo.id + "\">\n" +
+                "              <td >\n" +
+                "                <input type='hidden' id='sort' name='sort' value="+number+">" +
+                "                <span id='number'>"+number+"</span>" +
+                "              </td>\n" +
+                "              <td>\n" +
+                "                <select id=\"ticketType_1\" name=\"ticket_type\">\n" +
+                "                  <option name=\"ticket_type\" selected=\"selected\" value=\"0\">成人票</option>\n" +
+                "                  <option value=\"1\">儿童票</option>\n" +
+                "                  <option value=\"2\">学生票</option>\n" +
+                "                  <option value=\"3\">军人票</option>\n" +
+                "                </select>\n" +
+                "              </td>\n" +
+                "              <td>\n" +
+                "                <select id=\"seat_type\" name='seat_type' ></select>\n" +
+                "              </td>\n" +
+                "              <td>\n" +
+                "                <div class=\"pos-rel\"><input name=\"passenger_name\" class=\"inptxt w110\" value=" + passenger_name + " \n" +
+                "                                            title=\"不允许变更乘车人信息\" size=\"12\" maxlength=\"20\" type=\"text\"\n" +
+                "                                            readonly=\"readonly\">\n" +
+                "                  <div class=\"w110-focus\" id=\"passenger_name_1_notice\" tabindex=\"-1\"></div>\n" +
+                "                </div>\n" +
+                "              </td>\n" +
+                "              <td>\n" +
+                "                <select id=\"identity_type\" title=\"不允许变更乘车人信息\"\n" +
+                "                        onfocus=\"this.defaultIndex=this.selectedIndex;\" onchange=\"this.selectedIndex=this.defaultIndex;\"\n" +
+                "                        role=\"combobox\" name='card_type' aria-label=\"中国居民身份证,不允许修改乘车人信息\" readonly=\"readonly\">\n" +
+                "                  <option value="+card_type+" selected=\"selected\">"+card_type+"</option>\n" +
+                "                </select>\n" +
+                "              </td>\n" +
+                "              <td>\n" +
+                "                <div class=\"pos-rel\"><input id=\"passenger_id_no_1\" class=\"inptxt w160\" name='card_code' value=" + card_code + "\n" +
+                "                                            title=\"不允许变更乘车人信息\" size=\"20\" maxlength=\"35\" type=\"text\"\n" +
+                "                                            readonly=\"readonly\">\n" +
+                "                  <div class=\"w160-focus\" id=\"passenger_id_no_1_notice\" tabindex=\"-1\"></div>\n" +
+                "                </div>\n" +
+                "              </td>\n" +
+                "              <td style=\"width:40px;\">\n" +
+                "                <a aria-label=\"占位符\"  id=\"addchild_1\" name=\"addchild_normalPassenger_1\"></a>\n" +
+                "              </td>\n" +
+                "              <td title=\"删除乘车人\">\n" +
+                "                <span aria-label=\"点击删除乘车人\" tabindex=\"0\" class=\"i-del\"\n" +
+                "                      style=\"width:50px;margin-bottom: 10px;color: red\"></span>\n" +
+                "              </td>\n" +
+                "        </tr>");
+            //遍历循环添加座位价格信息
+            for (let s of seat) {
+                $("#tr_id_" + passengerInfo.id +" #seat_type").append("<option value="+s.seat_type_id+','+s.price+">" + s.seatType.seat_type_name + "（￥" + s.price + ' ）' + "</option>")
+            }
+        } else {
+            //移除一条数据
+            $("#tr_id_" + passengerInfo.id).remove();
+            //遍历循环这个标签，重新排序
+            $("input[name='sort']").each(function (index) {   //设置索引
+                //重新赋值（索引+1）
+                $(this).val(index+1);    //给隐藏域赋值
+                $(this).next().text(index+1);   //序号赋值
+            })
+        }
+    }
+</script>

@@ -1,0 +1,248 @@
+﻿html, body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, textarea, p, blockquote, th, td, em, button { margin:0; padding:0; }
+html { background-color:#FFF; }
+body { background-color:#FFF; font-size:14px; line-height:1.5; font-family:  "Hiragino Sans GB","Microsoft YaHei",SimHei,SimSun,sans-serif; color:#333; }
+img, fieldset { margin:0; padding:0; border:0; }
+input, textarea { font-size:12px; }
+table { border-collapse:collapse; }
+a { color:#3480e2; text-decoration:none; outline:none; }
+a:hover { color:#004fb3;text-decoration:none; }
+h1, h2, h3, h4, h5 { font-size:100%; }
+ul li, ol li { list-style:none; }
+dfn { margin-right:2px; font:normal 12px Arial; }
+section { display:block; }
+select { padding:1px; font-family:Arial,Simsun,sans-serif; border:1px solid #CCC; background-color:#FFF; }
+.basefix { *zoom:1; }
+.basefix:after { clear:both; content:'.'; display:block; height:0; overflow:hidden; }
+.base_txtgray { color:#CCC; }
+.base_price { color:#999;font-size:12px}
+.base_price dfn,.base_price strong{color:#f86720;}
+.base_price strong{ font:normal 18px "helvetica";margin-right:2px;}
+.fl { float:left; }
+.fr { float:right;position: relative;left: -723px;}
+.fm{margin:0 auto}
+.mb10{margin-bottom:10px;}
+.text_right { text-align:right; }
+.invisible { visibility:hidden; }
+.posre{position:relative}
+.hidden { display:none; }
+input:focus{outline:none;}
+input[type="button"],input[type="submit"]{-webkit-appearance:none;}
+input[type="text"],input[type="number"] { padding:5px 8px; border:solid 1px #e0e0e0; font-size:14px; }
+input[type="text"]:focus,input[type="number"]:focus{ border-color:#5d9de5}
+
+/*鑳屾櫙鍥剧墖*/
+.chage,
+.checkbox,
+.hotline_bd .arr,
+.hotel_left,
+.hotel_right,
+.i_recom,
+.i_colt,
+.i_map,
+.i_seo,
+.i_adv,
+.i_sidebar{background:url("http://pic.c-ctrip.com/railway_v3/un_index.png?v=20150310")}
+
+/* Structure Begin */
+.base_top { min-width:980px; height:360px; /*margin-bottom:20px;*/}
+.base_bd { max-width:1180px; min-width:980px; width:auto; margin:0 auto; *zoom:1;-webkit-font-smoothing: antialiased; }
+.base_bd:after { clear:both; content:'.'; display:block; height:0; overflow:hidden; }
+.cui_hd, .cui_nav, #base_bd { _width:980px; }
+.index_wrapper { max-width:780px; min-width:580px; margin-bottom:40px; padding-left:400px; zoom:1; _width:580px; }
+.index_wrapper:after { clear:both; content:'.'; display:block; height:0; overflow:hidden; }
+.index_side { display:inline; float:left; width:380px; margin-left:-400px; }
+.index_main { float:left; width:100%; }
+/* Structure End */
+
+/* notice Begin */
+.block_notice { max-width:1178px; min-width:978px; width:auto; margin:0 auto; *zoom:1;height:32px;line-height:32px;background:#fff8dd;border:1px solid #FFE19B;margin-bottom:10px;color:#ffab00;font-size:12px;}
+.block_notice .icon_close { float:right; margin-right:10px; font-size:20px;color:#ffab00;font-weight:200}
+.block_notice .icon_close:hover {color:#F79700;}
+.notice_tips{background:#ffab00;margin-right:10px;height:32px;padding:0 10px;color:#fff;float:left}
+/* notice End */
+
+/*shearchbox Begin*/
+.s_box{width:320px; height:360px;position:absolute;left:0;top:0;/*-webkit-box-shadow:0 0 6px rgba(0,0,0,.2);-moz-box-shadow:0 0 6px rgba(0,0,0,.2);box-shadow:0 0 6px rgba(0,0,0,.2);background:#fff;border-radius:4px;margin-top:-350px;*/}
+
+.s_box_tab{height:45px;line-height:45px;text-align:center;font-size:14px;}
+.s_box_tab a{width:50%;float:left;color:#fff;background:#74a3e7;border-radius:0 4px 0 0;}
+.s_box_tab a:hover{background:#3480e2}
+.s_box_tab a.current{background:#3480e2;height:47px;margin-top:0px;border-radius:4px 4px 0 0;}
+.search_box{border:5px solid #3480e2;padding:20px;height:265px;border-radius:0 0 4px 4px;background:#fff;}
+.search_type{overflow:hidden;font-size:14px;line-height:15px;}
+.search_type li{width:33.33%;float:left;border-left:1px solid #ebebeb;margin-left:-1px;text-align:center;cursor:pointer}
+.search_type li:hover,.search_type li.current{ color:#3480e2;}
+
+.search_form{margin-top:20px;line-height:20px;/*height:100px;background:#f00*/}
+
+.search_txt{position:relative;margin-bottom:20px;*zoom:1;font-size:14px;cursor:default;}
+.search_txt:after{ clear:both; content:'.'; display:block; height:0; overflow:hidden; }
+.search_city{/*background:#fff;*/color:#666;position:absolute;line-height:20px;left:6px;top:-13px;z-index:1;}
+.search_city span{position:relative;z-index:10;padding:0 4px;}
+.search_city i{height:7px;background:#fff;position:absolute;left:0;bottom:0; right:0;z-index:5}
+.search_txt input{height:20px;*line-height:20px;*float:left;}
+:root .search_txt input{z-index:2;position:relative;}
+:root .search_txt .search_city{left:6px; top:5px;}
+:root .search_txt input:focus + .search_city{transform:translate(0,-18px);transition:All 0.5s ease-in-out; -webkit-transition:All 0.5s ease-in-out;  -moz-transition:All 0.5s ease-in-out;  -o-transition:All 0.5s ease-in-out;font-size:12px;color:#999;z-index:5}
+:root .search_txt input:focus::-ms-input-placeholder{content:""}
+:root .search_txt input:focus::-moz-placeholder{content:""}
+
+
+
+.input_txt128{width:112px;}
+.input_txt225{width:220px;}
+.input_txt270{width:250px;}
+.chage{width:30px;height:45px;background-position:-15px -175px;position:absolute;left:238px; top:20px; }
+.chage:hover{background-position:-65px -175px;}
+.time{position:absolute;right:8px; top:6px;font-size:12px;color:#999;z-index:5}
+.week{color:#ffab00;position:absolute; top:6px; right:35px;font-style:normal;font-size:12px;z-index:5}
+.columns2{width:132px;position:relative}
+.searchbtn{width:100%; height:35px;border:0;background:#ffab00;font-size:16px;color:#fff;border-radius:5px;cursor:pointer;font-weight: bold;}
+.searchbtn:hover{background:#F79700}
+.checkbox{width:20px; height:20px; float:right;background-position:-160px -215px}
+.search_txt.current .checkbox{background-position:-190px -215px}
+/*shearchbox End*/
+
+/*adv*/
+.adv_bd{margin-top: 10px;height:360px;overflow:hidden;margin-left:340px;background:#f8f8f8}
+
+/*titbar Begin*/
+.titbar{margin:25px 0 15px}
+.titbar h2{font: 24px/34px "Microsoft Yahei";}
+.titbar span{font-size:14px;vertical-align:-1px;margin-left:10px}
+.citytabs{float:right;margin-top:12px;zoom: 1;}
+.citytabs a { display:inline-block; height:20px; padding:0 10px; line-height:20px; white-space:nowrap;color:#666 }
+.citytabs a:hover, .citytabs a.current { background-color:#3480e2; color:#FFF; }
+/*titbar End*/
+
+/*hotline Begin*/
+.hotline{border-top:1px dashed #dbdbdb;padding:25px 0 35px;}
+.hotline_bd td{position:relative;line-height:35px;}
+.hotline_bd a{color:#333}
+.hotline_bd a:hover{color:#004fb3}
+.hotline_bd .base_price{float:right}
+.hotline_dashed{position:absolute; top:0;bottom:0;border-left:1px dashed #dbdbdb;left:50%}
+.hotline_bd .arr{width:33px;height:6px;display:inline-block;background-position:-160px -200px;margin:-2px 4px 0;vertical-align:middle;cursor: pointer;}
+/*hotline Ende*/
+
+/*hotproduct Begin*/
+.hothotel{background:#fff;overflow:hidden;}
+.hottrain{background:#f8f8f8;overflow:hidden;}
+.product_list{margin:0 0 35px -20px; white-space:nowrap;height:250px;position:relative}
+.product_bd{width:25%;height:241px;float:left;position:relative;}
+.product_bd a{margin-left:20px;height:241px;display:block;*background:url ;*zoom:1;} 
+
+.product_bd a:hover{-webkit-box-shadow:0 0 3px rgba(0,0,0,.15);-moz-box-shadow:0 0 3px rgba(0,0,0,.15);box-shadow:0 0 3px rgba(0,0,0,.15);}
+.product_img{width:100%;height:170px;overflow:hidden;position:relative;z-index:-1;display:inline;float:left}
+:root .product_img{z-index:10}
+.product_img img{height:170px;width:100%;transition: transform 0.3s ease 0s;}
+.product_bd a:hover img{-webkit-transform: scale(1.2); transform: scale(1.2);}
+.i_recom{width:56px; height:50px;background-position:-100px -175px;color:#fff;position:absolute; top:0;left:12px;z-index:15;font-size:16px;text-align:center;line-height:32px;font-style:normal}
+.product_cont{padding:10px;line-height:30px;position:relative;z-index:5}
+
+.product_cont .base_price{float:right}
+.product_tit,.hotel_ads{max-width:160px;min-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#333;cursor: pointer;}
+.hotel_ads,.hotel_score{font-size:12px;color:#999}
+.hotel_score{margin-top:-32px;float:right;cursor: pointer;}
+.hotel_left,.hotel_right{width:30px;height:60px;position:absolute;top:55px;z-index:10}
+.hotel_left{left:20px;background-position:-255px -110px}
+.hotel_left:hover{background-position:-255px -180px}
+.hotel_right{right:0;background-position:-220px -110px}
+.hotel_right:hover{background-position:-220px -180px}
+.i_map{width:11px; height:14px;background-position:-200px -175px;display:inline-block;vertical-align:middle;margin:-2px 5px 0 0}
+.product_bd.train .product_cont{border:1px solid #dbdbdb;border-top:0}
+.train_colt{/*text-align:right;*/color:#999;cursor: pointer;}
+.i_colt{width:16px; height:13px;background-position:-160px -175px;display:inline-block;vertical-align:middle;}
+.train_colt.current .i_colt{background-position:-180px -175px}
+/*hotproduct End*/
+
+/*seotool Begin*/
+.seotool{padding:40px 0 30px;}
+.seotool td{text-align:center;}
+.seotool a{width:160px;display:inline-block;color:#3480e2;font-size:18px;line-height:50px;}
+.seotool a:hover{color:#004fb3}
+.i_seo{float:left;width:60px;height:50px;margin-right:5px}
+.l_line{width:34px;height:50px;background-position:-310px -0;margin-right:0;float:none;display:inline-block}
+.i_seo.icon1{width:70px;background-position:0 0;cursor: pointer;}
+.i_seo.icon2{background-position:-70px 0;cursor: pointer;}
+.i_seo.icon3{background-position:-130px 0;cursor: pointer;}
+.i_seo.icon4{background-position:-190px 0;cursor: pointer;}
+.i_seo.icon5{background-position:-250px 0;cursor: pointer;}
+.seotool a:hover .i_seo.icon1{background-position:0 -50px}
+.seotool a:hover .i_seo.icon2{background-position:-70px -50px}
+.seotool a:hover .i_seo.icon3{background-position:-130px -50px}
+.seotool a:hover .i_seo.icon4{background-position:-190px -50px}
+.seotool a:hover .i_seo.icon5{background-position:-250px -50px}
+/*seotool End*/
+
+/*advantage Begin*/
+.advantage{background:#c4c9cd;color:#fff;height:140px;overflow:hidden}
+.advantage_bd{width:180px;display:block;position:relative;padding:25px 0 15px 100px;}
+.advantage_bd h4{font-size:28px;font-weight:500;}
+.advantage_bd p{font-size:12px;}
+.i_adv{width:70px;height:60px;position:absolute; top:35px;left:15px}
+.i_adv.icon1{background-position:0 -110px}
+.i_adv.icon2{background-position:-70px -110px}
+.i_adv.icon3{background-position:-140px -110px}
+.advantage_bd a{font-size:12px;color:#fff;}
+.i_tri{height:0px;width:0px;line-height:0px;border:5px solid #000;border-color:transparent transparent transparent #fff;display:inline-block;margin-left:5px}
+/*advantage End*/
+
+/*seobox Begin*/
+.seo_box{background:#f8f8f8;padding:50px 0 40px;zoom:1;color: #999;font-size:12px}
+.seo_box h3 { display:inline; font:normal 12px Simsun; }
+.seo_box strong{font-weight:400}
+.nav_title a { color:#666; }
+.seo_navigation { overflow:hidden;}
+.seo_navigation a { white-space:nowrap; color:#999; }
+.seo_navigation dt, .seo_navigation dd { float:left;*display:inline; *zoom:1; }
+.seo_navigation dt { width:91px; }
+.seo_navigation dd { max-width:1055px;min-width:855px; overflow:hidden; }
+.seo_navigation dd a { float:left; width:87px; white-space:nowrap; overflow:hidden; }
+.seo_book dd a { width:348px; }
+/*seobox Begin*/
+
+/*sidebar Begin*/
+.side_fixed{position: fixed;right: 0px;top: 50%;z-index: 27;width: 50px;}
+.sidebar{background:#74a3e7;text-align:center;padding:10px 0 0;height:80px;display:block;color:#fff}
+.sidebar:hover{background:#6095e2;color:#fff}
+.sidebar:hover .sidebar_snav{display:block;}
+.i_sidebar{width:30px;height:30px;display:block;margin:0 auto 5px;line-height:20px;cursor: pointer;}
+.i_sidebar.icon1{background-position:-290px -140px}
+.i_sidebar.icon2{background-position:-290px -170px}
+.i_sidebar.icon3{background-position:-325px -170px}
+.i_sidebar.icon5{background-position:-290px -110px}
+.i_sidebar.icon4{height:32px;background-position:-320px -110px}
+.sidebar_snav{height:80px;position:absolute; right:50px; top:0;width:145px;}
+.sidebar_snav a{width:145px; height:45px;display:block;background:#6095e2;color:#fff;line-height:45px;}
+.sidebar_snav a:hover{background:#3480e2}
+.sidebar_snav .i_sidebar{display:inline-block;margin:-2px 10px 0 10px;vertical-align:middle}
+/*sidebar End*/
+
+/*在线客服*/
+.shadow{width:100%;height:100%;position:fixed;z-index:28;background:#000; filter:alpha(Opacity=60);opacity:0.6;top:0;left:0;}
+.popBox{width:520px;height:240px;position:fixed;left:50%;top:50%;margin-left:-260px;margin-top:-120px;background:#fff;z-index:29;-moz-border-radius:15px;-webkit-border-radius:15px;border-radius:15px;}
+.pop_top{position:relative;}
+.pop_bk{position:absolute;width:180px;height:178px;background:url("http://pic.c-ctrip.com/railway_v3/LstIcon.png") 0px 0px;top:72px;left:30px;}
+.pop1{padding:75px 0 0 250px;}
+.pop1 dt{font-size:20px;color:#FF9A14;}
+.pop1 dd{font-size:18px;color:#333;padding-top:20px;}
+.yellowBtn{width:160px;height:50px;line-height:50px; text-align:center;-moz-border-radius:5px;-webkit-border-radius:5px;border-radius:5px;background:#ffab00;color:#fff;font-size:20px;display:block;}
+.yellowBtn:hover{background:#F79700;color:#fff;}
+.pop_close{position:absolute;width:27px;height:27px;background:url("http://pic.c-ctrip.com/railway_v3/LstIcon.png") -294px -242px;right:26px;top:22px; cursor:pointer;}
+.pop_bk2{position:absolute;width:110px;height:105px;background:url("http://pic.c-ctrip.com/railway_v3/LstIcon.png") -110px 0px;top:60px;left:30px;}
+.pop2{padding:52px 0 0 180px;}
+.pop2 dd,.pop3 dd{text-indent:-74px;padding:5px 0 0 74px;}
+.pop2 dd span,.pop3 dd span{color:#999;font-size:16px;padding-right:10px;}
+.pop2 dd i{font-style:normal;color:#999;}
+.pop2 dd strong{font-size:20px; font-weight:normal;color:#FF9A14;}
+.pop2 dd b,.pop3 dd b{font-weight:normal;font-size:16px;}
+.pop3{padding:75px 0 0 160px;}
+
+/*在线客服*/
+
+
+#notice01div,#notice02div,#notice03div,#notice08div{display:none;left:10px;top:-13px;transform:translate(0,0);font-size:12px;color:#999;z-index:5;}
+
+.erweima{height:110px;background:url("http://pic.c-ctrip.com/train/railway_v3/banner4.png") no-repeat;margin-top:12px;background-size:100% 100%;position:relative;}
+.erweima img{position:absolute;width:98px;height:98px;border:0;top:6px;left:14%;}

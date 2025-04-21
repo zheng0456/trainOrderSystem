@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<!--引入thymeleaf模板引擎-->
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <title>乘客信息编辑</title>
+    <link rel="stylesheet" type="text/css" href="/home/css/style.min.css?v=3.0.0" >
+    <link rel="stylesheet" type="text/css"  href="/admin/css/style1.css" >
+    <link rel="stylesheet" type="text/css"  href="/admin/css/style2.css" >
+    <link rel="stylesheet" type="text/css" href="/home/css/public.css"/>
+    <link rel="stylesheet" type="text/css" href="/home/css/mygrxx.css"/>
+    <link href="/home/fonts/iconfont.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/home/css/ticket_public_v70001.css"/>
+    <script type="text/javascript" src="/admin/js/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="/admin/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var selectedCardValue =  $("#card_type_value").val() ; //从服务器获取的值
+            var selectCardElement = document.getElementById("select_card_type");
+            for (var i = 0; i < selectCardElement.options.length; i++) {
+                if (selectCardElement.options[i].value === selectedCardValue) {
+                    selectCardElement.options[i].selected = true;
+                    break;
+                }
+            }
+
+            var selectedPassengerTypeValue =  $("#passenger_type_value").val() ; //从服务器获取的值
+            var selectPassengerTypeElement = document.getElementById("select_passenger_type");
+            for (var j = 0; j < selectPassengerTypeElement.options.length; j++) {
+                if (selectPassengerTypeElement.options[j].value === selectedPassengerTypeValue) {
+                    selectPassengerTypeElement.options[j].selected = true;
+                    break;
+                }
+            }
+        });
+
+        /***********验证真实姓名*************/
+        function checkTrueName() {
+            let name = $("#name").val();
+            if (name.trim() == "") {
+                $("#errorNameMsg").text("姓名不能为空").css("color","red");
+                return false;
+            }
+            var nameZZ = /^[\u4E00-\u9FA5]{2,10}$/;
+            if (!nameZZ.test(name)) {
+                $("#errorNameMsg").text("姓名只能用2-10位汉字组成！").css("color","red");
+                return false;
+            } else {
+                $("#errorNameMsg").text("");
+                return true;
+            }
+        }
+
+        /************验证身份证号************/
+        function checkIDCard() {
+            var cardCode = $("#cardCode").val();
+            let flag =false;
+            if (cardCode.trim() == "") {
+                $("#errorCardMsg").text("身份证号不能为空！").css("color","red");
+                return false;
+            }
+            let reg  = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/ ;
+            if (!reg.test(cardCode)) {
+                $("#errorCardMsg").text("身份证号码格式错误！").css("color","red");
+                return false;
+            } else {
+                $.ajax({
+                    type: "get",
+                    url: "/system/user/checkCardCode",
+                    data: {"card_code": cardCode},
+                    dataType: "json",
+                    async:false,
+                    success: function (data) {
+                        if (data) {
+                            $("#errorCardMsg").text("");
+                            flag =true;
+                        } else {
+                            $("#errorCardMsg").text("该身份证已经注册，不能重复添加！").css("color","red");
+                        }
+                    },
+                    error: function () {
+                        alert("网络错误，请刷新试一试")
+                    }
+                });
+            }
+            return flag;
+        }
+        /***********验证手机号****************/
+        function checkPhone() {
+            var phone = $("#phone").val();
+            let flag = false;
+            if (phone.trim() == "") {
+                $("#phoneErrorMsg").text("手机号码不能为空").css("color","red");
+                return false;
+            }
+            let reg = /^1[3456789]\d{9}$/;
+            if (!reg.test(phone)) {
+                $("#phoneErrorMsg").text("手机号格式错误").css("color","red");
+                return false;
+            } else {
+                $("#phoneErrorMsg").text("");
+                $.ajax({
+                    type: "get",
+                    url: "/system/user/checkPhone",
+                    data: {"phone": $("#phone").val()},
+                    dataType: "json",
+                    async:false,
+                    success: function (data) {
+                        if (!data) {
+                            $("#phoneErrorMsg").text("手机号码已经存在").css("color","red");
+                        } else {
+                            $("#phoneErrorMsg").text();
+                            flag =true;
+                        }
+                    },
+                    error: function () {
+                        alert("网络错误，请刷新试一试")
+                    }
+                });
+            }
+            return flag;
+        }
+
+        //整体表单提交校验
+        function checkForm(){
+            if (checkTrueName() && checkIDCard() && checkPhone()){
+                return true;
+            }else {
+                alert("信息验证不通过,请确认后重新填写!")
+                return false;
+            }
+        }
+
+        //用户提交表单
+        function editPassenger(){
+            //判断是否通过校验
+            if (checkForm()){
+                let $data = $("#Form01").serialize();  //获取表单数据
+                $.ajax({
+                    type:"PUT",
+                    url:"/view/passenger/edit",
+                    data:$data,
+                    dataType:"json",
+                    success:function (msg){
+                        if(msg){
+                            alert("乘客修改成功！");
+                            window.location = "/view/passenger/list";
+                        }else {
+                            alert("乘客修改失败！");
+                        }
+                    },
+                    error:function (){
+                        alert("网络访问失败,请检查网络")
+                    }
+                })
+            }
+        }
+    </script>
+
+
+</head>
+<body>
+<!------------------------------head------------------------------>
+<!--引入顶部文件-->
+<div th:replace="/home/header"></div>
+<!------------------------------idea------------------------------>
+<div class="address">
+    <div class="wrapper clearfix">
+        <a>当前位置：</a>
+        <a href="http://localhost:8080/index.html" class="fl" style="">首页</a><span>></span>
+        <a href="/view/personal/info" class="go">个人中心</a><span>></span>
+        <a href="" class="go">乘客信息编辑</a>
+    </div>
+</div><!------------------------------Bott------------------------------>
+<div class="Bott">
+    <div class="wrapper clearfix" style="width: 1500px;margin-left: 160px;">
+        <!--个人中心左侧菜单开始-->
+        <div th:replace="/home/common/left_menu"></div>
+        <!--个人中心左侧菜单结束-->
+        <div class="you fl" style="width: 1100px;padding: 5px 50px;">
+
+
+            <form  id="Form01" novalidate="novalidate" onsubmit="return checkForm()" method="post">
+                <div class="center-main" style="">
+                    <input type="hidden"  name="id" th:value="${passenger.id}">
+                    <div class="tips-box tips-box-mini" style="margin-bottom: 5px">
+                        <p class="txt-md">
+                          乘客信息编辑
+                        </p>
+                    </div>
+                    <div id="js-minHeight" style="min-height: 505px;">
+                        <!-- 通过的基本信息 -->
+                        <div class="center-form-item">
+                            <div class="center-tit">
+                                <div class="tit-name">基本信息</div>
+                            </div>
+                            <div class="form-list form-list-view">
+                                <div id="bianji_centerform" style="position: relative;">
+                                    <!-- 所有的表单 -->
+                                    <div class="zhengjian">
+                                        <div class="form-item" style="position: relative">
+                                            <div class="form-label">
+                                                <span class="required" aria-required="true">*</span>证件类型：
+                                            </div>
+                                            <div class="form-bd">
+                                                <div class="input-box">
+                                                    <input type="hidden" id="card_type_value" th:value="${passenger.card_type}">
+                                                    <select  id="select_card_type" name="card_type"  class="passenger_select" >
+                                                        <option value="中国居民身份证" >中国居民身份证</option>
+                                                        <option value="港澳居民来往内地通行证">港澳居民来往内地通行证</option>
+                                                        <option value="台湾居民来往大陆通行证">台湾居民来往大陆通行证</option>
+                                                        <option value="外国人永久居留身份证">外国人永久居留身份证</option>
+                                                        <option value="港澳台居民居住证">港澳台居民居住证</option>
+                                                        <option value="护照">护照</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-item" style="position: relative">
+                                            <div class="form-label"><span class="required" aria-required="true">*</span>姓名：</div>
+                                            <div class="form-bd">
+                                                <div class="input-box">
+                                                    <input id="name" name="passenger_name"  th:value="${passenger.passenger_name}" placeholder="请输入姓名" maxlength="30"
+                                                           type="text" class="input" value="" autocomplete="off" onblur="checkTrueName()">
+                                                </div>
+                                                <div class="form-bd-txt pull-left ml verificationStatusP" id="errorNameMsg"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-item" id="zhengjian_no" style="position: relative">
+                                            <div class="form-label">
+                                                <span class="required"   aria-required="true">*</span>证件号码：
+                                            </div>
+                                            <div class="form-bd">
+                                                <div class="input-box">
+                                                    <input id="cardCode" maxlength="18" name="card_code" type="text"
+                                                           class="input"  th:value="${passenger.card_code}" autocomplete="off" placeholder="请填写证件号码" onblur="checkIDCard()">
+                                                </div>
+                                                <div class="form-bd-txt pull-left ml verificationStatusP" id="errorCardMsg"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 联系方式 -->
+                                <div class="center-form-item">
+                                    <div class="form-list">
+                                        <div class="form-item">
+                                            <div class="form-label">
+                                                <span id="mobileNoLabelTipSpan" class="required" aria-required="true">*</span>手机号码：
+                                            </div>
+                                            <div class="form-bd" style="margin-left: 0;">
+                                                <div class="sel areaCodeDom" style="width:85px;margin-right:5px;">
+                                                    <div class="sel-hd" style="text-align: center;">
+                                                        <div class="sel-inner areaText">+86</div>
+                                                    </div>
+                                                </div>
+                                                <div class="input-box">
+                                                    <input id="phone" maxlength="11" name="phone"  th:value="${passenger.phone}"  class="input" onblur="checkPhone()"
+                                                           autocomplete="off" placeholder="请填写手机号码">
+                                                </div>
+                                                <div class="form-bd-txt pull-left ml verificationStatusP" id="phoneErrorMsg"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 附加信息 -->
+                                <div class="center-form-item">
+                                    <div class="center-tit">
+                                        <div class="tit-name">附加信息</div>
+                                    </div>
+                                    <div class="form-list">
+                                        <div class="form-item" style="position: relative">
+                                            <div class="form-label">
+                                                <span class="required" aria-required="true">*</span>优惠(待)类型：
+                                            </div>
+                                            <div class="form-bd">
+                                                <div class="input-box">
+                                                    <input type="hidden" id="passenger_type_value" th:value="${passenger.passenger_type}">
+                                                    <select name="passenger_type" id="select_passenger_type" class="passenger_select">
+                                                        <option value="成人">成人</option>
+                                                        <option value="儿童">儿童</option>
+                                                        <option value="学生">学生</option>
+                                                        <option value="残疾军人">残疾军人</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="btn-center mt-lg">
+                                    <a href="javascript:void(0);" class="btn" id="cancel_btn" onclick="history.go(-1)">取消</a>
+                                    <a href="javascript:void(0);" class="btn btn-primary" id="save_btn" onclick="editPassenger()">提交</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--引入底部footer.html文件-->
+<div th:replace="/home/footer"></div>
+<script src="/home/js/jquery-3.5.1.js" type="text/javascript" charset="utf-8"></script>
+<script src="/home/js/public.js" type="text/javascript" charset="utf-8"></script>
+<script src="/home/js/user.js" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>

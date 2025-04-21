@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<!--引入thymeleaf模板引擎-->
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>中国梦想游网站</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="/home/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="/home/css/common.css" rel="stylesheet" type="text/css"/>
+    <link href="/home/css/order/common_css.css?cssVersion=1.9084" rel="stylesheet"/>
+    <!--引入js文件-->
+    <script type="text/javascript" src="/home/js/jquery-3.5.1.js"></script>
+
+    <script>
+        //订单支付时判断
+        let payTime = 100;
+        $(document).ready(function() {
+            let order_no = $("#order_no").val();
+            let countdownInterval; // 存储定时器ID
+            // 更新倒计时显示
+            function updateCountdown(startTime, duration) {
+                let currentTime = Date.now();
+                let remainingTime = startTime + duration * 1000 - currentTime;
+
+                if (remainingTime > 0) {
+                    let minutes = Math.floor(remainingTime / 60000);  // 分钟
+                    let seconds = Math.floor((remainingTime % 60000) / 1000);  // 秒数
+                    // 保存两位数字（拼接字符串）
+                    let timeStr = minutes.toString().padStart(2, '0') + '分' + seconds.toString().padStart(2, '0') + '秒';
+                    $('#ShowTime').text(timeStr);
+                } else {
+                    clearInterval(countdownInterval); // 清除定时器
+                    let train_number = $("#train_number").val();
+                    let departure_date = $("#departure_date").val();
+                    $.ajax({
+                        url: "/view/order/cancelOrder",
+                        type: "POST",
+                        data: {
+                            "order_no": order_no,
+                            "train_number": train_number,
+                            "departure_date": departure_date
+                        },
+                        async:false,
+                        success: function(msg) {
+                            if (msg){
+                                $("#ShowTime").text("订单已过期");
+
+                            }else {
+                                alert("订单超时取消失败!!!");
+                            }
+                        },
+                        error:function (msg) {
+                            alert("网络错误，请检查你的网络！")
+                        }
+                    });
+                    payTime = 0;
+                }
+            }
+
+            // 获取订单的过期时间
+            $.ajax({
+                url: "/view/ticketing/expireTime",
+                type: "POST",
+                data: {order_no: order_no},
+                async: false, // 使用同步请求确保在获取到过期时间后再开始倒计时
+                success: function(response) {
+                    let expireTime = parseInt(response);
+                    let startTime = Date.now(); // 当前时间戳
+                    let duration = expireTime; // 订单过期时间（单位：秒）
+
+                    // 开始倒计时
+                    countdownInterval = setInterval(function() {
+                        updateCountdown(startTime, duration);
+                    }, 1000);
+                }
+            });
+        });
+
+
+
+        //支付订单
+        function paymentOrder(){
+            if(payTime == 100){
+                //提交表单
+                $("#paymentForm").submit();
+            }else {
+                alert("当前订单已失效,请重新购买车票！！！");
+                window.location.href = "http://localhost:8080/index.html";
+            }
+        }
+
+        //取消订单，用户取消订单
+        function cancelOrder() {
+           // 显示取消订单确认弹框
+           $("#cancelOrder").css("display", "block");
+            //如果确认取消
+            $("#confirm_cancel").click(function() {
+                //取消订单确认弹框
+                $("#cancelOrder").css("display",'none');
+                let order_no = $("#order_no").val();
+                let train_number = $("#train_number").val();
+                let departure_date = $("#departure_date").val();
+                $.ajax({
+                    url: "/view/order/cancelOrder",
+                    type: "POST",
+                    data: {
+                        "order_no": order_no,
+                        "train_number": train_number,
+                        "departure_date": departure_date  },
+                    success: function(msg) {
+                        if (msg){
+                            alert("取消订单成功！！");
+                            window.location.href = "http://localhost:8080/index.html";
+                        }else {
+                            alert("取消订单失败!!!");
+                        }
+                    },
+                    error:function (msg) {
+                        alert("网络错误，请检查你的网络！")
+                    }
+                });
+            });
+            //如果不取消
+            $("#no_cancel").click(function() {
+                // 隐藏取消订单确认弹框
+                $("#cancelOrder").css("display",'none');
+            });
+        }
+
+
+
+    </script>
+
+</head>
+
+<body>
+<!--引入顶部文件-->
+<div th:replace="/home/header"></div>
+<!--订单支付页面-->
+<div class="content" id="main_content" style="min-height: 830px;"><!--支付提示 开始-->
+    <div class="t-succ t-lock">
+        <div class="pay-tips"><span class="i-lock"></span>
+            <h3><span>席位已锁定，请在提示时间内尽快完成支付，完成网上购票。<span>
+        支付剩余时间：
+        <strong class="colorA" th:if="${errorMsg == null}"><strong id="ShowTime"></strong></strong>
+        <!--订单失效提醒-->
+        <strong class="colorA" th:if="${errorMsg != null}"><strong>[[${errorMsg}]]</strong></strong>
+        </span></span>
+            </h3>
+        </div>
+    </div>
+    <!--订单信息 开始-->
+    <div class="layout b-info">
+        <div class="lay-hd" style="background: #3b99fc;">订单信息</div>
+        <div class="lay-bd">
+            <div class="info" id="show_title_ticket">
+                <strong class="mr5" >[[${orderInfo.departure_date}]]</strong>
+                <strong class="mr5" >[[${orderInfo.train_number}]] 次 </strong>
+                <strong class="ml5">[[${trainInfo.start_station}]]</strong>站
+                <strong>（[[${trainInfo.departure_time}]]开）— [[${trainInfo.end_station}]]</strong>站（ [[${trainInfo.arrive_time}]]到）
+                <strong name="zl_time_alert" style="display:block;color:#f80;font-weight: bold;font-size: 14px;">出发时间和到达时间为车站所在时区时间！</strong>
+            </div>
+            <table class="table-a" id="table_list">
+                <tbody>
+                <tr align="center">
+                    <th width="40" rowspan="1" colspan="1"><strong>序号</strong>
+                    </th>
+                    <th width="75" rowspan="1" colspan="1"><strong>姓名</strong>
+                    </th>
+                    <th width="120" rowspan="1" colspan="1"><strong>证件类型</strong>
+                    </th>
+                    <th width="180" rowspan="1" colspan="1"><strong>证件号码</strong>
+                    </th>
+                    <th width="140" rowspan="1" colspan="1"><strong>票种</strong>
+                    </th>
+                    <th width="120" rowspan="1" colspan="1"><strong>席别</strong>
+                    </th>
+                    <th width="70" rowspan="1" colspan="1"><strong>车厢</strong>
+                    </th>
+                    <th width="70" rowspan="1" colspan="1"><strong>席位号</strong>
+                    </th>
+                    <th rowspan="1" colspan="1"><strong>票价（元）</strong>
+                    </th>
+                </tr>
+                </tbody>
+                <tbody id="show_ticket_message">
+                    <tr th:each="ticket:${orderInfo.tickets}">
+                        <td align="center">[[${ticket.sort}]]</td>
+                        <td>[[${ticket.passenger_name}]]</td>
+                        <td>[[${ticket.card_type}]]</td>
+                        <td>[[${ticket.card_code}]]</td>
+                        <td th:if="${ticket.ticket_type ==0}">成人票</td>
+                        <td th:if="${ticket.ticket_type ==1}">儿童票</td>
+                        <td th:if="${ticket.ticket_type ==2}">学生票</td>
+                        <td th:if="${ticket.ticket_type ==3}">优惠票</td>
+                        <td>[[${ticket.seatType.seat_type_name}]]</td>
+                        <td>[[${ticket.carriage_number}]]</td>
+                        <td>[[${ticket.seat_number}]]号</td>
+                        <td>[[${ticket.ticket_price}]] 元</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="total-box" style="margin-top: 30px">
+                <div class="item">总票价：<span class="price" id="total_ticket_price" >[[${orderInfo.total_price}]] 元</span>
+                </div>
+                <div class="item" style="display: block;">快递费：<span class="price" id="total_wl_price">0.0元</span>
+                </div>
+                <div class="item" style="display: block;">保险费：<span class="price" id="total_ins_price">0.0元</span>
+                </div>
+                <div class="item" style="display: block;">付款总额：<span class="price" id="total_all_price">[[${orderInfo.total_price}]]元</span>
+                </div>
+            </div>
+
+
+            <!--表单提交订单数据-->
+            <form id="paymentForm" method="post" action="/view/ticketing/toPay">
+                <!--隐藏域（保存订单编号，后台获取数据）-->
+                <input type="hidden" id="order_no" name="order_no" th:value="${orderInfo.order_no}">
+                <input type="hidden" id="train_number" name="train_number" th:value="${orderInfo.train_number}">
+                <input type="hidden" id="departure_date" name="departure_date" th:value="${orderInfo.departure_date}">
+            </form>
+            <div class="lay-btn bt_blue">
+                <p>
+                    <a href="javascript:" class="btn92" id="cancelButton" onclick="cancelOrder()" shape="rect" >取消订单</a>
+                    <span><a href="javascript:" class="btn92s" id="payButton" shape="rect" style="background: #ff8000" onclick="paymentOrder()">去支付</a></span>
+                </p>
+            </div>
+            <div class="tips-box"><p>
+                <span>
+                <code id="dcfc_wxts_1">
+                <span style="font-weight:bold;color:black">温馨提示：</span><br clear="none">
+		        	1. 请在指定时间内完成网上支付。<br clear="none">
+	        		2. 逾期未支付，系统将取消本次交易。<br clear="none">
+	        		3. 在完成支付或取消本订单之前，您将无法购买其他车票。<br clear="none">
+	        		4. 退票费如下核收：开车前8天（含）以上退票的，不收取退票费；票面乘车站开车时间前48小时以上的按票价5%计，24小时以上、不足48小时的按票价10%计，不足24小时的按票价20%计。  开车前48小时～8天期间内，改签或变更到站至距开车8天以上的其他列车，又在距开车8天前退票的，仍核收5%的退票费。 办理车票改签或“变更到站”时，新车票票价低于原车票的，退还差额，对差额部分核收退票费并执行现行退票费标准。上述计算的尾数以5角为单位，尾数小于2.5角的舍去、2.5角以上且小于7.5角的计为5角、7.5角以上的进为1元。退票费最低按2元计收。 <br
+                        clear="none">
+	        		5. 铁路乘意险保障您的出行。保障意外导致的身故伤残及相应医疗费用、意外伤害住院津贴、急性病身故责任。<br
+                        clear="none">
+	        		6. 请充分理解保险责任、责任免除、保险期间、合同解除等约定，详见保险条款。凭保单号或保单查询号登录<a
+                        shape="rect" href="https://www.china-ric.com" target="_blank">www.china-ric.com</a>
+                                    查看电子保单或下载电子发票。<br clear="none">
+	        		7. 如因运力原因或其他不可控因素导致列车调度调整时，当前车型可能会发生变动。<br clear="none">
+	        		8. 跨境旅客旅行须知详见铁路跨境旅客相关运输组织规则和车站公告。<br clear="none">
+	        		9. 未尽事宜详见《国铁集团铁路旅客运输规程》等有关规定和车站公告。<br clear="none">
+            </code>
+            </span>
+            </p>
+            </div>
+        </div>
+    </div>
+    <!--订单信息 结束-->
+
+
+
+
+    <!--取消订单提醒-->
+    <div id="cancelOrder" class="up-box w600" style="z-index: 20000; position: fixed; left: 459.5px; top: 30%;display: none">
+        <div class="up-box-hd" style="background: #3b99fc">你确定要取消订单嘛？</div>
+        <div class="up-box-bd" style="background: #eeeeee"><div class="up-con clearfix"><!-- <span class="icon i-work"></span> -->
+            <div class="r-txt">
+                <p class="ft14" style="font-weight: 700;font-size: 16px">
+                    取消订单后，订单数据将无法恢复。<br clear="none">
+                    每位乘客一天只能最多取消三次订单。<br clear="none">
+                    超过三次将不允许继续购票！！！
+                </p>
+            </div>
+        </div>
+            <div class="lay-btn">
+                <a href="javascript:" class="btn92"  shape="rect"  style="background: #fff8f8" id="no_cancel">取消</a>
+                <a href="javascript:" class="btn92s" shape="rect" style="background:#FF8000FF" id="confirm_cancel">确认</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!--引入底部footer.html文件-->
+<div th:replace="/home/footer"></div>
+</body>
+</html>
+
+
+
+

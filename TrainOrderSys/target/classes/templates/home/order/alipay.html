@@ -1,0 +1,266 @@
+<!--引入thymeleaf模板引擎-->
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <script src="/home/js/jquery-3.5.1.js" type="text/javascript" charset="utf-8"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>支付宝电脑网站支付</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul, ol {
+            list-style: none;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande",
+            sans-serif;
+        }
+
+        .tab-head {
+            margin-left: 120px;
+            margin-bottom: 10px;
+        }
+
+        .tab-content {
+            clear: left;
+            display: none;
+        }
+
+        h2 {
+            border-bottom: solid #02aaf1 2px;
+            width: 200px;
+            height: 25px;
+            margin: 0;
+            float: left;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .selected {
+            color: #FFFFFF;
+            background-color: #02aaf1;
+        }
+
+        .show {
+            clear: left;
+            display: block;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .new-btn-login-sp {
+            padding: 1px;
+            display: inline-block;
+            width: 75%;
+        }
+
+        .new-btn-login {
+            background-color: #02aaf1;
+            color: #FFFFFF;
+            font-weight: bold;
+            border: none;
+            width: 100%;
+            height: 30px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        #main {
+            width: 100%;
+            margin: 0 auto;
+            font-size: 14px;
+        }
+
+        .red-star {
+            color: #f00;
+            width: 10px;
+            display: inline-block;
+        }
+
+        .null-star {
+            color: #fff;
+        }
+
+        .content {
+            margin-top: 5px;
+        }
+
+        .content dt {
+            width: 100px;
+            display: inline-block;
+            float: left;
+            margin-left: 20px;
+            color: #666;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        .content dd {
+            margin-left: 120px;
+            margin-bottom: 5px;
+        }
+
+        .content dd input {
+            width: 85%;
+            height: 28px;
+            border: 0;
+            -webkit-border-radius: 0;
+            -webkit-appearance: none;
+        }
+
+        #foot {
+            margin-top: 10px;
+            position: absolute;
+            bottom: 15px;
+            width: 100%;
+        }
+
+        .foot-ul {
+            width: 100%;
+        }
+
+        .foot-ul li {
+            width: 100%;
+            text-align: center;
+            color: #666;
+        }
+
+        .note-help {
+            color: #999999;
+            font-size: 12px;
+            line-height: 130%;
+            margin-top: 5px;
+            width: 100%;
+            display: block;
+        }
+
+        #btn-dd {
+            margin: 20px;
+            text-align: center;
+        }
+
+        .foot-ul {
+            width: 100%;
+        }
+
+        .one_line {
+            display: block;
+            height: 1px;
+            border: 0;
+            border-top: 1px solid #eeeeee;
+            width: 100%;
+            margin-left: 20px;
+        }
+
+        .am-header {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: box;
+            width: 100%;
+            position: relative;
+            padding: 7px 0;
+            -webkit-box-sizing: border-box;
+            -ms-box-sizing: border-box;
+            box-sizing: border-box;
+            background: #3d75f4;
+            height: 50px;
+            text-align: center;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            box-pack: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            box-align: center;
+        }
+
+        .am-header h1 {
+            -webkit-box-flex: 1;
+            -ms-flex: 1;
+            box-flex: 1;
+            line-height: 18px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 300;
+            color: #fff;
+        }
+
+    </style>
+    <script>
+        function Pay(){
+            let order_no = $("#order_no").val();
+            if (confirm("确认要支付吗？")) {
+                $.ajax({
+                    url: "/view/ticketing/Pay",
+                    type: 'PUT',
+                    data: {
+                        "order_no": order_no,
+                    },
+                    success: function(response) {
+                        if (response){
+                            alert("订单支付成功!")
+                           window.location.href="http://localhost:8080/index.html";
+                        }else {
+                            alert("订单支付失败");
+                        }
+                    },
+                    error: function() {
+                        alert("提交订单时发生错误，请稍后重试！");
+                    }
+                });
+            }
+        }
+
+    </script>
+</head>
+<body text=#000000 bgColor="#ffffff" leftMargin=0 topMargin=4>
+<header class="am-header">
+    <h1>支付宝电脑网站支付</h1>
+</header>
+<div id="main">
+    <div id="tabhead" class="tab-head">
+        <h2 id="tab1" class="selected" name="tab">付 款</h2>
+    </div>
+
+    <div id="body1" class="show" name="divcontent">
+        <dl class="content">
+            <dt>订单编号 ：</dt>
+            <dd>
+                <input id="order_no" th:value="${order.order_no}" readonly/>
+            </dd>
+            <hr class="one_line">
+            <dt>订单名称 ：</dt>
+            <dd>
+                中国梦想游票务支付订单
+            </dd>
+            <hr class="one_line">
+            <dt>付款金额 ：</dt>
+            <dd>
+                <input th:value="${order.total_price}+元" readonly/>
+            </dd>
+            <hr class="one_line">
+            <dt>车票数量 ：</dt>
+            <dd>
+                <input th:value="${order.ticket_quantity}+'张'" readonly/>
+            </dd>
+            <hr class="one_line">
+            <dt></dt>
+            <dd id="btn-dd">
+                    <span class="new-btn-login-sp">
+                        <button class="new-btn-login" onclick="Pay()" style="text-align: center;">付 款</button>
+                    </span> <span class="note-help">如果您点击“付款”按钮，即表示您同意该次的执行操作。</span>
+            </dd>
+        </dl>
+    </div><!---->
+
+</div>
+</body>
+
+</html>

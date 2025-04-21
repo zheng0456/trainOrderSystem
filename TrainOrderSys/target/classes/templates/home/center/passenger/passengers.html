@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<!--引入thymeleaf模板引擎-->
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>中国梦想游</title>
+    <link rel="stylesheet" type="text/css" href="/home/css/style.min.css?v=3.0.0" >
+    <link rel="stylesheet" type="text/css"  href="/admin/css/style1.css" >
+    <link rel="stylesheet" type="text/css"  href="/admin/css/style2.css" >
+    <link rel="stylesheet" type="text/css" href="/home/css/public.css"/>
+    <link rel="stylesheet" type="text/css" href="/home/css/mygrxx.css"/>
+    <link href="/home/fonts/iconfont.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/home/css/ticket_public_v70001.css"/>
+    <script>
+        //分页展示数据,输入页数，跳转到第几页
+        function searchPassenger(){
+                $("#searchForm").submit();  //提交表单
+        }
+
+        function editPassenger(passenger_id){
+             window.location.href="/view/passenger/edit/"+passenger_id;
+        }
+
+        function deletePassenger(passenger_id){
+            if (confirm("确认要删除此乘客吗?")){
+                $.ajax({
+                    type:"DELETE",
+                    url:"/view/passenger/delete/"+passenger_id,
+                    dataType:"json",
+                    success:function (msg){
+                        if(msg){
+                            alert("乘客删除成功！");
+                            window.location = "/view/passenger/list";
+                        }else {
+                            alert("乘客删除失败！");
+                        }
+                    },
+                    error:function (){
+                        alert("网络访问失败,请检查网络")
+                    }
+                })
+            }
+        }
+
+
+        let checkedValues = [];
+        function getCheckedValues(passenger_id) {
+            checkedValues.push(passenger_id);
+        }
+
+        function deleteAnyPassenger(passenger_id){
+            if (confirm("确认要删除这些乘客吗?")){
+                $.ajax({
+                    type:"DELETE",
+                    url:"/view/passenger/deleteAny/"+checkedValues,
+                    dataType:"json",
+                    success:function (msg){
+                        if(msg){
+                            alert("乘客删除成功！");
+                            window.location = "/view/passenger/list";
+                        }else {
+                            alert("乘客删除失败！");
+                        }
+                    },
+                    error:function (){
+                        alert("网络访问失败,请检查网络")
+                    }
+                })
+            }
+        }
+
+
+
+    </script>
+</head>
+<body>
+<!------------------------------head------------------------------>
+<!--引入顶部文件-->
+<div th:replace="/home/header"></div>
+<!------------------------------idea------------------------------>
+<div class="address">
+    <div class="wrapper clearfix">
+        <a>当前位置：</a>
+        <a href="http://localhost:8080/index.html"  style="">首页</a><span>></span>
+        <a href="/view/personal/info" class="go">个人中心</a><span>></span>
+        <a href="#" class="go">乘客信息</a>
+    </div>
+</div><!------------------------------Bott------------------------------>
+<div class="Bott">
+    <div class="wrapper clearfix" style="width: 1500px;margin-left: 160px;">
+        <!--个人中心左侧菜单开始-->
+        <div th:replace="/home/common/left_menu"></div>
+        <!--个人中心左侧菜单结束-->
+        <div class="you fl" style="width: 1100px;padding: 10px 50px">
+            <div class="center-main" style="min-height: 540px;">
+                <div id="js-minHeight">
+                    <!-- 常用联系人 -->
+                    <div class="order-panel order-panel-contacts">
+                        <!-- 搜索表单 -->
+
+
+                        <form class="search-form-mini" method="post" action="/view/passenger/list" id="searchForm">
+                            <div class="form-item">
+                                <div class="input-box w160">
+                                    <input type="text" class="input" id="search_name" th:value="${passenger_name}" name="passenger_name" aria-label="查询条件请输入乘客姓名" placeholder="请输入乘客姓名">
+                                </div>
+                            </div>
+                            <div class="form-item">
+                                <a href="javascript:void(0);" class="btn w100" id="serch_btn" th:onclick="searchPassenger()">查询</a>
+                            </div>
+                        </form>
+
+
+                        <div class="result-title">
+                            <div class="result-list">
+                                <a class="btn btn-success" href="/view/passenger/add" ><i class="icon-font"></i>新增乘客</a>
+                                <a class="btn btn-danger"  href="javascript:void(0);"  onclick="deleteAnyPassenger()"><i class="icon-font"></i>批量删除</a>
+                                <!--  a id="updateOrd" href="javascript:void(0)"><i class="icon-font"></i>更新排序</a -->
+                            </div>
+                        </div>
+                        <!-- 订单-订单列表头部 -->
+                        <div id="content_list">
+                            <div class="order-item">
+                                <div class="order-item-bd" style="max-height:100%;">
+                                    <table class="order-item-table">
+                                        <tbody>
+                                        <tr >
+                                            <th>序号</th>
+                                            <th style="min-width: 80px;text-align: center">姓名</th>
+                                            <th>证件类型</th>
+                                            <th>证件号码</th>
+                                            <th>手机／电话</th>
+                                            <th>乘客类型</th>
+                                            <th>核验状态</th>
+                                            <th style="text-align: center">操作</th>
+                                        </tr>
+                                        <!--遍历循环乘客列表-->
+                                        <tr th:each="p:${passengers}">
+                                            <td style="text-align: center;"><input type="checkbox" th:onchange="getCheckedValues([[${p.id}]])"  style="margin: -3px 0 0;"></td>
+                                            <td class="br-none" style="text-align: center">
+                                                <div class="name-yichu" >[[${p.passenger_name}]]</div>
+                                            </td>
+                                            <td class="br-none"><div>[[${p.card_type}]]</div></td>
+                                            <td class="br-none"><div>[[${p.card_code}]]</div></td>
+                                            <td class="br-none"><div>(+86)[[${p.phone}]]</div></td>
+                                            <td class="br-none"><div>[[${p.passenger_type}]]</div></td>
+                                            <td class="br-none">
+                                                <div class="verification-status-box">
+                                                    <div class="txt-success" th:if="${p.status==1}">已通过</div>
+                                                    <div class="txt-danger"  th:if="${p.status!=1}">未通过</div>
+                                                </div>
+                                            </td>
+                                            <td class="br-none" style="text-align: center">
+
+                                                <a class="btn btn-success btn-xs " href="javascript:void(0);" style="min-width: 50px" th:onclick="editPassenger([[${p.id}]])"><i class="fa fa-edit" ></i>编辑</a>&nbsp;
+                                                <a class="btn btn-danger  btn-xs " href="javascript:void(0);" style="min-width: 50px" th:onclick="deletePassenger([[${p.id}]])"><i class="fa fa-remove" ></i>删除</a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--引入底部footer.html文件-->
+<div th:replace="/home/footer"></div>
+<script src="/home/js/jquery-3.5.1.js" type="text/javascript" charset="utf-8"></script>
+<script src="/home/js/public.js" type="text/javascript" charset="utf-8"></script>
+<script src="/home/js/user.js" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>
+

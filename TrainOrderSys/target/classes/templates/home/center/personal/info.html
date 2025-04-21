@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<!--引入thymeleaf模板引擎-->
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta charset="utf-8"/>
+    <title>个人信息</title>
+    <link rel="stylesheet" type="text/css" href="/home/css/public.css"/>
+    <link rel="stylesheet" type="text/css" href="/home/css/mygrxx.css"/>
+    <script type="text/javascript" src="/home/js/jquery-3.5.1.js"></script>
+
+    <script>
+        //上传头像，并且路径
+        function upload1(show,headPic){
+            let $data = new FormData();
+            let imgShow = $("#user_img").val();
+            $data.append("img",$("#select-file")[0].files[0]);
+            $data.append("type","headImg"); //路径中文件夹的名称 /upload/head/日期/图片名
+            $.ajax({
+                url:'/uploadHeadImg',
+                type:'POST',
+                data:$data,
+                processData:false,
+                contentType:false,
+                success:function(data){
+                    if (data!="fail"){
+                       if (imgShow == null){
+                           $("#show-picture-img").attr("src",data);
+                       }else {
+                           $("#show-pic").attr("src",data);
+                       }
+                        alert("头像修改成功!")
+                    }
+                },
+                error:function(data){
+                    alert('网络错误!');
+                }
+            });
+        }
+    </script>
+
+    <script type="text/javascript">
+
+
+        /***********验证用户名*************/
+        function checkUsername() {
+            var userNameObj = $("#username");
+            var divName = $("#errorMsg");
+            var strName = userNameObj.val();
+            let flag = false;
+            if (strName === "" || strName === null) {
+                divName.html("<font color='red'>用户名不能为空</font>");
+                return false;
+            }
+            var username = /^[\u4e00-\u9fa5a-zA-Z0-9_-]{2,16}$/;
+            if (!username.test(strName)) {
+                divName.html("<font color='red'>用户名只能是2-16位数字、字母下划线和减号组成</font>");
+                return false;
+            }else {
+                $.ajax({
+                    type: "get",
+                    url: "/view/personal/checkUserName",
+                    data: { "username": strName ,"user_id":$("#user_id").val()},
+                    dataType: "json",
+                    async: false,
+                    success: function(data) {
+                        if (data === false) {
+                            divName.html("<font color='red'>用户名已经存在，不能重复</font>");
+                        } else {
+                            divName.html(" ");
+                            flag =true;
+                        }
+                    },
+                    error: function() {
+                        alert("网络错误，请刷新试一试");
+                    }
+                });
+            }
+            return flag; // 假设AJAX失败，返回false
+        }
+
+        function checkPhone() {
+            let strPhone = document.getElementById("phone").value;
+            var divName = $("#errorMsg");
+            let flag = false;
+            if (strPhone.trim() == "") {
+                divName.html("<font color='red'>手机号不能为空</font>");
+                return false;
+            }
+            let reg = /^1[3456789]\d{9}$/;
+            if (!reg.test(strPhone)) {
+                divName.html("<font color='red'>手机号格式错误</font>");
+                return false;
+            } else {
+                $.ajax({
+                    type: "get",
+                    url: "/view/personal/checkPhone",
+                    data: {"phone": $("#phone").val(),"user_id":$("#user_id").val()},
+                    dataType: "json",
+                    async:false,
+                    success: function (data) {
+                        if (data == false) {
+                            divName.html("<font color='red'>该手机号已经注册过了！</font>");
+                        } else {
+                            divName.html(" ");
+                            flag =true;
+                        }
+                    },
+                    error: function () {
+                        alert("网络错误，请刷新试一试")
+                    }
+                });
+            }
+            return flag;
+        }
+
+        function checkEmail() {
+            var email = document.getElementById("email").value;
+            var divName = $("#errorMsg");
+            let flag =false;
+            if (email.trim() == "") {
+                divName.html("<font color='red'>邮箱不能为空</font>");
+                return false;
+            }
+            //定义邮箱格式
+            let emailZZ= /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailZZ.test(email)) {
+                divName.html("<font color='red'>邮箱格式错误！</font>");
+                return false;
+            } else {
+                $.ajax({
+                    type: "get",
+                    url: "/view/personal/checkEmail",
+                    data: {"email": $("#email").val(),"user_id":$("#user_id").val()},
+                    dataType: "json",
+                    async:false,
+                    success: function (data) {
+                        if (data == false) {
+                            divName.html("<font color='red'>该邮箱已经存在！</font>");
+                        } else {
+                            divName.html(" ");
+                            flag =true;
+                        }
+                    },
+                    error: function () {
+                        alert("网络错误，请刷新试一试")
+                    }
+                });
+            }
+            return flag;
+        }
+
+
+
+
+        function checkForm() {
+            if (checkUsername() && checkPhone() && checkEmail()) {
+                if (confirm("确认要提交么？")) {
+                    $("#form").submit(); // 修改 "from" 为正确的表单ID "form"
+                    alert("修改成功！");
+                } else {
+                    alert("您取消了修改信息的提交!!");
+                }
+            } else {
+                alert("信息错误");
+            }
+        }
+
+    </script>
+</head>
+
+<body>
+<!------------------------------head------------------------------>
+<!--引入顶部文件-->
+<div th:replace="/home/header"></div>
+<!------------------------------idea------------------------------>
+<div class="address">
+    <div class="wrapper clearfix">
+        <a>当前位置：</a>
+        <a href="http://localhost:8080/index.html" style="">首页</a><span>></span>
+        <a href="/view/personal/info" class="go">个人中心</a><span>></span>
+        <a class="go">查看个人信息</a>
+    </div>
+</div>
+
+<div class="Bott">
+    <div class="wrapper clearfix" style="width: 1500px;margin-left: 160px;">
+        <!--个人中心左侧菜单开始-->
+        <div th:replace="/home/common/left_menu"></div>
+        <!--个人中心左侧菜单结束-->
+        <div class="you fl" style="min-height: 460px"><h2>个人信息</h2>
+            <div class="gxin">
+                <div class="tx">
+                    <a href="#">
+                        <input type="hidden" id="user_img" th:value="${user.head_pic}">
+                        <img th:if="${user.head_pic} == null " src="/upload/headImg/defaultHeadImg.webp" id="show-picture-img" alt="默认头像" width="92px" height="92px" style="border-radius: 40px" />
+                        <img th:if="${user.head_pic} != null" th:src="${user.head_pic}" id="show-pic"  width="92px" height="92px" style="border-radius: 40px" />
+                        <input  th:text="更换头像" type="file" id="select-file"  onchange="upload1('show-picture-img','headImg')"/>
+<!--                        <p>更换头像</p>-->
+                    </a>
+                </div>
+
+                <div class="xx">
+
+                <h3 class="clearfix">
+                    <strong class="fl">基本信息</strong>
+                    <a href="#" class="fr" id="edit1">编辑</a>
+                </h3>
+                    <div>用户名：[[${session.user.username}]]</div>
+                    <div>姓名：[[${session.user.name}]]</div>
+                    <div>性别：
+                        <font th:if="${user.sex == 1}">男</font>
+                        <font th:if="${user.sex == 0}">女</font>
+                    </div>
+                    <div>证件类型：
+                        <font th:if="${user.card_type == 0}">居民身份证</font>
+                        <font th:if="${user.card_type == 1}">港澳居民居住证</font>
+                        <font th:if="${user.card_type == 2}">台湾居民居住证</font>
+                        <font th:if="${user.card_type == 3}">外国人永久居留身份证</font>
+                        <font th:if="${user.card_type == 4}">外国护照</font>
+                        <font th:if="${user.card_type == 5}">中国护照</font>
+                        <font th:if="${user.card_type == 6}">港澳居民来往内地通行证</font>
+                        <font th:if="${user.card_type == 7}">台湾居民来往大陆通行证</font>
+                    </div>
+                    <div>证件号：[[${session.user.card_code}]]</div>
+                    <div>优惠类型：
+                        <font th:if="${user.user_type == 0}">成人</font>
+                        <font th:if="${user.user_type == 1}">儿童</font>
+                        <font th:if="${user.user_type == 2}">学生</font>
+                        <font th:if="${user.user_type == 3}">残疾军人</font>
+                    </div>
+                    <div>生日：[[${session.user.birthday}]] </div>
+                    <div>电话：[[${session.user.phone}]]</div>
+                    <div>邮箱：[[${session.user.email}]]</div>
+
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+
+</div><!------------------------------Bott------------------------------>
+
+<!--遮罩-->
+<div class="mask"></div>
+
+
+<!--个人信息编辑弹框-->
+<div class="bj">
+    <div class="clearfix"><a href="#" class="fr gb">
+        <img src="/home/img/cancel.png"/></a></div>
+    <h3>编辑基础资料</h3>
+
+    <div>
+    <form action="/view/personal/editInformation" method="post"  id="from">
+        <input type="hidden" name="user_id" id="user_id" th:value="${user.user_id}">
+
+        <p><label>用户名：</label>
+      <input  style="padding:0px" name="username" id="username" th:value="${user.username} " onblur="checkUsername()" />
+        </p>
+
+
+            <span>电话号：</span>
+            <input width="100px" name="phone" id="phone" th:value="${user.phone} " onblur="checkPhone()" />
+
+
+        <p><label>邮箱：</label>
+            <input style="padding:0px" name="email" id="email" th:value="${user.email} " onblur="checkEmail()" />
+        </p>
+
+
+        <p>优惠(待)类型
+           <select  id="user_type" name="user_type"  th:selected="${user.user_type}">
+               <option value="0" >成人</option>
+               <option value="1">儿童</option>
+               <option value="2">学生</option>
+               <option value="3">残疾军人</option>
+           </select>
+       </p>
+       <span id="errorMsg"></span>
+
+
+        <div class="bc">
+            <input  onclick="checkForm()" value="保存"/>
+            <input type="button" value="取消"/>
+        </div>
+
+    </form>
+    </div>
+</div>
+
+
+<!--引入底部footer.html文件-->
+<div th:replace="/home/footer"></div>
+
+<script src="/home/js/jquery-3.5.1.js" type="text/javascript" charset="utf-8"></script>
+<script src="/home/js/public.js" type="text/javascript" charset="utf-8"></script>
+<script src="/home/js/user.js" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>

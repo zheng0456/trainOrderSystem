@@ -10,7 +10,7 @@ public interface UserMapper {
     @Select("select * from t_user where (name = #{account} or email = #{account} or phone = #{account}) and password = #{password}")
     UserEntity login(String account, String password);
     //注册-1 验证用户名
-    @Select("select * from t_user where name = #{username}")
+    @Select("select * from t_user where username = #{username}")
     UserEntity checkUserName(String username);
     //注册-2 验证证件号
     @Select("select * from t_user where card_code = #{cardCode}")

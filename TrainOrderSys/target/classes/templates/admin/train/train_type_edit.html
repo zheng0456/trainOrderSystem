@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh"  xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>车辆类型管理-编辑车辆类型</title>
+</head>
+
+<body>
+<script src="/admin1/js/jquery.min.js" type="text/javascript"></script>
+<div id="header"></div>
+<script>$("#header").load("/header.html")</script>
+<div class="lyear-layout-web">
+  <div class="lyear-layout-container">
+    <!--左侧导航-->
+    <aside class="lyear-layout-sidebar">
+
+      <!-- logo -->
+      <div id="logo" class="sidebar-header">
+        <a href="index.html"><img src="/admin1/images/logo-sidebar.png"  /></a>
+      </div>
+      <div class="lyear-layout-sidebar-scroll">
+        <!--引入left-menu.html页面中的 th:fragment="leftMenu" 部分代码-->
+        <div th:replace="/admin/common/left-menu :: leftMenu"></div>
+      </div>
+
+    </aside>
+    <!--End 左侧导航-->
+    <div id="header-menu"></div>
+    <script>$("#header-menu").load("/header-menu.html")</script>
+
+    <!--页面主要内容-->
+    <main class="lyear-layout-content">
+
+      <div class="container-fluid">
+
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-header"><h4>编辑车辆类型</h4></div>
+              <div class="card-body">
+                <form action="edit" id="trainType-edit-form" method="post" class="row">
+                  <input type="hidden" name="type_id" th:value="${trainType.type_id}">
+                  <div class="input-group m-b-10">
+                    <span class="input-group-addon">车辆类型名称</span>
+                    <input type="text" class="form-control required" id="name" name="name" th:value="${trainType.name}" placeholder="请输入车站名称" tips="请填写车站城市" />
+                  </div>
+                  <div class="input-group m-b-10">
+                    <span class="input-group-addon">最高时速</span>
+                    <input type="text" class="form-control required" id="max_speed" name="max_speed" th:value="${trainType.max_speed}" placeholder="请输入所在城市" tips="请填写所在城市" />
+                  </div>
+
+                  <div class="input-group m-b-10">
+                    <span class="input-group-addon">平均时速</span>
+                    <input type="tel" class="form-control" id="avg_speed" name="avg_speed" th:value="${trainType.avg_speed}" />
+                  </div>
+                  <div class="input-group m-b-10">
+                    <span class="input-group-addon">基础设施</span>
+                    <select name="status" class="form-control" id="status" th:value="${trainType.status}">
+                      <option value="0">无空调，无充电接口</option>
+                      <option value="1">有空调</option>
+                      <option value="2">有充电接口</option>
+                      <option value="3">有空调，有充电接口</option>
+                    </select>
+                  </div>
+                  <div class="form-group col-md-12">
+                    <button type="button" class="btn btn-primary ajax-post" id="add-form-submit-btn">确 定</button>
+                    <button type="button" class="btn btn-default" onclick="javascript:history.back(-1);return false;">返 回</button>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+    <!--End 页面主要内容-->
+  </div>
+</div>
+<div id="footer"></div>
+<script>$("#footer").load("/footer.html")</script>
+<script type="text/javascript" src="/admin1/js/perfect-scrollbar.min.js"></script>
+<script type="text/javascript" src="/admin1/js/main.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    //提交按钮监听事件
+    $("#add-form-submit-btn").click(function(){
+      // if(!checkForm("user-add-form")){
+      // 	return;
+      // }
+      let data = $("#trainType-edit-form").serialize();
+      $.ajax({
+        url:'/system/train/train_type_edit',
+        type:'PUT',
+        data:data,
+        success:function(data){
+          if (data=="true"){
+            alert("车站编辑成功");
+            window.location.href="/system/train/train_type_list";
+          }else{
+            alert(data);
+          }
+        },
+        error:function(data){
+          alert('网络错误!');
+        }
+      });
+    });
+    //监听上传图片按钮
+    $("#add-pic-btn").click(function(){
+      $("#select-file").click();
+    });
+  });
+</script>
+</body>
+</html>

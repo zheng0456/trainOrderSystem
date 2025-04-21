@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<!--引入thymeleaf模板引擎-->
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<html>
+<head id="ctl00_head1">
+    <meta http-equiv="x-ua-compatible" content="IE=7"/>
+    <title>show</title>
+    <meta charset="utf-8">
+    <link href="/home/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="/home/css/common.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="/home/css/hzw-city-picker.css">
+    <link rel="stylesheet" type="text/css" href='/home/css/showcss/search.css'/>
+    <link rel="stylesheet" type="text/css" href="/home/css/showcss/hf.css"/>
+    <link rel="stylesheet" type="text/css" href="/home/css/reset1.css"/>
+    <link rel="stylesheet" type="text/css" href="/home/css/style1.css"/>
+    <link rel="stylesheet" type="text/css" href="/home/css/button.css">
+    <link rel="stylesheet" type="text/css" href="/home/css/show.css">
+    <script type='text/javascript' src='/home/js/cQuery_110421.js'></script>
+    <script type='text/javascript' src='/home/js/float.min.js'></script>
+    <script type="text/javascript" src="/home/js/jquery-1.9.1.min.js"></script>
+    <style>
+        .up-box {
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            background-color: #ffffff; /* 设置背景颜色 */
+            opacity: 1; /* 设置不透明度 */
+        }
+        .up-box-hd {
+            padding: 10px;
+            text-align: center;
+            color: white;
+            background-color: #3b99fc;
+            position: relative; /* 为关闭按钮定位 */
+        }
+        .up-box-hd .close-btn {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: white;
+            font-size: 18px;
+        }
+        .up-box-bd {
+            padding: 10px;
+            overflow-y: auto;
+        }
+        .stations-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .station {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .arrow::before {
+            content: ">";
+            font-weight: bold;
+        }
+        .station-text {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* 用于遮盖最后一个站点前的箭头 */
+        .last-station .arrow::before {
+            content: "";
+        }
+
+        /* 遮罩层 */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* 半透明黑色 */
+            z-index: 19999; /* 确保遮罩层在弹窗之下 */
+            display: none;
+        }
+        </style>
+    </style>
+    <script type="text/javascript">
+        var time ;
+        $(document).ready(function () {
+            var element = document.getElementById('timeChangeFlag_num');
+            if (element) { // 确保元素存在
+                var timeChangeFlag = element.value;
+                if (timeChangeFlag == '1') {
+                    time = 7;
+                } else if (timeChangeFlag == '-1') {
+                    time = -7;
+                } else {
+                    time = 0;
+                }
+            }
+        })
+
+
+
+        $(function () {
+                //置换城市输入框
+                $(".exchangedBtn").click(function () {
+                    var city1 = $("#cityChoice").val();
+                    $("#cityChoice").val($("#cityChoice1").val());
+                    $("#cityChoice1").val(city1);
+                })
+                //横排日期切换
+                $("#centerUlList1 li a").on("click", function () {
+                    $("#centerUlList1 li a").removeClass("current")
+                    $(this).addClass("current")
+                    var i = $(this).attr("num");
+                    var today = new Date();
+                    var now1 = new Date(today.getTime() + (time * 24 * 60 * 60 * 1000));
+                    var date = new Date(now1.getTime() + i * 24 * 3600 * 1000);
+                    var da = date.getFullYear() + "-";
+                    if (date.getMonth() < 9) {
+                        da = da + "0" + (date.getMonth() + 1) + "-"
+                    } else {
+                        da = da + (date.getMonth() + 1) + "-"
+                    }
+                    if (date.getDate() < 10) {
+                        da = da + "0" + date.getDate()
+                    } else {
+                        da = da + date.getDate()
+                    }
+                    $("#ECalendar_case1").val(da);
+                    $("#time1").val(da);
+                    var element = document.getElementById('timeChangeFlag');
+                    element.value = 'default';
+                    //提交表单
+                    $("#form").submit();
+                })
+            })
+        function updateDateTime() {
+            //当前时间更新
+            setInterval(function () {
+                var now = (new Date()).toLocaleString();
+                $('#current-time').text(now);
+            }, 1000);
+            //时间设置
+            for (var i = 0; i < 7; i++) {
+                var today = new Date();
+                var now1 = new Date(today.getTime() + (time * 24 * 60 * 60 * 1000));
+                var date = new Date(now1.getTime() + i* 24 * 3600 * 1000);
+
+                var t1, t2, t3;
+                if (date.getMonth() < 9) {
+                    t1 = "0" + (date.getMonth() + 1);
+                } else {
+                    t1 = date.getMonth() + 1;
+                }
+                if (date.getDate() < 10) {
+                    t2 = "0" + date.getDate();
+                } else {
+                    t2 = date.getDate()
+                }
+
+                if (date.getDay() == 0) {
+                    t3 = "星期日"
+                } else if (date.getDay() == 1) {
+                    t3 = "星期一"
+                } else if (date.getDay() == 2) {
+                    t3 = "星期二"
+                } else if (date.getDay() == 3) {
+                    t3 = "星期三"
+                } else if (date.getDay() == 4) {
+                    t3 = "星期四"
+                } else if (date.getDay() == 5) {
+                    t3 = "星期五"
+                } else if (date.getDay() == 6) {
+                    t3 = "星期六"
+                }
+                $("#centerUlList1 li a").eq(i).html(t1 + "-" + t2 + "<br>" + t3).attr("num", i)
+            }
+
+            var now1 = new Date();
+            var closingDate = new Date($("#ECalendar_case1").val().replace("-", "/").replace("-", "/"));
+            var n = Math.ceil((closingDate.getTime() - now1.getTime()) / (24 * 3600 * 1000));
+            for (var i = 0; i < $("#centerUlList1 li a").length; i++) {
+                //当日期是搜索日期直接选中
+                if ($("#centerUlList1 li a").eq(i).attr("num") == n) {
+                    $("#centerUlList1 li a").eq(i).addClass("selectedDate")
+                }
+            }
+        }
+
+        function changeValue() {
+            $("#time1").val($("#ECalendar_case1").val())
+            return true;
+        }
+
+
+        function CanlenderRightButtonClick() {
+            // 获取当前选中的日期
+            var currentDate = new Date(new Date().toLocaleString().replace(/-/g, "/"));
+
+            // 计算当前日期的一天毫秒数
+            var oneDay = 24 * 60 * 60 * 1000;
+
+            // 计算新的日期
+            var newDate = new Date(currentDate.getTime() + time*oneDay);
+
+            // 更新日期显示
+            var da = newDate.getFullYear() + "-";
+            if (newDate.getMonth() < 9) {
+                da += "0" + (newDate.getMonth() + 1) + "-";
+            } else {
+                da += newDate.getMonth() + 1 + "-";
+            }
+            if (newDate.getDate() < 10) {
+                da += "0" + newDate.getDate();
+            } else {
+                da += newDate.getDate();
+            }
+
+            $("#ECalendar_case1").val(da);
+            $("#time1").val(da);
+
+            // 切换当前选中的日期标签
+            var days = $("#centerUlList1 li a");
+            var currentDay = null;
+            for (var i = 0; i < days.length; i++) {
+                if ($(days[i]).hasClass("current")) {
+                    currentDay = i;
+                    break;
+                }
+            }
+            if (currentDay !== null && currentDay < days.length - 1) {
+                $(days[currentDay]).removeClass("current");
+                $(days[currentDay + 1]).addClass("current");
+            }
+
+            var element = document.getElementById('timeChangeFlag');
+            element.value = 'next';
+            // 提交表单
+            $("#form").submit();
+        }
+
+        function CanlenderLeftButtonClick() {
+            // 获取当前选中的日期
+            var currentDate = new Date(new Date().toLocaleString().replace(/-/g, "/"));
+
+            // 计算当前日期的一天毫秒数
+            var oneDay = 24 * 60 * 60 * 1000;
+
+            // 计算新的日期
+            var newDate = new Date(currentDate.getTime() - time * oneDay);
+
+            // 更新日期显示
+            var da = newDate.getFullYear() + "-";
+            if (newDate.getMonth() < 9) {
+                da += "0" + (newDate.getMonth() + 1) + "-";
+            } else {
+                da += newDate.getMonth() + 1 + "-";
+            }
+            if (newDate.getDate() < 10) {
+                da += "0" + newDate.getDate();
+            } else {
+                da += newDate.getDate();
+            }
+
+            $("#ECalendar_case1").val(da);
+            $("#time1").val(da);
+
+            // 切换当前选中的日期标签
+            var days = $("#centerUlList1 li a");
+            var currentDay = null;
+            for (var i = 0; i < days.length; i++) {
+                if ($(days[i]).hasClass("current")) {
+                    currentDay = i;
+                    break;
+                }
+            }
+            if (currentDay !== null && currentDay < days.length - 1) {
+                $(days[currentDay]).removeClass("current");
+                $(days[currentDay + 1]).addClass("current");
+            }
+            var element = document.getElementById('timeChangeFlag');
+            element.value = 'previous';
+            // 提交表单
+            $("#form").submit();
+        }
+
+
+        function showTrainStations(train_number) {
+            // 清空站点列表
+            $('#stationsContainer').empty();
+
+            $.ajax({
+                url: '/view/ticketing/findTrain_station',
+                type: 'GET',
+                data: {
+                    "train_number": train_number,
+                },
+                success: function(data) {
+                    // 处理服务器返回的数据
+                    var stops = data;
+
+                    // 遍历站点数组，并将每个站点名称追加到容器中
+                    stops.forEach(function(stop) {
+                        var stationDiv = $('<div>').addClass('station ' + (stop.sort === stops.length ? 'last-station' : ''));
+                        var stationText = $('<span>').addClass('station-text').text(stop.sort+'.'+stop.trainStation.station_name + ' (' + stop.arrive_time + ')');
+
+                        // 创建箭头元素
+                        var arrow = $('<span>').addClass('arrow');
+
+                        stationDiv.append(stationText);
+                        stationDiv.append(arrow);
+                        $('#stationsContainer').append(stationDiv);
+                    });
+
+                    // 显示站点列表弹窗
+                    var chooseSeatDiv = $('#showTrainStations');
+                    chooseSeatDiv.show();
+
+
+                    var closeBtn = chooseSeatDiv.find('.close-btn');
+                    closeBtn.on('click', hideTrainStations);
+                    chooseSeatDiv.on('click', function(event) {
+                        if (event.target === this[0]) {
+                            hideTrainStations();
+                        }
+                    });
+                },
+                error: function() {
+                    alert("查询经过站点失败");
+                }
+            });
+        }
+
+        function hideTrainStations() {
+            var showTrainStationsDiv = $('#showTrainStations');
+            showTrainStationsDiv.hide();
+        }
+
+        // 初始化时隐藏弹窗
+        $(function() {
+            var showTrainStationsDiv = $('#showTrainStations');
+            showTrainStationsDiv.hide();
+        });
+
+    </script>
+
+</head>
+<body id='mainbody' onload="updateDateTime()">
+<!--引入header.html文件-->
+<div th:replace="/home/header.html"></div>
+<div style="position: absolute;top:292px;left:1723px;z-index:1000;background-color: #fff;width: 20px;height: 20px;"></div>
+<div id="main">
+
+
+
+
+    <!--==搜索框==-->
+    <div class="base_bd">
+        <div class="search_box" style="margin-top: 10px;height: 25px">
+            <form action="/view/ticketing/list" id="form" mothod="get" onsubmit="return changeValue()">
+                <ul>
+                    <input type="hidden" id="timeChangeFlag" name="changeFlag" th:value="${changeFlag}">
+                    <input type="hidden" id="timeChangeFlag_num" name="changeFlag_num" th:value="${changeFlag_num}">
+
+                    <!--出发地-->
+                    <li class="search_region_lft">
+                        <input type="text" id="cityChoice"  name="start_station" th:value="${start_station}" style="margin: -7px -11px -55px; height: 23px; width: 130px;" placeholder="出发地">
+                    </li>
+                    <li class="search_exchanged">
+                        <a class="exchangedBtn" id="change1" style="margin-left: 25px">换</a>
+                    </li>
+                    <!--目的地-->
+                    <li class="search_region_rit" bus="true">
+                        <input type="text" id="cityChoice1"  name="end_station" th:value="${end_station}"  placeholder="目的地"
+                               style="margin: -5px 0px 0px -24px; width: 127px; height: 22px;">
+                    </li>
+                    <li class="search_date_lft" style="margin-left: 20px">出发日期</li>
+                    <li class="search_dateInput_lft" >
+                        <input type="hidden" id="time1" name="go_time">
+                        <input class="txt100"   id="ECalendar_case1" style="margin: -5px 0px 0px -15px;width: 118px">
+                    </li>
+                    <li class="search_Btn">
+                        <input style="background: #fb7403; width: 80px;height: 30px;margin: -20px 0px;" class="blueBtn" value="查询" type="submit">
+                    </li>
+                </ul>
+            </form>
+        </div>
+        <input type="hidden" id="from" value="beijing"/>
+        <input type="hidden" id="to" value="shenzhen"/>
+        <input type="hidden" id="tos" value="shenzhen"/>
+        <input type="hidden" id="hub" value=""/>
+        <input type="text" id="validates" value="" style="display: none"/>
+    </div>
+
+
+    <!--==车次信息==-->
+    <div class="base_bd">
+        <div class="trainList_box">
+            <!--查询到的车次信息-->
+            <div class="trainList_title" style="width: 1200px">
+                <h2>
+                    <strong>[[${start_station}]]</strong> <i class="arr"></i> <strong>[[${end_station}]]</strong>
+                </h2>
+                <span style="font-size: 14px">([[${go_time}]])</span>
+                <b id="titleResult">（共计
+                    <a style="color: #333;" id="totalResult" th:text="${trainList.size()}"></a> 个车次）
+                </b>
+               <!-- 当前时间 -->
+                <b id="current-time"></b>
+            </div>
+            <!--横排日期选择-->
+            <div class="calendar" id="ulCanlender02">
+                <div class="cal_left">
+                    <a onclick="CanlenderLeftButtonClick()" class="icon_cal_left " ><i></i></a>
+                </div>
+                <ul class="cal_middle1" id="centerUlList1">
+                    <li><a class="" style="cursor: pointer;"><br></a></li>
+                    <li><a class="" style="cursor: pointer;"><br></a></li>
+                    <li><a class="" style="cursor: pointer;"><br></a></li>
+                    <li><a class="" style="cursor: pointer;"><br></a></li>
+                    <li><a class="" style="cursor: pointer;"><br></a></li>
+                    <li><a class="" style="cursor: pointer;"><br></a></li>
+                    <li><a class="" style="cursor: pointer;"><br></a></li>
+                </ul>
+                <div class="cal_right">
+                    <a onclick="CanlenderRightButtonClick()" class="icon_cal_right " ><i></i></a>
+                </div>
+            </div>
+
+            <!--车次信息表头-->
+            <div id="listheader" style="width: 1162px;">
+                <dl class="topic_box">
+                    <dd class="w1">
+                        <label style="cursor: default;margin-left: 18px">车次信息</label>
+                    </dd>
+                    <dd class="w2">
+                        <label class="icon_blue_down sort" order='1,default,false'>出发/到达时间
+                            <b class="on"></b></label>
+                    </dd>
+                    <dd class="w3">
+                        <label style="cursor: default">出发/到达站</label>
+                    </dd>
+                    <dd class="w4">
+                        <label class="icon_gray_down sort" order="3,default,false">运行时长
+                            <b class="on"></b></label>
+                    </dd>
+                    <dd class="w5">
+                        <label class="icon_gray_down sort" order="8,default,false" style="margin-left: 44px;">参考价
+                            <b class="on"></b></label>
+                    </dd>
+
+                    <dd class="w6">
+                        <label order="8,default,false">剩余票数<b class="on"></b></label>
+                    </dd>
+
+                    <dd class="w7">
+                        <label order="8,default,false">票务预定<b class="on"></b></label>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+
+    <div>
+        <!--车次信息详情（遍历循环）-->
+        <div class="banci"  th:each="train:${trainList}">
+
+
+            <div class="checi"><h1 style="position: absolute; font-size: 20px; margin-top: -33px; margin-left: 40px;">[[${train.train_number}]]</h1><button class="blueBtn" id="train_station" th:onclick="showTrainStations([[${train.train_number}]])">经过站点</button></div>
+            <div class="shijian"><h1 class="banciname">[[${train.departure_time}]]</h1><span>[[${train.arrive_time}]]</span></div>
+            <div class="zhandian">
+                <h1 class="banciname"><i class="shi_icon">始</i>&nbsp;&nbsp;&nbsp;<font>[[${train.start_station}]]</font></h1>
+                <span><i class="zhong_icon">终</i>&nbsp;&nbsp;&nbsp;<font>[[${train.end_station}]]</font></span></div>
+            <div class="zongshijian"><h1 class="banciname">[[${train.totalTime}]]</h1></div>
+
+
+
+
+            <div class="cankaojia">
+                <span class="jiaqian" th:each="seat:${train.seatInfoEntityList}">
+                    <span>[[${seat.seatType.seat_type_name}]]</span>
+                    <font>￥<b class="piaozi1">[[${seat.price}]]</b></font>
+
+                    <a th:if="${seat.remain_nums==0 and train.status==2}" style="float: right ;margin-right: 70px;">已售罄</a>
+                    <a th:if="${train.status==3 }" style="float: right ;margin-right: 70px;">已结束</a>
+                    <a th:if="${seat.remain_nums!=0 and train.status==2}" style="float: right ;margin-right: 70px;">余<b class="shengyu1">[[${seat.remain_nums}]]</b>张</a>
+                    <a th:if="${train.status==1 }" style="float: right ;margin-right: 70px;">未开始</a>
+                </span>
+            </div>
+            <div class="w6">
+                <div th:each="seatInfo:${train.seatInfoEntityList}">
+                    <a th:if="${seatInfo.remain_nums > 0 and train.status==2 }" class="qp_btn1" href="javascript:void(0);" canthese="True" th:onclick="buyTicket([[${session.user}]],'[[${train}]]')">预定</a>
+                    <a th:if="${seatInfo.remain_nums == 0 or train.status==1  or train.status==3 }" class="qp_btn1" href="javascript:void(0);" canthese="True" >无法预定</a>
+                </div>
+            </div>
+
+
+            <div id="showTrainStations" class="up-box w600" style="z-index: 20000; position: fixed; left: 459.5px; top: 35%; display: none;" tabindex="0">
+                <div class="up-box-hd">
+                    <span>经过站点</span>
+                    <span class="close-btn">&times;</span>
+                </div>
+                <div class="up-box-bd">
+                    <div class="stations-container" id="stationsContainer">
+                        <!-- 动态填充站点列表 -->
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- 表单保存该列车数据 -->
+            <form action="/view/ticketing/confirmPassenger" method="post" id="Form01">
+                <!--隐藏域-->
+                <input type="hidden" id="trainInfo" name="trainInfo" th:value="trainInfo">
+            </form>
+        </div>
+    </div>
+<script type="text/javascript">
+    //用户预定火车票
+    function buyTicket(user,train) {
+        //判断当前用户是否处于登录状态
+        if (user!=null){
+            $.ajax({
+                url: "/view/ticketing/findUnPayOrder",
+                type: "get",
+                async: false,
+                success: function (msg) {
+                    if (!msg) {
+                        alert("您还有未支付订单，请前往(个人中心/未完成订单)界面查看确认");
+                    }else {
+                        //传递整个车次数据,转换成json字符,再给隐藏域赋值
+                        $("#trainInfo").val(train);
+                        //提交表单让后台去解析
+                        $("#Form01").submit();
+                    }
+                },
+                error: function (msg) {
+                    alert("网络错误，请检查你的网络！")
+                }
+            });
+        }else {
+            let login = window.confirm("您当前还没有登录，是否去登录！");
+            if (login == true){
+                window.location.href = "/login.html";
+            }
+        }
+    }
+
+
+</script>
+    <script type="text/javascript" src='/home/js/LAB.js'></script>
+    <script type="text/javascript">
+        var uid = '';
+        var IsTieYou = '0';
+        var flightFlag = '1';
+        var tychannel = ''; //铁友channel
+        var SEARCH_CATE_LIST_No = ['01'];
+        var webResourcePath = "http://webresource.ctrip.com/ResTrainOnline/R2/TrainBooking";
+        var noticeContent = "";
+        var releaseNo = "2017_10_11_15_10_25";
+        var newFightTicket = "1";
+        var searchMaxDate = '2017-11-24';
+        $LAB.script({
+            src: 'js/cQuery_110421.js',
+            charset: "utf-8"
+        }).wait().script(
+            {
+                src: webResourcePath + "/JS/ui2_train.min.js?"
+                    + releaseNo + ".js",
+                charset: "utf-8"
+            }).wait().script(
+            {
+                src: webResourcePath + "/JS/calendar.min.js?"
+                    + releaseNo + ".js",
+                charset: "utf-8"
+            }).wait().script(
+            {
+                src: webResourcePath + "/JS/ol_hotel.min.js?"
+                    + releaseNo + ".js",
+                charset: "utf-8"
+            }).wait().script(
+            {
+                src: webResourcePath + "/JS/ol_search.min.js?"
+                    + releaseNo + ".js",
+                charset: "utf-8"
+            }).wait()
+    </script>
+    <script type="text/javascript" src="/home/js/jquery-2.1.3.min.js"></script>
+    <script type="text/javascript" src="/home/js/city-data.js"></script>
+    <script type="text/javascript" src="/home/js/hzw-city-picker.min.js"></script>
+    <script type="text/javascript" src="/home/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/home/js/Ecalendar.jquery.min.js"></script>
+
+
+    <script>
+        var cityPicker = new HzwCityPicker({
+            data: data,
+            target: 'cityChoice',
+            valType: 'k-v',
+            hideCityInput: {
+                name: 'city',
+                id: 'city'
+            },
+            hideProvinceInput: {
+                name: 'province',
+                id: 'province'
+            }
+
+        });
+
+        cityPicker.init();
+    </script>
+    <script>
+        var cityPicker = new HzwCityPicker({
+            data: data,
+            target: 'cityChoice1',
+            valType: 'k-v',
+            hideCityInput: {
+                name: 'city',
+                id: 'city'
+            },
+            hideProvinceInput: {
+                name: 'province',
+                id: 'province'
+            }
+
+        });
+
+        cityPicker.init();
+    </script>
+    <script>
+        var cityPicker = new HzwCityPicker({
+            data: data,
+            target: 'cityChoice2',
+            valType: 'k-v',
+            hideCityInput: {
+                name: 'city',
+                id: 'city'
+            },
+            hideProvinceInput: {
+                name: 'province',
+                id: 'province'
+            }
+
+        });
+
+        cityPicker.init();
+
+
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#ECalendar_case").ECalendar({
+                type: "date",
+                skin: "#009f95",
+                name: "time2",
+                offset: [0, 2]
+            });
+        })
+        $(function () {
+            $("#ECalendar_case1").ECalendar({
+                type: "date",
+                skin: "#009f95",
+                name: "time1",
+                offset: [0, 2]
+            });
+
+        })
+    </script>
+    <script src="/home/js/plugins/layer/laydate/laydate.js"></script>
+    <script>
+        laydate({elem: "#hello", event: "focus"});
+        var start = {
+            elem: "#start",
+            format: "YYYY-MM-DD",
+            min: laydate.now(),
+            max: "2099-06-16 23:59:59",
+            istime: true,
+            istoday: false,
+            choose: function (a) {
+                end.min = a;
+                end.start = a
+            }
+        };
+        var end = {
+            elem: "#end",
+            format: "YYYY-MM-DD",
+            min: laydate.now(),
+            max: "2099-06-16 23:59:59",
+            istime: true,
+            istoday: false,
+            choose: function (a) {
+                start.max = a
+            }
+        };
+        laydate(start);
+        laydate(end);
+
+
+
+    </script>
+</div>
+
+<div th:replace="/home/footer"></div>
+<script src="/home/js/jquery-3.5.1.js" type="text/javascript" charset="utf-8"></script>
+<script src="/home/js/public.js" type="text/javascript" charset="utf-8"></script>
+<script src="/home/js/user.js" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>

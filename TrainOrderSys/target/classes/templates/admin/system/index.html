@@ -1,0 +1,176 @@
+<!DOCTYPE html >
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>火车票后台管理系统主页</title>
+</head>
+<body>
+<script src="/admin1/js/jquery.min.js" type="text/javascript"></script>
+<div id="header"></div>
+<script>$("#header").load("/header.html")</script>
+
+<div class="lyear-layout-web">
+  <div class="lyear-layout-container">
+    <!--左侧导航-->
+    <aside class="lyear-layout-sidebar">
+      
+      <!-- logo -->
+      <div id="logo" class="sidebar-header">
+        <a href="index" style="pointer-events:none;"><img src="/admin1/images/logo-sidebar.png" title="${siteName!''}" alt="${siteName!''}" /></a>
+      </div>
+      <div class="lyear-layout-sidebar-scroll" >
+        <!--引入left-menu.html页面中的 th:fragment="leftMenu" 部分代码-->
+        <div th:replace="/admin/common/left-menu :: leftMenu"></div>
+      </div>
+      
+    </aside>
+    <!--End 左侧导航-->
+    <div id="header-menu"></div>
+    <script>$("#header-menu").load("/header-menu.html")</script>
+    <!--页面主要内容-->
+    <main class="lyear-layout-content">
+      
+      <div class="container-fluid">
+        
+        <div class="row">
+          
+          <div class="col-sm-6 col-lg-3">
+            <div class="card bg-danger">
+              <div class="card-body clearfix">
+                <div class="pull-right">
+                  <p class="h6 text-white m-t-0">管理员用户总数</p>
+                  <p class="h3 text-white m-b-0">12</p>
+                </div>
+                <div class="pull-left"> <span class="img-avatar img-avatar-48 bg-translucent"><i class="mdi mdi-account fa-1-5x"></i></span> </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-sm-6 col-lg-3">
+            <div class="card bg-success">
+              <div class="card-body clearfix">
+                <div class="pull-right">
+                  <p class="h6 text-white m-t-0">管理员当前在线用户</p>
+                  <p class="h3 text-white m-b-0">12</p>
+                </div>
+                <div class="pull-left"> <span class="img-avatar img-avatar-48 bg-translucent"><i class="mdi mdi-account-multiple fa-1-5x"></i></span> </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-sm-6 col-lg-3">
+            <div class="card bg-purple">
+              <div class="card-body clearfix">
+                <div class="pull-right">
+                  <p class="h6 text-white m-t-0">后台操作日志</p>
+                  <p class="h3 text-white m-b-0">12条</p>
+                </div>
+                <div class="pull-left"> <span class="img-avatar img-avatar-48 bg-translucent"><i class="mdi mdi-keyboard-close fa-1-5x"></i></span> </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-sm-6 col-lg-3">
+            <div class="card bg-primary">
+              <div class="card-body clearfix">
+                <div class="pull-right">
+                  <p class="h6 text-white m-t-0">使用人注册总数</p>
+                  <p class="h3 text-white m-b-0">12</p>
+                </div>
+                <div class="pull-left"> <span class="img-avatar img-avatar-48 bg-translucent"><i class="mdi mdi-account-multiple fa-1-5x"></i></span> </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-sm-6 col-lg-3">
+            <div class="card bg-danger">
+              <div class="card-body clearfix">
+                <div class="pull-right">
+                  <p class="h6 text-white m-t-0">物品发布总数</p>
+                  <p class="h3 text-white m-b-0">12}</p>
+                </div>
+                <div class="pull-left"> <span class="img-avatar img-avatar-48 bg-translucent"><i class="mdi mdi-database fa-1-5x"></i></span> </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-sm-6 col-lg-3">
+            <div class="card bg-success">
+              <div class="card-body clearfix">
+                <div class="pull-right">
+                  <p class="h6 text-white m-t-0">求购物品发布总数</p>
+                  <p class="h3 text-white m-b-0">11</p>
+                </div>
+                <div class="pull-left"> <span class="img-avatar img-avatar-48 bg-translucent"><i class="mdi mdi-database fa-1-5x"></i></span> </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-sm-6 col-lg-3">
+            <div class="card bg-purple">
+              <div class="card-body clearfix">
+                <div class="pull-right">
+                  <p class="h6 text-white m-t-0">物品评论总数</p>
+                  <p class="h3 text-white m-b-0">11条</p>
+                </div>
+                <div class="pull-left"> <span class="img-avatar img-avatar-48 bg-translucent"><i class="mdi mdi-comment-multiple-outline fa-1-5x"></i></span> </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h4>系统最近操作日志</h4>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>操作人</th>
+                        <th style="width:400px;">操作内容</th>
+                        <th>操作时间</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>${operatorLog_index+1}</td>
+                        <td>${operatorLog.operator}</td>
+                        <td>${operatorLog.content}</td>
+                        <td>${operatorLog.createTime}</td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+        
+      </div>
+      
+    </main>
+    <!--End 页面主要内容-->
+  </div>
+</div>
+<div id="footer"></div>
+<script>$("#footer").load("/footer.html")</script>
+<script type="text/javascript" src="/admin1/js/perfect-scrollbar.min.js"></script>
+<script type="text/javascript" src="/admin1/js/main.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	
+});
+
+</script>
+</body>
+</html>

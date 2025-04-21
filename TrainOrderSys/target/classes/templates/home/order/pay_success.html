@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<!--引入thymeleaf模板引擎-->
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="applicable-device" content="pc">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/home/css/book/layer.css"/>
+    <link href="/home/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="/home/css/common.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="/home/css/tk_order.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>支付成功页面_中国梦想游网</title>
+    <script type="text/javascript" src="/home/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="/home/js/jquery-3.5.1.js"></script>
+    <style type="text/css">
+        .ka {
+            padding-left: 10px;
+            margin-top: 10px;
+            padding-top: 20px;
+            font-size: 23px;
+            font-family: "华文行楷";
+            background-color: #ECECFF;
+            font-size: 23px;
+        }
+
+        .order_content {
+            height: 94px;
+        }
+
+        .footer_w {
+            width: 100%;
+            background: none repeat scroll 0% 0% #000;
+            padding: 15px 0px;
+
+        }
+
+        .footer .footer_c {
+            float: left;
+            padding-top: 20px;
+        }
+
+        .footer .f_logo {
+            float: right;
+            margin-top: -53px;
+        }
+
+        .footer .footer_c a {
+            color: #fff;
+        }
+
+        .footer {
+            width: 980px;
+            margin: 0 auto;
+            color: #fff;
+        }
+    </style>
+
+    <script type="text/javascript">
+        $(function () {
+            var names = '${names}';
+            var chexiangzuohao = '${chexiangzuohao}';
+            var chexiangzuohao1 = '${chexiangzuohao1}';
+            var name = names.split(",");
+            var chezuos = chexiangzuohao.split("-");
+            var chezuos1 = chexiangzuohao1.split("-");
+            // alert(chezuos1);
+            // alert(name.length)
+            var dd = "";
+            var tt = "";
+            for (var i = 0; i < name.length; i++) {
+
+                dd = "<span style='margin-left: 3px; padding-right: 13px;'>" + dd + name[i] + "先生（女士）:<span style='color:#FF4500'>" + chezuos[i] + "</span></span>";
+                tt = "<span style='margin-left: 3px; padding-right: 13px;'>" + tt + name[i] + "先生（女士）:<span style='color:#FF4500'>" + chezuos1[i] + "</span></span>";
+            }
+
+
+            var renshu = '${renshu}';
+            if ('${xinxinum}' == "单程") {
+                $("#wangfan").hide();
+                $(".foot").html("<span style='color: gray; font-weight: 800;'>" + dd + "</span>")
+
+            }
+            if ('${xinxinum}' == "往返") {
+                $("#wangfan").show();
+                $("#dancheng").hide();
+                $("#dan").html("<span style='color: gray; font-weight: 800;'>" + dd + "</span>")
+                $("#fan").html("<span style='color: gray; font-weight: 800;'>" + tt + "</span>")
+            }
+        })
+    </script>
+</head>
+<body class="index1200">
+<!--引入顶部header.html文件-->
+<div th:replace="/home/header"></div>
+<!-- 订单信息服务 -->
+<div class="resule-block succ-block">
+    <div class="result-txt">
+        <div class="order_box" id="J_Ticket">
+            <span class="order_title">订单信息</span>
+            <span style="display: inline-block">订单编号：</span>
+            <span style="display: inline-block ;color:orangered;">[[${order.order_no}]]</span>
+            <span style="margin-left: 150px;">车票人数：</span>
+            <span style="margin-left: 6px; font-size: 18px; color: orangered;">[[${order.ticketList.size()}]]人</span>
+            <span style="margin-left: 235px;">付款金额：</span>
+            <span style="margin-left: 6px; font-size: 20px; color: orangered;">￥[[${order.total_price}]]</span>
+            <div id="center">
+                <!-- 单程 -->
+                <div id="dancheng">
+                    <div class="order_content">
+                        <!--ticket detail info S-->
+                        <div class="train_detail clearfix">
+                            <div class="train_name">
+                                <div class="train_num" style="margin-top: -28px;font-size: 20px;color: #ed9191">乘车日期：[[${order.departure_date}]]</div>
+                                <div class="train_det_date" style="color: orangered;">
+                                </div>
+                            </div>
+                            <div class="train_date_start">
+                                <strong class="train_det_time">[[${order.start_time}]]</strong>
+                                <span class="train_det_station">[[${order.start_station}]]<i class="icon "></i></span>
+                                <!--<span class="train_det_date">[[${order.departure_date}]] <br/>${week1 }-->
+						</span>
+
+                            </div>
+                            <div class="train_duration">
+                                <div class="train_duration_left"></div>
+                                <strong class="train_duration_time">[[${order.train_number}]]</strong>
+                                <div class="train_duration_right"></div>
+                                <div class="train_icon"></div>
+                            </div>
+                            <div class="train_date_end">
+                                <strong class="train_det_time">[[${order.arrive_time}]]</strong>
+                                <span class="train_det_station">[[${order.end_station}]]<i class="icon icon_end"></i></span>
+                                 <!--
+                                <span class="train_det_date"> ${actiondate}<br/>${week1 }</span>
+                                    -->
+                            </div>
+                        </div>
+                        <!--ticket detail info E-->
+                        <!--ticket seat type S-->
+                        <div class="train_types clearfix">
+                            <div class="J_TrainType train_type  selected"
+                                 data_resId="1425125366"
+                                 style="margin-left: 543px; margin-top: -118px;">
+                                <table>
+                                    <tr>
+                                        <td class="td1" style="text-align: center;font-size: 20px; font-family: cursive;">售票成功</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--  往返-->
+                <div id="wangfan" style="display:none;">
+                    <div class="order_content" style="height: 127px;">
+                        <!--ticket detail info S-->
+                        <div class="train_detail clearfix">
+                            <div class="train_name">
+                                <div class="train_num"
+                                     style="font-size: 21px; margin-top: -40px; margin-bottom: 14px; color: skyblue;">往
+                                </div>
+                                <div class="train_num">${cname }</div>
+                                <div class="train_det_date" style="color: orangered;">
+                                    <!-- <span>5</span><span>车厢</span><span>25</span><span>号</span> -->
+                                </div>
+                            </div>
+                            <div class="train_date_start">
+                                <strong class="train_det_time">${starttime}</strong> <span
+                                    class="train_det_station">${action }<i class="icon "></i></span> <span
+                                    class="train_det_date">${actiondate} <br/>${week1 }
+						</span>
+
+                            </div>
+                            <div class="train_duration">
+                                <div class="train_duration_left"></div>
+                                <strong class="train_duration_time">${zongtime1}</strong>
+                                <div class="train_duration_right"></div>
+                                <div class="train_icon"></div>
+                            </div>
+                            <div class="train_date_end">
+                                <strong class="train_det_time">${endtime}</strong> <span
+                                    class="train_det_station">${over}<i class="icon icon_end"></i></span>
+                                <span class="train_det_date"> ${actiondate}<br/>${week1 }
+						</span>
+
+                            </div>
+                        </div>
+                        <!--ticket detail info E-->
+                        <!--ticket seat type S-->
+                        <div class="train_types clearfix">
+                            <div class="J_TrainType train_type  selected"
+                                 data_resId="1425125366"
+                                 style="margin-left: 543px; margin-top: -118px;">
+                                <table>
+                                    <tr>
+                                        <td class="td1 ">${zuotype }</td>
+                                        <td class="seat_price">￥${price }</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                        </div>
+                        <div id="dan" style="margin-top: -25px;"></div>
+                    </div>
+                    <div class="order_content" style="height: 105px;">
+                        <!--ticket detail info S-->
+                        <div class="train_detail clearfix">
+                            <div class="train_name">
+                                <div class="train_num"
+                                     style="font-size: 21px; margin-top: -40px; margin-bottom: 14px; color: skyblue;">返
+                                </div>
+                                <div class="train_num">${cname1}</div>
+                                <div class="train_det_date" style="color: orangered;">
+                                    <!-- <span>5</span><span>车厢</span><span>25</span><span>号</span> -->
+                                </div>
+                            </div>
+                            <div class="train_date_start">
+                                <strong class="train_det_time">${starttime1 }</strong> <span
+                                    class="train_det_station">${action1 }<i class="icon "></i></span> <span
+                                    class="train_det_date">${actiondate1} <br/>${week2}
+						</span>
+
+                            </div>
+                            <div class="train_duration">
+                                <div class="train_duration_left"></div>
+                                <strong class="train_duration_time">${zongtime2}</strong>
+                                <div class="train_duration_right"></div>
+                                <div class="train_icon"></div>
+                            </div>
+                            <div class="train_date_end">
+                                <strong class="train_det_time">${endtime1}</strong> <span
+                                    class="train_det_station">${over1}<i class="icon icon_end"></i></span>
+                                <span class="train_det_date"> ${actiondate1}<br/>${week2 }
+						</span>
+                            </div>
+                        </div>
+                        <!--ticket detail info E-->
+                        <!--ticket seat type S-->
+                        <div class="train_types clearfix">
+                            <div class="J_TrainType train_type  selected"
+                                 data_resId="1425125366"
+                                 style="margin-left: 543px; margin-top: -118px;">
+                                <table>
+                                    <tr>
+                                        <td class="td1 ">${zuotype1}</td>
+                                        <td class="seat_price">￥${price1 }</td>
+                                    </tr>
+
+                                </table>
+                            </div>
+
+                        </div>
+                        <div id="fan" style="margin-top: -25px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="foot" style="margin-bottom: 23px; margin-left: 28px;font-size: 15px;">
+            </div>
+        </div>
+    </div>
+    <div class="result-tips">
+        <span class="success-icon"></span>
+        <p class="result-tip">恭喜您&nbsp;[[${session.USER.userName}]]，订单支付成功！</p>
+        <div class="result-tip-submit ">
+            <a class="result-tip-return" href="/index" m="点击_返回首页_1052579652"/>返回首页 </a>
+            <a id="J_checkOrder" class="result-tip-check" href="/view/order/train_order" m="点击_查询订单_1052579652"/> 查看订单 </a>
+        </div>
+    </div>
+</div>
+
+<!-- 以下为静态信息 -->
+<div class="local-block succ-block server-block">
+    <p class="server-tit">
+        <span><em>本地服务</em></span>
+    </p>
+    <ul class="clearfix">
+        <li><a href="#" m="点击_出行服务_酒店_1052579652">
+            <span class="succ-icon">
+                <img src="https://m.tuniucdn.com/fb2/t1/G1/M00/95/BA/Cii-U1i44euIeqbFAAASdRBYynIAAIQygOoNMoAABKN264.png"/></span>
+            <div class="mess">
+                <div class="price">
+                    <span class="s-name" style="margin-top: 5px">酒店民宿</span>
+                    <span class="pri" style="margin-top: 3px">实时查询</span>
+                </div>
+            </div>
+        </a></li>
+        <li><a href="#" m="点击_出行服务_门票_1052579652"> <span
+                class="succ-icon"><img
+                src="https://m.tuniucdn.com/fb2/t1/G1/M00/95/BA/Cii9EFi44euIYXN4AAAVefk5010AAIQygOsNRUAABWR758.png"/></span>
+            <div class="mess">
+                <div class="price">
+                    <span class="s-name" style="margin-top: 5px">景点门票</span>
+                    ¥ <em>15</em><i>起</i>
+                </div>
+            </div>
+        </a>
+        </li>
+        <li><a href="#" m="点击_出行服务_酒店_1052579652">
+            <span class="succ-icon">
+                <img src="https://m.tuniucdn.com/fb2/t1/G1/M00/95/BA/Cii-U1i44euIeqbFAAASdRBYynIAAIQygOoNMoAABKN264.png"/></span>
+            <div class="mess">
+                <div class="price">
+                    <span class="s-name" style="margin-top: 5px">特色美食</span>
+                    <span class="pri" style="margin-top: 3px">实时查询</span>
+                </div>
+            </div>
+        </a></li>
+        <li><a href="#" m="点击_出行服务_酒店_1052579652">
+            <span class="succ-icon">
+                <img src="https://m.tuniucdn.com/fb2/t1/G1/M00/95/BA/Cii-U1i44euIeqbFAAASdRBYynIAAIQygOoNMoAABKN264.png"/></span>
+            <div class="mess">
+                <div class="price">
+                    <span class="s-name" style="margin-top: 5px">景点攻略</span>
+                    <span class="pri" style="margin-top: 3px">在线查看</span>
+                </div>
+            </div>
+        </a></li>
+    </ul>
+</div>
+
+<div id="scroll0" class="succ-block pro-block ">
+    <div class="pro-tit clearfix">
+			<span class="tit"> <i></i> 酒店
+			</span> <a href="#" class="link" m="点击_更多酒店单品推荐_更多酒店">更多酒店 ></a>
+    </div>
+    <ul class="clearfix">
+        <li>
+            <div class="pro-box ">
+                <a href="#" m=点击_酒店_1-200294006_1052579652>
+                    <div class="img-box">
+                        <img src="https://m.tuniucdn.com/fb2/t1/G1/M00/36/15/Cii-U1ku7XWIYEiaAAIYOmAZYxIAALKmQAKuA4AAhhS587_w450_h300_c1_t0.jpg"/>
+                        <div class="dess-txt clearfix">
+								<span class="dess-satisf fl"> <i>高档型</i>
+								</span> <span class="dess-rated fr"> <i>44</i> 条评价
+								</span>
+                        </div>
+                    </div>
+                    <div class="content-box">
+                        <p class="content-tit">香巴拉雅酒店</p>
+                        <div class="content-txt clearfix">
+                            <div class="content-price fl">
+                                <span class="unit">¥</span> <span class="num">266</span> <span
+                                    class="text">起</span>
+                            </div>
+                            <div class="content-detail fr">
+									<span> <i>距离火车站约1.9km</i>
+									</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </li>
+        <li>
+            <div class="pro-box ">
+                <a href="#" m=点击_酒店_2-2276280_1052579652>
+                    <div class="img-box">
+                        <img
+                                src="https://m4.tuniucdn.com/filebroker/cdn/res/d6/e5/d6e525d00ec9e119f5325c89d6842035_w450_h300_c1_t0.jpg"/>
+                        <div class="dess-txt clearfix">
+
+								<span class="dess-satisf fl"> <i>二星级</i>
+								</span> <span class="dess-rated fr"> <i>32</i> 条评价
+								</span>
+                        </div>
+                    </div>
+                    <div class="content-box">
+
+                        <p class="content-tit">宜家商务酒店</p>
+                        <div class="content-txt clearfix">
+                            <div class="content-price fl">
+
+                                <span class="unit">¥</span> <span class="num">98</span> <span
+                                    class="text">起</span>
+                            </div>
+                            <div class="content-detail fr">
+
+									<span> <i>距离火车站约2.6km</i>
+									</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </li>
+        <li>
+            <div class="pro-box ">
+                <a href="#" m=点击_酒店_3-1689299713_1052579652>
+                    <div class="img-box">
+                        <img src="https://m.tuniucdn.com/fb2/t1/G4/M00/0F/65/Cii-VVmdjT6IOKIdAAFeZEF3w_MAAAVdQP8AS8AAV58938_w450_h300_c1_t0.jpg"/>
+                        <div class="dess-txt clearfix">
+								<span class="dess-satisf fl"> <i>二星级</i>
+								</span> <span class="dess-rated fr"> <i>8</i> 条评价
+								</span>
+                        </div>
+                    </div>
+                    <div class="content-box">
+                        <p class="content-tit">尚客优连锁酒店</p>
+                        <div class="content-txt clearfix">
+                            <div class="content-price fl">
+                                <span class="unit">¥</span> <span class="num">139</span> <span
+                                    class="text">起</span>
+                            </div>
+                            <div class="content-detail fr">
+									<span> <i>距离火车站约2.1km</i>
+									</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </li>
+        <li>
+            <div class="pro-box ">
+                <a href="#" m=点击_酒店_4-219479413_1052579652>
+                    <div class="img-box">
+                        <img
+                                src="https://m.tuniucdn.com/fb2/t1/G4/M00/2E/0D/Cii-VVmva8uILHrwAAG3JcC1DEUAAA4nAGzN74AAbc9909_w450_h300_c1_t0.jpg"/>
+
+                        <div class="dess-txt clearfix">
+
+
+								<span class="dess-satisf fl"> <i>二星级</i>
+								</span> <span class="dess-rated fr"> <i>3</i> 条评价
+								</span>
+
+
+                        </div>
+                    </div>
+                    <div class="content-box">
+
+                        <p class="content-tit">华兰商务酒店</p>
+
+                        <div class="content-txt clearfix">
+                            <div class="content-price fl">
+
+                                <span class="unit">¥</span> <span class="num">119</span> <span
+                                    class="text">起</span>
+
+                            </div>
+                            <div class="content-detail fr">
+
+									<span> <i>距离火车站约2.1km</i>
+									</span>
+
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </li>
+        <li>
+            <div class="pro-box ">
+                <a href="#" m=点击_酒店_5-686277_1052579652>
+                    <div class="img-box">
+                        <img
+                                src="https://m3.tuniucdn.com/filebroker/cdn/res/e5/c7/e5c7057c4cf065de5127f4fbde3a8852_w450_h300_c1_t0.jpg"/>
+
+                        <div class="dess-txt clearfix">
+
+
+								<span class="dess-satisf fl"> <i>二星级</i>
+								</span> <span class="dess-rated fr"> <i>79</i> 条评价
+								</span>
+
+
+                        </div>
+                    </div>
+                    <div class="content-box">
+                        <p class="content-tit">中州皇冠商务酒店</p>
+                        <div class="content-txt clearfix">
+                            <div class="content-price fl">
+                                <span class="unit">¥</span> <span class="num">88</span> <span
+                                    class="text">起</span>
+                            </div>
+                            <div class="content-detail fr">
+									<span> <i>距离火车站约2.4km</i></span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </li>
+    </ul>
+</div>
+<!--引入底部footer.html文件-->
+<div th:replace="/home/footer"></div>
+
+</body>
+</html>
