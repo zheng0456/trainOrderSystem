@@ -1,0 +1,150 @@
+<!DOCTYPE html><!--引入thymeleaf模板引擎-->
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>顶部</title>
+    <link href="/home/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="/home/css/common.css" rel="stylesheet" type="text/css"/>
+    <style type="text/css">
+        .top_hr span{
+            color: #ccc;
+            margin-left: 10px;
+        }
+        .top_hw {
+            background: url(/home/img/top_h.jpg) repeat-x;
+            height: 28px;
+            line-height: 28px;
+            width: 100%;
+        }
+
+        .top_h {
+            width: 1080px;
+            margin: 0 auto;
+        }
+
+        .top_h .top_hl {
+            float: left;
+        }
+
+        .top_h .top_hl span {
+            color: #666;
+        }
+
+        .top_h .top_hl b {
+            color: #ec0000;
+        }
+
+        .top_h .top_hr {
+            float: right;
+            color: #cccccc;
+        }
+
+        .top_h .top_hr a {
+            margin: 0 5px;
+        }
+        .clearfix:after {
+            clear: both;
+            content: ' ';
+            display: block;
+            font-size: 0;
+            line-height: 0;
+            visibility: hidden;
+            width: 0;
+            height: 0;
+        }
+
+        .clearfix {
+            display: inline-block;
+        }
+
+        * html .clearfix {
+            height: 1%;
+        }
+
+        .clearfix {
+            display: block;
+            *zoom: 1;
+        }
+
+        a {
+            color: #3480e2;
+            text-decoration: none;
+            outline: none;
+        }
+
+        .top_h .top_hl span {
+            color: #666;
+        }
+
+        body {
+            margin-top: 0;
+            font-size: 14px;
+            line-height: 1.5;
+            font-family: "Hiragino Sans GB", "Microsoft YaHei", SimHei, SimSun, sans-serif;
+            color: #333;
+        }
+    </style>
+    <script type="text/javascript" src="/home/js/jquery-3.5.1.js"></script>
+    <script>
+        function Logout(){
+            let confirm = window.confirm("您确定要退出当前系统嘛？");
+            if (confirm == true){
+                $.ajax({
+                    type:"POST",  //修改提交方式
+                    url:"/system/user/logout",
+                    success:function (msg){
+                        if(msg){
+                            alert("你已经成功退出系统！！！");
+                            window.location = "http://localhost:8080/index.html";
+                        }else {
+                            alert("退出系统失败，请刷新页面重试！");
+                        }
+                    },
+                    error:function (){
+                        alert("网络访问失败,请检查网络")
+                    }
+                })
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="top_hw clearfix">
+    <div class="top_h clearfix ">
+        <div class="top_hl"><span>欢迎来到中国梦想旅游网，让你的梦想全程免费自由行！</span> 预定热线：<b>0939-12345678</b></div>
+
+        <div class="top_hr" >
+            <a href="https://www.12306.cn/" target="_blank">铁路12306 <span>|</span> </a>
+            <a href="https://trains.ctrip.com/" target="_blank">携程网 <span>|</span> </a>
+
+            <a href="#" th:if="${session.user != null}">
+                <span style="color: black;font-size: 14px; margin-left: 0px">您好,</span>
+                <a  href="/view/personal/info">[[${session.user.username}]]</a><span>|</span>
+            </a>
+            <a href="javascript:void(0);" th:if="${session.user != null}" onclick="Logout()">退出</a>
+            <a href="login.html" th:if="${session.user == null}"    target="_top">登录<span>|</span></a>
+            <a href="register.html" th:if="${session.user == null}" target="_top">注册</a>
+        </div>
+
+    </div>
+</div>
+<div class="mainNav clearfix">
+    <ul class="Nav_ul">
+        <li><a href="http://localhost:8080/index.html">首页</a><img src="/home/img/nav_line.jpg"></li>
+        <li><a href="#">旅游路线</a><img src="/home/img/nav_line.jpg"></li>
+        <li><a href="#">旅游景点</a><img src="/home/img/nav_line.jpg"></li>
+        <li><a href="#">餐饮住宿</a><img src="/home/img/nav_line.jpg"></li>
+        <li><a href="#">交通线路</a><img src="/home/img/nav_line.jpg"></li>
+        <li><a href="#">旅游团购</a><img src="/home/img/nav_line.jpg"></li>
+        <li><a href="#">地方特产</a><img src="/home/img/nav_line.jpg"></li>
+        <li><a href="#">出行指南</a><img src="/home/img/nav_line.jpg"></li>
+        <li><a href="#">信息查询</a><img src="/home/img/nav_line.jpg"></li>
+        <li><a href="#">行程导航</a></li>
+    </ul>
+</div>
+
+
+
+
+</body>
+</html>

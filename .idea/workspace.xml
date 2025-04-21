@@ -42,6 +42,15 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\WorkSpace\trainOrderSystem\TrainOrderSys\src\main\java\com\etc\trainordersys\entity" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.etc.trainordersys.controller" />
+      <recent name="com.etc.trainordersys.config" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="TrainOrderSysApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="TrainOrderSys" />
@@ -59,7 +68,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1745238084095</updated>
-      <workItem from="1745238085221" duration="300000" />
+      <workItem from="1745238085221" duration="617000" />
     </task>
     <servers />
   </component>

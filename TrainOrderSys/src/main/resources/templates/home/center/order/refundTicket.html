@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<!--引入thymeleaf模板引擎-->
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>中国梦想游</title>
+  <link rel="stylesheet" type="text/css" href="/home/css/style.min.css?v=3.0.0" >
+  <link rel="stylesheet" type="text/css"  href="/admin/css/style1.css" >
+  <link rel="stylesheet" type="text/css"  href="/admin/css/style2.css" >
+  <link rel="stylesheet" type="text/css" href="/home/css/common.css"/>
+  <link rel="stylesheet" type="text/css" href="/home/css/public.css"/>
+  <link rel="stylesheet" type="text/css" href="/home/css/style.css"/>
+  <link rel="stylesheet" type="text/css" href="/home/css/mygrxx.css"/>
+  <link href="/home/fonts/iconfont.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="/home/css/ticket_index_v70003.css"/>
+
+  <script>
+    //分页展示数据,输入页数，跳转到第几页
+    function gotoPage(totalPages){
+      if(totalPages >= 1){
+        $("#currentPage").val(totalPages);
+        $("#Form").submit();  //提交表单
+
+      }else{
+        alert("网络错误!");
+      }
+    }
+
+
+
+  </script>
+
+</head>
+<body>
+<!------------------------------head------------------------------>
+<!--引入顶部文件-->
+<div th:replace="/home/header"></div>
+<!------------------------------idea------------------------------>
+<div class="address">
+  <div class="wrapper clearfix">
+    <a>当前位置：</a>
+    <a href="http://localhost:8080/index.html"  style="">首页</a><span>></span>
+    <a href="/view/personal/info" class="go">个人中心</a><span>></span>
+    <a href="" class="go">车票订单</a><span>></span>
+    <a href="" class="go">退票车票</a>
+  </div>
+</div><!------------------------------Bott------------------------------>
+
+<div class="Bott">
+  <div class="wrapper clearfix" style="width: 1500px;margin-left: 160px;">
+    <!--个人中心左侧菜单开始-->
+    <div th:replace="/home/common/left_menu"></div>
+    <!--个人中心左侧菜单结束-->
+    <div class="you fl" style="width: 1100px;padding: 10px 50px">
+      <div class="center-main">
+        <!-- 待付款 、 未完成 、 历史订单-->
+        <div class="subway-order">
+          <div class="panel-tab">
+            <div class="tab-hd">
+            </div>
+            <form action="/view/order/findRefundTicket" method="post" id="Form">
+                 <input type="hidden" id="currentPage" name="currentPage">
+            </form>
+
+
+            <div class="tab-bd">
+              <!-- 未出行订单 -->
+              <div class="tab-item" style="display: block;min-height: 495px; ">
+                <!-- 未出行订单列表 -->
+                <div class="order-panel order-panel-history">
+
+                  <div class="order-filter" style="margin: 0px">
+                    <a href="javascript:;" class="active">申请退票订单</a>
+                  </div>
+                  <!-- 订单-订单列表头部 -->
+                  <table class="order-panel-head title-text" style="display: table;">
+                    <colgroup>
+                      <col class="col-train">
+                      <col class="col-passenger">
+                      <col class="col-seat">
+                      <col class="col-price">
+                      <col class="col-state">
+                      <col>
+                    </colgroup>
+                    <tbody><tr style="background: #c7e2ff;">
+                      <th>车次信息</th>
+                      <th>旅客信息</th>
+                      <th>席位信息</th>
+                      <th>票价</th>
+                      <th>车票状态</th>
+                      <!-- <th>总金额</th> -->
+                    </tr>
+                    </tbody></table>
+
+
+                  <div id="not_travel">
+
+                    <div class="order-item">
+                      <div>
+                        <!-- 遍历所有订单 -->
+                        <div th:if="${page.list !=null }" th:each="ticket: ${page.list} ">
+
+                          <table class="order-item-table" id="query_order_form_E594557123">
+                            <colgroup>
+                              <col class="col-train">
+                              <col class="col-passenger">
+                              <col class="col-seat">
+                              <col class="col-price">
+                              <col class="col-state">
+                            </colgroup>
+
+                            <tbody>
+                            <tr class="is-has-tag has-order-num " >
+                              <td class="td-left align-top">
+                                <div class="order-info-ticket">
+                                  <div class="hotline_bd" style="font-weight: 700;font-size: 17px;">
+                                    [[${ticket.start_station}]]<i class="arr"></i>[[${ticket.end_station}]]
+                                    <span>&nbsp;[[${ticket.train_number}]]</span>
+                                  </div>
+                                  <div>[[${ticket.departure_date}]]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[${ticket.start_time}]] 开</div>
+                                </div>
+                              </td>
+                              <td style="width: 200px;">
+                                <div class="passenger-operation">
+                                  <div class="passenger-check data-val">
+                                    <div class="icheckbox" style="position: relative;">
+                                      <input class=" " type="checkbox" aria-label="按空格键进行操作" style="position: absolute; opacity: 0;">
+                                      <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
+                                    </div>
+                                  </div>
+                                  <div>[[${ticket.passenger_name}]]</div>
+
+
+                                  <div style="color: orange" th:text="${ticket.card_type}"></div>
+                                </div>
+                              </td>
+                              <td style="text-align: center">
+                                <!--                                        座位类型    -->
+                                <div th:text="${ticket.seatType.seat_type_name}"></div>
+                                <div>[[${ticket.carriage_number}]]车-[[${ticket.seat_number}]]</div>
+                              </td>
+                              <td style="position: relative;text-align: center">
+                                <div th:if="${ticket.ticket_type ==0}">成人票</div>
+                                <div th:if="${ticket.ticket_type ==1}">儿童票</div>
+                                <div th:if="${ticket.ticket_type ==2}">学生票</div>
+                                <div th:if="${ticket.ticket_type ==3}">优惠票</div>
+                                <div><span class="txt-price">[[${ticket.ticket_price}]]元</span></div>
+                              </td>
+
+                              <td style="text-align: center">
+                                <div class="ticket-status-name">
+                                  <div>
+                                    <span> 退票中 (待审核)</span>
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                            </tbody>
+                          </table>
+                        </div>
+
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="J-Trip" class="pagination mt-lg" style="display: block;">
+                    <div class="page-all">第<strong>[[${page.pageNum}]]/[[${page.pages}]]</strong>页
+                    </div>
+                    <ul class="page-num">
+                      <li >
+                        <a th:if="${page.pageNum > 1}" href="javascript:void(0);" th:onclick="gotoPage([[${page.prePage}]])">«</a>
+                      </li>
+                      <li>
+                        <a th:if="${page.pageNum < page.pages}" href="javascript:;" th:onclick="gotoPage([[${page.nextPage}]])">»</a>
+                      </li>
+                    </ul>
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--引入底部footer.html文件-->
+<div th:replace="/home/footer"></div>
+<script src="/home/js/jquery-3.5.1.js" type="text/javascript" charset="utf-8"></script>
+<script src="/home/js/public.js" type="text/javascript" charset="utf-8"></script>
+<script src="/home/js/user.js" type="text/javascript" charset="utf-8"></script>
+
+</body>
+</html>
+
+

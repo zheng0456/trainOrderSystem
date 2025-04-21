@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<!--引入thymeleaf模板引擎-->
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>中国梦想游</title>
+    <link rel="stylesheet" type="text/css" href="/home/css/style.min.css?v=3.0.0">
+    <link rel="stylesheet" type="text/css" href="/admin/css/style1.css">
+    <link rel="stylesheet" type="text/css" href="/admin/css/style2.css">
+    <link rel="stylesheet" type="text/css" href="/home/css/common.css"/>
+    <link rel="stylesheet" type="text/css" href="/home/css/public.css"/>
+    <link rel="stylesheet" type="text/css" href="/home/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/home/css/mygrxx.css"/>
+    <link href="/home/fonts/iconfont.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/home/css/ticket_index_v70003.css"/>
+    <script type="text/javascript" src="/home/js/jquery-3.5.1.js"></script>
+
+    <script>
+        //用户去支付，跳转到支付页面
+        function toPay(order_no,train_number,departure_date) {
+            window.location.href = "/view/ticketing/toPay?order_no=" + order_no+"&train_number="+train_number+"&departure_date="+departure_date;
+        }
+
+        $(document).ready(function() {
+           let cancelMsg = $("#cancelMsg").val();
+           if (cancelMsg!=null && cancelMsg!=""){
+               alert(cancelMsg);
+           }
+        });
+        //用户取消订单
+        function cancelOrder(order_no,train_number,departure_date) {
+            let flag = window.confirm("你确定要取消订单嘛？");
+            if (flag) {
+                $.ajax({
+                    url: "/view/order/cancelOrder",
+                    type: "POST",
+                    data: {
+                        "order_no": order_no,
+                        "train_number": train_number,
+                        "departure_date": departure_date
+                    },
+                    async: false,
+                    success: function (msg) {
+                        if (msg) {
+                            alert("取消订单成功！！");
+                            window.location.href = "/view/order/unpaidOrder";
+                        } else {
+                            alert("取消订单失败!!!");
+                        }
+                    },
+                    error: function (msg) {
+                        alert("网络错误，请检查你的网络！")
+                    }
+                });
+            }
+        }
+    </script>
+</head>
+<body>
+<!------------------------------head------------------------------>
+<!--引入顶部文件-->
+<div th:replace="/home/header"></div>
+<!------------------------------idea------------------------------>
+<div class="address">
+    <div class="wrapper clearfix">
+        <a>当前位置：</a>
+        <a href="http://localhost:8080/index.html"  style="">首页</a><span>></span>
+        <a href="/view/personal/info" class="go">个人中心</a><span>></span>
+        <a href="" class="go">车票订单</a><span>></span>
+        <a href="" class="go">未完成的订单</a>
+    </div>
+</div><!------------------------------Bott------------------------------>
+<div class="Bott">
+    <div class="wrapper clearfix" style="width: 1500px;margin-left: 160px;">
+        <!--个人中心左侧菜单开始-->
+        <div th:replace="/home/common/left_menu"></div>
+        <!--个人中心左侧菜单结束-->
+        <div class="you fl" style="width: 1100px;padding: 10px 50px">
+            <div class="center-main">
+<!--                隐藏域保存订单过期的消息-->
+                <input type="hidden" id="cancelMsg"  th:value="${cancelMsg}">
+                <!-- 待付款 、 未完成 、 历史订单-->
+                <div class="subway-order">
+                    <div class="panel-tab">
+                        <div class="tab-hd">
+                            <ul class="tab-hd-list" id="order_tab">
+                                <li class="active"><a href="javascript:void(0);">未完成订单 </a>
+                                </li>
+                                <li data-type="0"><a href="/view/order/train_order">未出行订单 </a></li>
+                                <li data-type="1"><a href="/view/order/history_order">历史订单</a></li>
+                            </ul>
+                        </div>
+                        <div class="tab-bd">
+                            <!--未付款订单-->
+                            <div class="tab-item" style="display: block; min-height: 495px;padding: 10px 0px;">
+                                <!-- 待付款订单列表 -->
+                                <div class="order-panel order-panel-unpaid">
+                                    <!-- 订单-订单列表头部 -->
+                                    <table class="order-panel-head title-text">
+                                        <colgroup>
+                                            <col class="col-train">
+                                            <col class="col-passenger">
+                                            <col class="col-seat">
+                                            <col class="col-price">
+                                            <col class="col-state">
+                                            <col>
+                                        </colgroup>
+                                        <tbody>
+                                        <tr>
+                                            <th>车次信息</th>
+                                            <th style="width: 200px">旅客信息</th>
+                                            <th>席位信息</th>
+                                            <th>票价</th>
+                                            <th>车票状态</th>
+                                            <!-- <th>总金额</th> -->
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <div>
+
+                                        <div class="order-item" id="not_complete" th:if="${order != null}">
+
+                                            <div class="order-item-hd">
+                                                <div class="order-hd-info"><span class="txt-light">订票日期：</span>
+                                                    <span class="dingqiaoDate">[[${order.create_time}]]</span></div>
+                                                <div class="order-hd-info">
+                                                    <span class="txt-light">订单号：</span>[[${order.order_no}]]
+                                                </div>
+                                                <div class="order-hd-info">
+                                                    <span class="txt-light">总金额：</span>[[${order.total_price}]]
+                                                </div>
+                                            </div>
+
+
+                                            <div class="order-item-bd">
+
+
+
+                                                <table class="order-item-table">
+                                                    <colgroup>
+                                                        <col class="col-train">
+                                                        <col class="col-passenger">
+                                                        <col class="col-seat">
+                                                        <col class="col-price">
+                                                        <col class="col-state">
+                                                        <col>
+                                                    </colgroup>
+
+
+
+                                                    <tbody>
+                                                    <tr class="is-has-tag has-order-num "
+                                                        th:each="ticket:${order.tickets}">
+                                                        <td class="td-left align-top" rowspan="1">
+                                                            <div class="order-info-ticket">
+                                                                <div class="hotline_bd"
+                                                                     style="font-weight: 700;font-size: 17px;">
+                                                                    [[${ticket.start_station}]]<i class="arr"></i>[[${ticket.end_station}]]
+                                                                    <span>&nbsp;[[${ticket.train_number}]]</span>
+                                                                </div>
+                                                                <div>[[${ticket.departure_date}]]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[${ticket.start_time}]]
+                                                                    开
+                                                                </div>
+                                                            </div>
+                                                        </td>
+
+                                                        <td style="width: 200px;">
+                                                            <div class="passenger-operation">
+                                                                <div>[[${ticket.passenger_name}]]</div>
+
+                                                                <div style="color: orange" th:text="${ticket.card_type}"></div>
+                                                            </div>
+                                                        </td>
+                                                        <td style="text-align: center">
+                                                            <div>[[${ticket.seatType.seat_type_name}]]</div>
+                                                            <div>
+                                                                [[${ticket.carriage_number}]]车-[[${ticket.seat_number}]]
+                                                            </div>
+                                                        </td>
+                                                        <td style="text-align: center">
+                                                            <div th:if="${ticket.ticket_type ==0}">成人票</div>
+                                                            <div th:if="${ticket.ticket_type ==1}">儿童票</div>
+                                                            <div th:if="${ticket.ticket_type ==2}">学生票</div>
+                                                            <div th:if="${ticket.ticket_type ==3}">优惠票</div>
+                                                            <div><span
+                                                                    class="txt-price">[[${ticket.ticket_price}]]元</span>
+                                                            </div>
+                                                        </td>
+                                                        <td style="text-align: center">
+                                                            <div class="ticket-status-name">待支付</div>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="order-item-ft">
+                                                <table class="order-item-table">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td colspan="6" class="order-operation">
+                                                            <div class="btn-right">
+                                                                <a href="javascript:void(0)" class="btn" id="cancelBtn"
+                                                                   th:onclick="cancelOrder([[${order.order_no}]],[[${order.train_number}]],[[${order.departure_date}]])">取消订单</a>
+                                                                <a href="javascript:void(0)" id="countdown0"
+                                                                   class="btn btn-primary"
+                                                                   th:onclick="toPay([[${order.order_no}]],[[${order.train_number}]],[[${order.departure_date}]])">去支付</a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                        <!--没有订单数据，显示信息-->
+                                        <div class="order-item" th:if="${order == null}" style="display: block">
+                                            <div class="order-empty">
+                                                <div class="empty-pic">
+                                                    <img src="https://kyfw.12306.cn/otn/images/center/empty.png" alt="">
+                                                </div>
+                                                <div class="empty-txt">
+                                                    <p>您没有未完成的订单哦～</p>
+                                                    <p>您可以通过<a href="/index"
+                                                                    class="txt-primary underline">车票预订</a>功能，来制定出行计划。
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--底部页面-->
+                                        <div class="tips-box mt-lg shao-tips" style="">
+                                            <h4 class="tips-tit">温馨提示</h4>
+                                            <p>1.席位已锁定，请在指定时间内完成网上支付。</p>
+                                            <p>2.逾期未支付，系统将取消本次交易。</p>
+                                            <p>
+                                                3.在完成支付或取消本订单之前，您将无法购买其他车票。
+                                            </p>
+                                            <p>
+                                                4.未尽事宜详见《国铁集团铁路旅客运输规程》《广深港高速铁路跨境旅客运输组织规则》《中老铁路跨境旅客联运组织规则》等有关规定和车站公告。
+                                            </p>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--引入底部footer.html文件-->
+<div th:replace="/home/footer"></div>
+<script src="/home/js/jquery-3.5.1.js" type="text/javascript" charset="utf-8"></script>
+<script src="/home/js/public.js" type="text/javascript" charset="utf-8"></script>
+<script src="/home/js/user.js" type="text/javascript" charset="utf-8"></script>
+
+</body>
+</html>
+

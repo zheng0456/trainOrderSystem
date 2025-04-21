@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<!--引入thymeleaf模板引擎-->
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>中国梦想游-用户登录</title>
+    <style type="text/css">
+        #password {
+            height: 30px;
+            width: 165px;
+            font-size: 15px;
+        }
+
+        #account {
+            height: 20px;
+            width: 156px;
+        }
+        #errorMsg {
+            color: red; /*字体颜色*/
+            font-weight: 700;/*加粗*/
+            text-align: center; /*文字居中*/
+        }
+    </style>
+
+
+    <!--引入static下的css文件和js文件-->
+    <link href="/home/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="/home/css/common.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="/home/js/jquery-3.5.1.js"></script>
+
+
+    <script type="text/javascript">
+        /***********验证用户名*************/
+        function checkAccount() {
+            let account = $("#account").val();
+            if (account.trim()==""){
+                $("#errorMsg").text("用户名不能为空");
+                return false;
+            }
+            return true;
+        }
+        /***********验证密码*************/
+        function checkPassword() {
+            let password = $("#password").val();
+            if (password.trim()==""){
+                $("#errorMsg").text("密码不能为空");
+                return false;
+            }
+            return true;
+        }
+        //表单提交校验
+        function checkFrom() {
+            if(checkAccount() && checkPassword()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    </script>
+</head>
+<body >
+<!--引入顶部文件-->
+<div th:replace="/home/header"></div>
+
+<div class="b_wrap" >
+
+    <div class="current"><span>您当前的位置：</span>
+        <a href="http://localhost:8081/index.html">首页</a> >
+        <a href="login.html">账号登录</a></div>
+    <div class="login_w clearfix">
+        <div class="login">
+            <div class="login_t">用户登录
+                 <br>
+                <span  id="errorMsg" th:text="${errorMsg}  "></span>  <!--    错误提示   -->
+               </div>
+
+            <div class="login_con">
+                <form action="/home/login" onsubmit="return checkFrom()" method="post">
+                    <table class="login_tab" width="270" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td>账&nbsp;&nbsp;&nbsp;&nbsp;号：<div style="height:13px;"></div></td>
+                            <td>
+                                <input type="text"   name="account" id="account" value="" placeholder="用户名/邮箱/手机号" onblur="checkAccount()"><br>
+                                <div id="z1" style="height:13px;"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>密&nbsp;&nbsp;&nbsp;&nbsp;码：<br></td>
+                            <td>
+                                <input type="password" name="password" id="password" value="" placeholder="密码" onblur="checkPassword()"><br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>
+                                <input type="button" name="" class="log_b" value="登录" onclick="login()">
+                            </td>
+
+                        </tr>
+                    </table>
+                </form>
+
+
+                <script type="text/javascript" src="/home/js/jquery.js"></script>
+                <script>
+                    /*登录*/
+                    function login(){
+                        let account = $("#account").val();
+                        let password = $("#password").val();
+                        $.ajax({
+                            url:"/home/login",
+                            type:"POST",
+                            data:{
+                                "account":account,
+                                "password":password
+                            },
+                            success:function (response){
+                                if (response=="user_page"){
+                                    window.location.href="/home/index.html";
+                                }else if (response=="admin_page"){
+                                    window.location.href="/admin/index.html";
+                                }else {
+                                    $("#errorMsg").text(response);//将异常信息显示在span标签中
+                                }
+                            },
+                            error:function(response){
+                            alert(response);
+                        }
+                        })
+                    }
+                </script>
+
+
+            </div>
+
+            <div class="login_b">
+                <p style="text-align: right">没有登录账号？
+                    <a class="free_zc" href="register.html">免费注册</a>
+                </p>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--引入底部footer.html文件-->
+<div th:replace="/home/footer"></div>
+</body>
+</html>

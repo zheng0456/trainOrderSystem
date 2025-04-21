@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<!--引入thymeleaf模板引擎-->
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta charset="utf-8"/>
+    <title>个人信息</title>
+    <link rel="stylesheet" type="text/css" href="/home/css/public.css"/>
+    <link rel="stylesheet" type="text/css" href="/home/css/mygrxx.css"/>
+    <script type="text/javascript" src="/home/js/jquery-3.5.1.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.to-bind').click(function() {
+                var bindValue = $(this).attr('bindvalue');
+                alert('绑定 ' + bindValue + ' 的支付宝');
+            });
+
+            $('.to-unbind').click(function() {
+                var unbindValue = $(this).attr('bindvalue');
+                alert('解绑 ' + unbindValue + ' 的微信');
+            });
+        });
+    </script>
+</head>
+
+<body>
+<!--引入顶部文件-->
+<div th:replace="/home/header"></div>
+<!--个人中心左侧菜单开始-->
+<div class="address">
+    <div class="wrapper clearfix">
+        <a>当前位置：</a>
+        <a href="http://localhost:8080/index.html"  style="">首页</a><span>></span>
+        <a href="/view/personal/info" class="go">个人中心</a><span>></span>
+        <a class="go">账号安全</a><span>></span>
+        <a class="go">通知设置</a>
+    </div>
+</div>
+
+<div class="Bott">
+    <div class="wrapper clearfix" style="width: 1500px; margin-left: 160px;">
+        <!--个人中心左侧菜单开始-->
+        <div th:replace="/home/common/left_menu"></div>
+        <!--个人中心左侧菜单结束-->
+
+        <!-- 右侧菜单 -->
+        <div class="you fl" style="min-height: 460px;">
+            <h2>通知设置</h2>
+            <div class="notice-settings">
+                <h3>绑定服务</h3>
+                <ul class="notice-bind">
+                    <li class="bind-item" bindvalue="3" bindflag="1">
+                        <i class="icon icon-weixin"></i>
+                        <div class="details">
+                            <div>微信绑定状态：<strong>已绑定</strong></div>
+                            <div>绑定时间：<strong>2023-08-13</strong></div>
+                            <div>
+                                <button class="to-unbind" bindvalue="3">解绑</button>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="bind-item" bindvalue="6" bindflag="-1">
+                        <i class="icon icon-zhifubao"></i>
+                        <div class="details">
+                            <div>支付宝绑定状态：<strong>未绑定</strong></div>
+                            <div>绑定后，可通过支付宝通知提醒接收12306行程通知</div>
+                            <div>
+                                <button class="to-bind" bindvalue="6">绑定</button>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--引入底部footer.html文件-->
+<div th:replace="/home/footer"></div>
+<script src="/home/js/public.js" type="text/javascript" charset="utf-8"></script>
+<script src="/home/js/user.js" type="text/javascript" charset="utf-8"></script>
+
+</body>
+</html>

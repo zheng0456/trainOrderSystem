@@ -1,0 +1,15 @@
+<html  xmlns:th="http://www.thymeleaf.org">
+<div class="toolbar-btn-action"  th:fragment="thirdMenu">
+
+	<a th:each="userThirdMenu:${userThirdMenus}"  th:if="${userThirdMenu.is_button == 1 and userThirdMenu.is_show == 1}"
+            class="btn btn-primary m-r-5" href="javascript:void(0)"  th:name="${userThirdMenu.url}" onClick="operation(this)">
+        <i th:class="'mdi '+${userThirdMenu.icon}"></i>[[${userThirdMenu.name}]]
+    </a>
+
+	<a  th:each="userThirdMenu:${userThirdMenus}"  th:if="${userThirdMenu.is_button == 0 and userThirdMenu.is_show == 1}"
+         class="btn btn-primary m-r-5" th:href="${userThirdMenu.url}">
+        <i th:class="'mdi '+${userThirdMenu.icon}"></i>[[${userThirdMenu.name}]]
+    </a>
+
+</div>
+</html>

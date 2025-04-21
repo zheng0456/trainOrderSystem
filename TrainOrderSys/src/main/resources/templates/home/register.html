@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<!--引入thymeleaf模板引擎-->
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>中国梦想游-注册页</title>
+    <link href="/home/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="/home/css/common.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="/home/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript">
+
+        /***********验证用户名*************/
+        function checkUsername() {
+            let strName = document.getElementById("userName").value;
+            let divName = document.getElementById("w1");
+            divName.style.display = "inline";
+            let flag =false;
+            if (strName.trim() == "") {
+                divName.innerHTML = "<font color='red'>用户名不能为空</font>";
+                return false;
+            }
+            let username = /^[\u4e00-\u9fa5a-zA-Z0-9_-]{2,16}$/
+            if (!username.test(strName)) {
+                divName.innerHTML = "<font color='red'>用户名只能是2-16位数字、字母下划线和减号组成</font>";
+                return false;
+            } else {
+                $.ajax({
+                    type: "get",
+                    url: "/system/user/checkUserName",
+                    data: {"username":$("#userName").val() },
+                    dataType: "json",
+                    async:false,
+                    success: function (data) {
+                        if (data == false) {
+                            divName.innerHTML = "<font color='red'>用户名已经存在，不能重复注册</font>";
+                        } else {
+                            divName.innerHTML = "<font color='green'>&check;</font>";
+                            flag =true;
+                        }
+                    },
+                    error: function () {
+                        alert("网络错误，请刷新试一试")
+                    }
+                });
+            }
+                return flag;
+        }
+
+
+
+
+
+        /***********验证密码*************/
+        function checkPassword() {
+            let strPass = document.getElementById("password").value;
+            let divName = document.getElementById("w2");
+            divName.style.display = "inline";
+            if (strPass == "") {
+                divName.innerHTML = "<font color='red'>密码不能为空</font>";
+                return false;
+            }
+            let passwordZZ = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,16}$/ ;
+            if (!passwordZZ.test(strPass)) {
+                divName.innerHTML = "<font color='red'>密码为6-16位字符,必须包含大小写字母和数字</font>";
+                return false;
+            } else {
+                divName.innerHTML = "<font color='green'>&check;</font>";
+            }
+            return true;
+        }
+
+
+
+        /***********验证确认密码*************/
+        function checkRepass() {
+            let pass1 = document.getElementById("password").value;
+            let pass2 = document.getElementById("RePassword").value;
+            let divName = document.getElementById("w3");
+            divName.style.display = "inline";
+            if (pass2 == "") {
+                divName.innerHTML = "<font color='red'>请输入确认密码！</font>";
+                return false;
+            }
+            if (pass1 != pass2) {
+                divName.innerHTML = "<font color='red'>密码与确认密码不同！</font>";
+                return false;
+            } else {
+                divName.innerHTML = "<font color='green'>&check;</font>";
+            }
+            return true;
+        }
+
+
+        /************验证证件号***********/
+        function checkCardCode(){
+            let cardCode = $("#card_code");
+            let cardError = document.getElementById("cardCodeError")
+            let cardCodeNum = cardCode.val();
+            let flag =false;
+            cardError.style.display = "inline";
+            if (cardCodeNum==null || cardCodeNum.trim()==""){
+                cardError.innerHTML = "<font color='red'>证件号不能为空！</font>";
+                return false;
+            }
+            let regCard  = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/ ;
+            if (!regCard.test(cardCodeNum)){
+                cardError.innerHTML = "<font color='red'>证件号格式错误！</font>";
+                return false;
+            }else {
+                $.ajax({
+                    type:"get",
+                    url:"/system/user/checkCardCode",
+                    data:{"card_code":$("#card_code").val()},
+                    dataType:"json",
+                    async:false,
+                    success:function (response){
+                        if (response){
+                            cardError.innerHTML = "<font color='green'>&check;</font>";
+                            flag =true;
+                        }else {
+                            cardError.innerHTML = "<font color='red'>该证件号已被注册！</font>";
+                        }
+                    },
+                    error:function (){
+                        alert("网络错误，请刷新试一试")
+                    }
+                })
+            }
+            return flag;
+
+        }
+
+
+        /***********验证手机号****************/
+        function checkPhone() {
+            let strPhone = document.getElementById("phone").value;
+            let divName = document.getElementById("w5");
+            let flag = false;
+            divName.style.display = "inline";
+            if (strPhone.trim() == "") {
+                divName.innerHTML = "<font color='red'>手机号不能为空</font>";
+                return false;
+            }
+            let reg = /^1[3456789]\d{9}$/;
+            if (!reg.test(strPhone)) {
+                divName.innerHTML = "<font color='red'>手机号格式错误</font>";
+                return false;
+            } else {
+                $.ajax({
+                    type: "get",
+                    url: "/system/user/checkPhone",
+                    data: {"phone": $("#phone").val()},
+                    dataType: "json",
+                    async:false,
+                    success: function (data) {
+                        if (data == false) {
+                            divName.innerHTML = "<font color='red'>该手机号已经注册过了！</font>";
+                        } else {
+                            divName.innerHTML = "<font color='green'>&check;</font>";
+                            flag =true;
+                        }
+                    },
+                    error: function () {
+                        alert("网络错误，请刷新试一试")
+                    }
+                });
+            }
+            return flag;
+        }
+
+        /**********验证邮箱格式*************/
+        function checkEmail() {
+            var email = document.getElementById("email").value;
+            var divName = document.getElementById("w6");
+            divName.style.display = "inline";
+            let flag =false;
+            if (email.trim() == "") {
+                divName.innerHTML = "<font color='red'>邮箱不能为空</font>";
+                return false;
+            }
+            //定义邮箱格式
+            let emailZZ= /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailZZ.test(email)) {
+                divName.innerHTML = "<font color='red'>邮箱格式错误！</font>";
+                return false;
+            } else {
+                $.ajax({
+                    type: "get",
+                    url: "/system/user/checkEmail",
+                    data: {"email": $("#email").val()},
+                    dataType: "json",
+                    async:false,
+                    success: function (data) {
+                        if (data == false) {
+                            divName.innerHTML = "<font color='red'>该邮箱已经存在！</font>";
+                        } else {
+                            divName.innerHTML = "<font color='green'>&check;</font>";
+                            flag =true;
+                        }
+                    },
+                    error: function () {
+                        alert("网络错误，请刷新试一试")
+                    }
+                });
+            }
+            return flag;
+        }
+
+
+
+         let code;
+        /**********生成验证码*************/
+        function createCode() {
+            code = "";
+            let codeLength = 6; //验证码的长度
+            let checkCode = document.getElementById("checkCode");
+            let codeChars = new Array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+                'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'); //所有候选组成验证码的字符，当然也可以用中文的
+            for (let i = 0; i < codeLength; i++) {
+                let charNum = Math.floor(Math.random() * 52);
+                code += codeChars[charNum];
+            }
+            if (checkCode) {
+                checkCode.className = "code";
+                checkCode.innerHTML = code;
+            }
+        }
+
+        function validateCode() {
+            let inputCode = document.getElementById("inputCode").value;
+            if (inputCode.length <= 0) {
+                $("#w7").text(" 请输入验证码").css("color","red");
+            } else if (inputCode.toUpperCase() != code.toUpperCase()) {
+                $("#w7").text(" 验证码错误").css("color","red");
+                createCode();
+            } else {
+                $("#w7").text(" 验证码正确").css("color","green");
+            }
+        }
+
+        /**********表单提交前的校验*************/
+        function checkForm() {
+            if (checkUsername() && checkPassword() && checkRepass() && checkPhone() && checkEmail() && checkCardCode() ) {
+                if (confirm("确认要提交么？")) {
+                    if (Box != null && !Box.checked) {
+                        alert("请先阅读并勾选注册协议！");
+                        return false;
+                    } else {
+                        alert("注册成功！请回到登陆界面登录");
+                        return true;
+                    }
+                } else {
+                    alert("您取消了注册信息的提交！！");
+                    return false;
+                }
+            } else {
+                alert("信息验证不通过,请返回重新填写！！");
+                return false;
+            }
+        }
+    </script>
+
+</head>
+<body onload="createCode()">
+<!--引入header.html文件-->
+<div th:replace="/home/header.html"></div>
+
+<div class="b_wrap">
+    <div class="current"><span>你现在的位置：</span>
+        <a href="index.html">首页</a> >
+        <a href="font/reg.jsp">用户注册</a>
+    </div>
+    <div class="regin_w clearfix">
+        <div class="regin_con">
+            <div class="regin">
+                <div class="tab_menu regin_menu">
+                    <ul class="regin_ul">
+                        <li class="selected">用户注册</li>
+                    </ul>
+                </div>
+                <div class="tab_box">
+                    <div class="regin_tw">
+
+                        <form name="loginForm" action="/system/user/register" method="post" onsubmit="return checkForm()">
+                            <table width="700" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td>用户名：</td>
+                                    <td><input class="rg_in" type="text" name="username" id="userName" value=""
+                                               placeholder="用户名设置后不可修改" onblur="checkUsername()">
+                                        <div id="w1" style=" display:none;background-color:#FFF"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>登录密码:</td>
+                                    <td><input class="rg_in" type="password" name="password" id="password" value=""
+                                               style="padding:5px 8px;font-size: 14px;"     placeholder="6-20位的数字、字母或符号" onblur="checkPassword()">
+                                        <div id="w2" style=" background-color:#FFF; display:none"></div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>确认密码：</td>
+                                    <td><input class="rg_in" type="password" name="RePassword" id="RePassword"
+                                               style="padding: 5px 8px;font-size: 14px;" value="" placeholder="与密码一致"
+                                               onblur="checkRepass()">
+                                           <div id="w3" style="background-color: #FFF;display:none"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>证件类型：</td>
+                                    <td>
+                                       <select  id="card_type" name="card_type" >
+                                         <option value="0" selected>中国居民身份证</option>
+                                         <option value="1">港澳居民居住证</option>
+                                         <option value="2">台湾居民居住证</option>
+                                         <option value="3">外国人永久居留身份证</option>
+                                         <option value="4">外国护照</option>
+                                         <option value="5">中国护照</option>
+                                         <option value="6">港澳居民来往内地通行证</option>
+                                         <option value="7">台湾居民来往大陆通行证</option>
+                                       </select>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>姓名：</td>
+                                    <td><input class="rg_in" type="text" name="name" id="name"
+                                               style="padding: 5px 8px;font-size: 14px;" value="" placeholder="请输入您的真实姓名">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>证件号码：</td>
+                                    <td><input class="rg_in" type="password" name="card_code" id="card_code"
+                                               style="padding: 5px 8px;font-size: 14px;" value="" placeholder="请输入您的证件号码"
+                                               onblur="checkCardCode()">
+                                        <div id="cardCodeError"style=" display:none;background-color:#FFF" ></div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>优惠(待)类型：</td>
+                                    <td>
+                                        <select  id="user_type" name="user_type" >
+                                            <option value="0" selected>成人</option>
+                                            <option value="1">儿童</option>
+                                            <option value="2">学生</option>
+                                            <option value="3">残疾军人</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>手机号码：</td>
+                                    <td width="588"><input class="rg_in" type="text" name="phone" id="phone"
+                                                           value="" placeholder="11位手机号" onblur="checkPhone()">
+                                        <div id="w5" style=" display:none;background-color:#FFF"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>电子邮箱：</td>
+                                    <td><input class="rg_in" type="text" name="email" id="email" value="" placeholder="请填写正确邮箱"
+                                               onblur="checkEmail()">
+                                        <div id="w6" style="background-color: #FFF;display:none"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>验 证 码：</td>
+                                    <td><input class="rg_yzm" type="text" id="inputCode" value=""
+                                               placeholder="与图片一致" onblur="validateCode()">
+                                        <div class="code" style="background-color: #FFBBFF;display:inline;
+            font-family:Arial;
+            font-style:italic;
+             color:blue;
+             font-size:20px;
+
+             font-weight:bolder;             
+            
+             width:90px;
+              
+                            " id="checkCode"></div>
+                                        <a href="#" onclick="createCode()">看不清换一张</a>
+                                        <span id="w7"></span>
+                                    </td>
+                                </tr>
+                                <tr></tr>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td><input type="checkbox"  id="Box" value=""> 我已阅读并同意遵守
+                                        <a href="service.html">《中国梦想游服务协议》</a>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td><input type="image" src="/home/img/agree_b.jpg" value=""></td>
+                                </tr>
+                            </table>
+                        </form>
+
+
+                    </div>
+                    <div class="hide regin_tw"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <!--右侧文本-->
+        <div class="regin_info">
+            <p class="if_t"><b>为什么选择中国梦想游</b></p>
+            <div>
+                <div class="if_tit"><img src="/home/img/dj_01.jpg"> 低价、放心</div>
+                <p>低价保证、无零负团费、无特殊附加
+                    费、9大出游保障。</p>
+            </div>
+            <div>
+                <div class="if_tit"><img src="/home/img/ff_01.jpg"> 产品丰富</div>
+                <p>8万+旅游产品，涵盖跟团、自助、自
+                    驾、邮轮、公司游等，总有一款适合您。</p>
+            </div>
+            <div>
+                <div class="if_tit"><img src="/home/img/xx_01.jpg"> 300万游客的选择</div>
+                <p>累计服务300万人次，60万真实点评，
+                    2万原创游记。</p>
+            </div>
+            <div>
+                <div class="if_tit"><img src="/home/img/fw_01.jpg"> 更多服务</div>
+                <p>全国15个出发城市，24小时服务</p>
+            </div>
+            <center><img src="/home/img/zc_img0.jpg"></center>
+        </div>
+    </div>
+</div>
+
+<!--引入底部footer.html文件-->
+<div th:replace="/home/footer"></div>
+</body>
+</html>
+    

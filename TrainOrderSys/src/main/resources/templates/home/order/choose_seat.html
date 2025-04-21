@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<!--引入thymeleaf模板引擎-->
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>中国梦想游网站</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="/home/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="/home/css/common.css" rel="stylesheet" type="text/css"/>
+    <link href="/home/css/public.css" rel="stylesheet" type="text/css"/>
+    <link href="/home/css/order/common_css.css?cssVersion=1.9084" rel="stylesheet"/>
+    <!--引入js文件-->
+    <script type="text/javascript" src="/home/js/jquery-3.5.1.js"></script>
+    <!--选座实现-->
+    <script type="text/javascript">
+        //定义数组，并确定数组的长度(存放选择的Id)
+        let seat = [];
+        $(document).ready(function () {
+            let flag = $("#flagSeat").val();
+            var showBed = document.getElementById("id-bed-sel");
+            var showSeat = document.getElementById("id-seat-sel");
+         if (flag==0){
+             showSeat.style.display = "none";
+             showBed.style.display = "block";
+           let maxBedNumber = parseInt($("#totalSeatNumber2").text());
+            $('#selectBed a').click(function () {
+                //获取当前对象的id
+                let id = $(this).attr("id");
+                //检查数组长度只能小于等于乘客数量，多了不能再选，需要取消以前选择的才能再选
+                if (seat.length < maxBedNumber) {
+                    if (seat.indexOf(id) == -1) {
+                        seat.push(id);              //添加当前数据到数组里面
+                        $(this).css('background', "#35a7f8"); // 切换背景颜色
+                    } else {
+                        let index = seat.indexOf(id); // 获取id在数组中的索引
+                        seat.splice(index, 1); // 从数组中删除该id
+                        $(this).css('background', "#c4e2f4"); // 切换背景颜色
+                    }
+                } else if (seat.length == maxBedNumber) {
+                    if (seat.indexOf(id) == -1) {
+                        alert("你当前可选座位已达上限，请先取消已选座位后在重新选座！");
+                    } else {
+                        let index = seat.indexOf(id); // 获取id在数组中的索引
+                        seat.splice(index, 1); // 从数组中删除该id
+                        $(this).css('background', "#c4e2f4");// 切换背景颜色
+                    }
+                }
+                //给选座的数量赋值
+                let selectNo = seat.length;
+                $("#selectNo2").text(selectNo);
+                $("#seatInfo").val(seat);
+            });
+
+
+        }else if (flag==1){
+             showSeat.style.display = "none";
+             showBed.style.display = "none";
+             var showTip1 = document.getElementById("notice_1_id");
+             showTip1.style.display="none";
+             var showTip2 = document.getElementById("notice_2_id");
+             showTip2.style.display="block";
+             $("#seatInfo").val("null");
+        }else {
+            //选择座位
+             showSeat.style.display = "block";
+             showBed.style.display = "none";
+                //获取可以选择的最大座位数量
+                let number = $("#totalSeatNumber").text();
+                // 为每个(座位的)a标签添加点击事件
+                $('#selectSeat a').click(function () {
+                    //获取当前对象的id
+                    let id = $(this).attr("id");
+                    //检查数组长度只能小于等于乘客数量，多了不能再选，需要取消以前选择的才能再选
+                    if (seat.length < number) {
+                        if (seat.indexOf(id) == -1) {
+                            seat.push(id);              //添加当前数据到数组里面
+                            $(this).css('background', "#35a7f8"); // 切换背景颜色
+                        } else {
+                            let index = seat.indexOf(id); // 获取id在数组中的索引
+                            seat.splice(index, 1); // 从数组中删除该id
+                            $(this).css('background', "#c4e2f4"); // 切换背景颜色
+                        }
+                        //选择座位的数量等于number时
+                    } else if (seat.length == number) {
+                        //当前点击的id不存在数组，提示选择完了
+                        if (seat.indexOf(id) == -1) {
+                            alert("你当前可选座位已达上限，请先取消已选座位后在重新选座！");
+                        } else {   //如果存在就删除这个id
+                            let index = seat.indexOf(id); // 获取id在数组中的索引
+                            seat.splice(index, 1); // 从数组中删除该id
+                            $(this).css('background', "#c4e2f4");// 切换背景颜色
+                        }
+                    }
+                    //给选座的数量赋值
+                    let selectNo = seat.length;
+                    $("#selectNo").text(selectNo);
+                    $("#seatInfo").val(seat);
+                });
+
+        }
+      })
+
+
+
+
+
+
+        function createOrder(trainInfo) {
+            // 获取当前的座位数量
+            let number = $("#totalSeatNumber").text();
+            let seatInfo =$("#seatInfo").val();
+            let flag = $("#flagSeat").val();
+            if (seat.length == number || flag ==1) {
+                // 使用 AJAX 提交表单数据
+                $.ajax({
+                    url: "/view/ticketing/createOrder",
+                    type: 'POST',
+                    data: {
+                        "trainInfo": trainInfo, // 传递 trainInfo 数据
+                        "seatInfo": seatInfo, // 传递座位信息
+                    },
+                    success: function(response) {
+                        if (response.code==200){
+                            $("#checkTicketInfo").css('display', 'none');
+                            $("#chooseSeat").css("display", 'block');
+                            waitingTicket(trainInfo);
+                        }else {
+                            alert(response.msg)
+                        }
+                    },
+                    error: function() {
+                        alert("提交订单时发生错误，请稍后重试！");
+                    }
+                });
+            } else {
+                alert("你的座位还没有选择完成!!!");
+            }
+        }
+
+
+
+        function waitingTicket(trainInfo){
+            let train_number = $("#train_number").val();
+            let departure_date = $("#departure_date").val();
+            $.ajax({
+                url: "/view/ticketing/findIsOrder/"+train_number+"/"+departure_date,
+                type: 'POST',
+                success: function(response) {
+                    if (response.code==200){
+                        let result = response.data;
+                        if (result == "-1"){
+                          alert("抢票失败，请重试!")
+                        }else if (result=="0"){
+                            setTimeout(function() {
+                                waitingTicket(trainInfo)
+                            }, 200);
+                        }else {
+                            let res =  window.confirm("订单已生成，去支付？");
+                            if (res){
+                               window.location.href="/view/ticketing/showOrder_pay?order_no="+result;
+                            }else {
+                                window.location.href="http://localhost:8080/index.html";
+                            }
+                        }
+                    }else {
+                        alert(response.msg)
+                    }
+                },
+                error: function() {
+                    alert("提交订单时发生错误，请稍后重试！");
+                }
+            });
+        }
+
+    </script>
+</head>
+
+<body>
+<!--引入顶部header.html文件-->
+<div th:replace="/home/header"></div>
+<!--页面中心-->
+<div class="content">
+    <!--列车信息 开始-->
+    <div class="layout t-info" style="background: #0086f6">
+        <div class="lay-hd">
+            列车信息<span class="small">（以下余票信息仅供参考）</span>
+        </div>
+        <div class="lay-bd"><p class="t-tit" id="ticket_tit_id">
+            <strong class="mr5">[[${trainInfo.departure_date}]]</strong>
+            <strong class="ml5">[[${trainInfo.train_number}]]</strong>次<strong title="北京南" class="ml5">[[${trainInfo.start_station}]]</strong>站
+            <strong title="">（[[${trainInfo.start_time}]]开）— [[${trainInfo.end_station}]]</strong>站（[[${trainInfo.arrive_time}]]到）
+        </p>
+            <p class="t-con" id="ticket_con_id">
+                <span id="ticket_status_id" th:each="seat:${trainInfo.seatInfoEntityList}"
+                      class="s1">[[${seat.seat_type}]]（<span class="colorA">￥[[${seat.price}]]</span>）有票</span>
+            </p>
+            <p style="color: #3177BF;">
+                *显示的卧铺票价均为上铺票价，供您参考。具体票价以您确认支付时实际购买的铺别票价为准。
+            </p>
+        </div>
+    </div>
+    <!--列车信息 结束-->
+
+    <input type="hidden" id="flagSeat"  th:value="${flagSeat}" >
+
+    <!--多级票价信息 开始-->
+    <div style="display: none;"><input style="display: none;" type="checkbox" id="fczk" aria-label="按空格键进行操作">
+    </div>
+
+    <!--乘客信息 开始-->
+    <div class="layout person">
+        <div class="lay-hd" style="background: #3b99fc">
+            乘客信息<span class="small" id="psInfo">（选择乘车人）</span>
+        </div>
+        <div class="lay-bd">
+            <div class="per-sel">
+                <div class="item clearfix">
+                    <h2 class="cy" id="normal_passenger_image_id" title="乘车人" style="padding: 0px">乘车人:</h2>
+                    <ul id="normal_passenger_id">
+                        <li th:each="p:${passengers}">
+                            <input name="passenger" id="passenger" type="checkbox" class="check">
+                            <label style="cursor: pointer;">[[${p.passenger_name}]]</label>
+                        </li>
+                    </ul>
+                    <div class="btn-all" style="display: none;" id="btnAll"><a id="show_more_passenger_id" title="展开"
+                                                                               href="javascript:" style="" shape="rect">
+                        <label id="gd">更多</label><b></b></a>
+                    </div>
+                </div>
+            </div>
+
+
+            <!--存放乘客数据，利用表单提交数据（后台使用实体类中的数组获取数据并解析成集合类型）-->
+            <form id="Form01"  method="post">
+                <table class="per-ticket">
+                    <tbody>
+                    <tr align="center">
+                        <th width="28" rowspan="1" colspan="1">序号</th>
+                        <th rowspan="1" colspan="1">票种</th>
+                        <th rowspan="1" colspan="1">席别</th>
+                        <th rowspan="1" colspan="1">姓名</th>
+                        <th rowspan="1" colspan="1">证件类型</th>
+                        <th rowspan="1" colspan="1">证件号码</th>
+                        <th width="70" rowspan="1" colspan="1"></th>
+                        <th width="30" rowspan="1" colspan="1"></th>
+                    </tr>
+                    </tbody>
+                    <tbody id="ticketInfo_id">
+                    <tr id="tr_id_1" th:each="t:${trainInfo.tickets}" >
+                        <td align="center" name="sortNumber">
+                            <input type="hidden" name="sort" value="5">[[${t.sort}]]
+                        </td>
+                        <td>
+                            <select id="ticketType_1" name="ticket_type">
+                                <option th:if="${t.ticket_type == '0'}" value="0" selected="selected">学生票</option>
+                                <option th:if="${t.ticket_type == '1'}" value="1" selected="selected">儿童票</option>
+                                <option th:if="${t.ticket_type == '2'}" value="2" selected="selected">成人票</option>
+                                <option th:if="${t.ticket_type == '3'}" value="3" selected="selected">军人票</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select id="seat_type" name="seat_type" >
+                                <option th:text="${t.seatType.getSeat_type_name()+'（'+t.ticket_price}+'）'"
+                                        selected></option>
+                            </select>
+                        </td>
+                        <td>
+                            <div class="pos-rel"><input name="passenger_name" class="inptxt w110"
+                                                        th:value="${t.passenger_name}" title="不允许变更乘车人信息"
+                                                        size="12" maxlength="20" type="text" readonly="readonly">
+                                <div class="w110-focus" id="passenger_name_1_notice" tabindex="-1"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <select id="card_type" title="不允许变更乘车人信息"
+                                    onfocus="this.defaultIndex=this.selectedIndex;"
+                                    onchange="this.selectedIndex=this.defaultIndex;" role="combobox"
+                                    name="card_type" aria-label="中国居民身份证,不允许修改乘车人信息"
+                                    readonly="readonly">
+                                <option th:value="${t.card_type}" selected="selected">[[${t.card_type}]]</option>
+                            </select>
+                        </td>
+                        <td>
+                            <div class="pos-rel"><input id="passenger_id_no_1" class="inptxt w160" name="card_code"
+                                                        th:value="${t.card_code}" title="不允许变更乘车人信息" size="20"
+                                                        maxlength="35" type="text" readonly="readonly">
+                                <div class="w160-focus" id="passenger_id_no_1_notice" tabindex="-1"></div>
+                            </div>
+                        </td>
+                        <td style="width:40px;">
+                            <a aria-label="占位符" id="addchild_1" name="addchild_normalPassenger_1"></a>
+                        </td>
+
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+
+
+
+        </div>
+    </div>
+    <div style="line-height: 20px; margin-top: 10px;">提交订单表示已阅读并同意
+        <a id="zl_gz" style="display: none;" target="_blank"
+           href="https://mobile.12306.cn/otsmobile/h5/otsbussiness/zhonglao/international-organizationRules/international-organizationRules.html"
+           shape="rect">《中老铁路跨境旅客联运组织规则》</a>
+        <a target="_blank" href="https://mobile.12306.cn/otsmobile/h5/otsbussiness/info/transportationRules.html"
+           shape="rect">《国铁集团铁路旅客运输规程》</a>
+        <a id="kj_gz" style="display: none;" target="_blank"
+           href="https://mobile.12306.cn/otsmobile/h5/otsbussiness/info/crossBorderPassenger.html" shape="rect">《广深港高速铁路跨境旅客运输组织规则》</a>
+        <a target="_blank" href="https://mobile.12306.cn/otsmobile/h5/otsbussiness/info/serviceAnnouncement.html"
+           shape="rect">《服务条款》</a>
+    </div>
+    <!--乘客信息 结束-->
+    <div class="lay-btn">
+        <a href="javascript:void(0);" onclick="history.go(-1)" class="btn92" shape="rect">上一步</a>
+        <a href="javascript:void(0);" onclick="checkTicketInfo()" class="btn92s" shape="rect"
+           style="background: #ffa50a">提交订单</a>
+    </div>
+    <div>
+        <div class="tips-txt">
+            <h2>温馨提示：</h2>
+            <p>1. 一张有效身份证件同一乘车日期同一车次只能购买一张车票，高铁动卧列车除外。</p>
+            <p>2.
+                购买儿童票时，乘车儿童有有效身份证件的，请填写本人有效身份证件信息。自2023年1月1日起，每一名持票成年人旅客可免费携带一名未满6周岁且不单独占用席位的儿童乘车，超过一名时，超过人数应购买儿童优惠票。免费儿童可以在购票成功后添加。</p>
+            <p>3.
+                购买残疾军人（伤残警察）优待票的，须在购票后、开车前办理换票手续方可进站乘车。换票时，不符合规定的减价优待条件，没有有效"中华人民共和国残疾军人证"或"中华人民共和国伤残人民警察证"的，不予换票，所购车票按规定办理退票手续。</p>
+            <p>4.一天内3次申请车票成功后取消订单（包含无座票时取消5次计为取消1次），当日将不能继续购票。</p>
+            <p>5.未尽事宜详见《铁路旅客运输规程》等有关规定和车站公告。</p>
+            <p>6.
+                为确保乘客在旅途中有一个安全、舒适的乘坐环境，自2020年11月17日起，您可选择雪具快运服务，请提前1-2天选择雪具快运“门到站”或“站到站”服务，中铁快运提供雪具到站后3日免费保管，请您根据出行时间，提前咨询和办理。中铁快运客服热线：95572<br
+                        clear="none">
+            </p>
+        </div>
+    </div>
+</div>
+<!--引入底部footer.html文件-->
+<div th:replace="/home/footer"></div>
+
+<!-- 提交订单核对车票信息弹出层 start              block（） -->
+<div id="checkTicketInfo" style="display: block;">
+    <!--遮罩-->
+    <div class="mark" style="height: 100%;"></div>
+    <div class="up-box w664" id="content_checkticketinfo_id" tabindex="0"
+         style="margin-left: 30%;margin-top:10%;width: 40%">
+        <div class="up-box-hd" style="background-color:#0086f6">请核对以下车票信息</div>
+        <div class="up-box-bd ticket-check">
+            <div class="info2" id="check_ticket_tit_id">
+                <strong class="mr5" title="出发日期">[[${trainInfo.departure_date}]] </strong>
+                <strong class="ml5" title="火车车次">[[${trainInfo.train_number}]]</strong>次
+                <strong title="北京南" class="ml5">[[${trainInfo.start_station}]]</strong>站
+                <strong title="上海虹桥">（[[${trainInfo.start_time}]]开）—[[${trainInfo.end_station}]]</strong>
+                站（[[${trainInfo.arrive_time}]]到）
+            </div>
+            <div class="table-list">
+                <div class="table-list-head">
+                    <table class="table-a">
+                        <thead>
+                        <tr>
+                            <th style="width: 38px; text-align: center;" rowspan="1" colspan="1">序号</th>
+                            <th style="width: 45px; text-align: center;" rowspan="1" colspan="1">席别</th>
+                            <th style="width: 45px; text-align: center;" rowspan="1" colspan="1">票种</th>
+                            <th style="width: 45px; text-align: center;" rowspan="1" colspan="1">票价</th>
+                            <th style="width: 55px; text-align: center;" rowspan="1" colspan="1">姓名</th>
+                            <th style="width: 90px; text-align: center;" rowspan="1" colspan="1">证件类型</th>
+                            <th style="width: 130px; text-align: center;" rowspan="1" colspan="1">证件号码</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="table-list-body" style="max-height: 164px;">
+                    <table class="table-a">
+                        <tbody id="check_ticketInfo_id">
+                        <tr th:each="ticket:${trainInfo.tickets}">
+                            <td style="width: 38px; text-align: center;">[[${ticket.sort}]]</td>
+                            <td style="width: 45px; text-align: center;">[[${ticket.seatType.getSeat_type_name()}]]</td>
+                            <td style="width: 45px; text-align: center;">[[${ticket.ticket_type}]]</td>
+                            <td style="width: 45px; text-align: center;color: #fb7403">￥[[${ticket.ticket_price}]]</td>
+                            <td style="width: 55px; text-align: center;">[[${ticket.passenger_name}]]</td>
+                            <td style="width: 90px; text-align: center;"> [[${ticket.card_type}]]</td>
+                            <td style="width: 130px; text-align: center;">[[${ticket.card_code}]]</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <p style="color: #3177BF;" id="notice_1_id" >
+                *如果本次列车剩余席位无法满足您的选座需求，系统将自动为您分配席位。</p>
+            <p style="color: #3177BF;" id="notice_2_id" >
+                *系统将自动为您分配席位。</p>
+
+            <!--座位类型选择-->
+            <div class="seat-sel seat-sel-round" id="id-seat-sel" >
+                <div class="seat-sel-hd">
+                    <div class="tips-xz">选座喽</div>
+                    已选座<span id="selectNo">0</span><span>/</span>
+                    <span id="totalSeatNumber">[[${trainInfo.tickets.size()}]]</span>
+                </div>
+                <!--座位列表-->
+                <div class="seat-sel-bd" id="selectSeat">
+                    <!-- 第一排 -->
+                    <div class="sel-item" ><!-- 二等座-->
+                        <div class="txt">窗</div>
+                        <ul class="seat-list">
+                            <li><a href="javascript:void(0);" id="1A" shape="rect">A</a></li>
+                            <li><a href="javascript:void(0);" id="1B" shape="rect">B</a></li>
+                            <li><a href="javascript:void(0);" id="1C" shape="rect">C</a></li>
+                        </ul>
+                        <div class="txt">过道</div>
+                        <ul class="seat-list">
+                            <li><a href="javascript:void(0);" id="1D" shape="rect">D</a></li>
+                            <li><a href="javascript:void(0);" id="1F" shape="rect">F</a></li>
+                        </ul>
+                        <div class="txt txt-last">窗</div>
+                    </div>
+
+                    <!-- 第二排 -->
+                    <div class="sel-item" id="erdeng2"><!-- 二等座-->
+                        <div class="txt">窗</div>
+                        <ul class="seat-list">
+                            <li><a href="javascript:void(0);" id="2A" shape="rect">A</a></li>
+                            <li><a href="javascript:void(0);" id="2B" shape="rect">B</a></li>
+                            <li><a href="javascript:void(0);" id="2C" shape="rect">C</a></li>
+                        </ul>
+                        <div class="txt">过道</div>
+                        <ul class="seat-list">
+                            <li><a href="javascript:void(0);" id="2D" shape="rect">D</a></li>
+                            <li><a href="javascript:void(0);" id="2F" shape="rect">F</a></li>
+                        </ul>
+                        <div class="txt txt-last">窗</div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!--卧铺类型选择-->
+            <div class="seat-sel seat-sel-round" id="id-bed-sel">
+                <div class="seat-sel-hd">
+                    <div class="tips-xz">选铺喽</div>
+                    已选铺<span id="selectNo2">0</span><span>/</span>
+                    <span id="totalSeatNumber2">[[${trainInfo.tickets.size()}]]</span>
+                </div>
+                <div class="seat-sel-bd" id="selectBed">
+                    <div class="sel-item">
+
+                        <div class="sel-item" >
+                            <div class="txt">上铺</div>
+                            <ul class="seat-list">
+                                <li><a href="javascript:void(0);" id="1上铺" shape="rect">上</a></li>
+                            </ul>
+                            <div class="txt">中铺</div>
+                            <ul class="seat-list">
+                                <li><a href="javascript:void(0);" id="1中铺" shape="rect">中</a></li>
+                            </ul>
+                            <div class="txt">下铺</div>
+                            <ul class="seat-list">
+                                <li><a href="javascript:void(0);" id="1下铺" shape="rect">下</a></li>
+                            </ul>
+                        </div>
+
+
+                        <div class="sel-item" >
+                            <div class="txt">上铺</div>
+                            <ul class="seat-list">
+                                <li><a href="javascript:void(0);" id="2上铺" shape="rect">上</a></li>
+                            </ul>
+                            <div class="txt">中铺</div>
+                            <ul class="seat-list">
+                                <li><a href="javascript:void(0);" id="2中铺" shape="rect">中</a></li>
+                            </ul>
+                            <div class="txt">下铺</div>
+                            <ul class="seat-list">
+                                <li><a href="javascript:void(0);" id="2下铺" shape="rect">下</a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <input type="hidden"  id="seatInfo">
+            <input type="hidden" th:value="${trainInfo.train_number}" id="train_number">
+            <input type="hidden" th:value="${trainInfo.departure_date}" id="departure_date">
+
+
+            <div class="lay-btn" id="confirmDiv" style="padding: 10px 0px;">
+                <a href="javascript:void(0);" id="back_edit_id" class="btn92" shape="rect"
+                   onclick="history.go(-1)">返回修改</a>
+                <a href="javascript:void(0);" class="btn92s" id="qr_submit_id" shape="rect" style="background: #fb7403"
+                   th:onclick="createOrder('[[${trainInfo}]]')">确认</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--遮罩显示-->
+<div class="mark" style="height: 100%;"></div>
+<!--  选择座位列表提醒  -->
+<div id="chooseSeat" class="up-box w600" style="z-index: 20000; position: fixed; left: 459.5px; top: 35%;display: none"  tabindex="0">
+    <div class="up-box-hd" style="background: #3b99fc">确认订单</div>
+    <div class="up-box-bd" style="background: white;height: 120px">
+        <div class="up-con clearfix"><!-- <span class="icon i-work"></span> -->
+            <div class="r-txt">
+                <p class="ft14" style="width:500px;font-weight: 700;font-size: 16px">
+                    订单已经提交,系统正在处理。<br clear="none">
+                    正在根据你的选座需求，分配合适的座位。<br clear="none">
+                    优先按指定坐席出票，若所选坐席无票时,
+                    系统将随机为您申请席位。
+                </p>
+            </div>
+        </div><!---->
+    </div>
+</div>
+</body>
+</html>
+
+
