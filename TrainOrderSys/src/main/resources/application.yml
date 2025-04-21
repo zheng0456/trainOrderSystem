@@ -4,7 +4,11 @@
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     url: jdbc:mysql://localhost:3306/train_ticketing_system?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+=======
+    url: jdbc:mysql://10.0.6.136:3306/train_ticketing_system?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+>>>>>>> Stashed changes
 =======
     url: jdbc:mysql://10.0.6.136:3306/train_ticketing_system?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
 >>>>>>> Stashed changes
