@@ -3,35 +3,27 @@
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    url: jdbc:mysql://localhost:3306/train_ticketing_system?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-=======
     url: jdbc:mysql://10.0.6.136:3306/train_ticketing_system?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
->>>>>>> Stashed changes
-=======
-    url: jdbc:mysql://10.0.6.136:3306/train_ticketing_system?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
->>>>>>> Stashed changes
     type: com.alibaba.druid.pool.DruidDataSource
-    #初始连接数
+    # ?????
     initialSize: 5
-    #最小连接池数量
+    # ???????
     minIdle: 5
-    #最大连接池数量
+    # ???????
     maxActive: 20
-    #配置获取连接等待超时的时间
+    # ?????????????
     maxWait: 60000
-    #配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+    # ???????????????????????????????
     timeBetweenEvictionRunsMillis: 60000
-    #配置一个连接在池中最小生存的时间，单位是毫秒
+    # ??????????????????????
     minEvictableIdleTimeMillis: 300000
-    #配置一个连接在池中最大生存的时间，单位是毫秒
+    # ??????????????????????
     validationQuery: SELECT 1 FROM DUAL
     testWhileIdle: true
     testOnBorrow: false
     testOnReturn: false
     poolPreparedStatements: true
-    #配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+    #   ?????????filters????????sql?????'wall'?????
     filters: stat,wall
     maxPoolPreparedStatementPerConnectionSize: 20
     useGlobalDataSourceStat: true
@@ -39,19 +31,16 @@
 
 
 
-#加载mybatis配置文件
+#??mybatis????
 mybatis:
-  #指定mapper映射文件路径
-  #mapper-locations: classpath:mapper/*.xml
-  #设置类型别名
-  type-aliases-package: com.etc.trainordersys.entity
-  #指定全局配置文件路径
+  #??mapper??????
+  mapper-locations: classpath:mapper/*.xml
+  #??????
+  type-aliases-package: com.etc.onlineorderingsys.entity
+  #??????????
   #config-location: classpath:mybatis/mybatis-config.xml
 
-#mybatis sql打印(方法接口所在的包，不是Mapper.xml所在的包)
+#mybatis sql??(???????????Mapper.xml????)
 logging:
   level:
-    com.etc.trainordersys.mapper: debug
-
-server:
-  port: 8080
+    com.etc.TrainOrderSys.mapper: debug
