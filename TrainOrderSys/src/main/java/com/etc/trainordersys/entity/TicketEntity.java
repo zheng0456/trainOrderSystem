@@ -1,0 +1,31 @@
+package com.etc.trainordersys.entity;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class TicketEntity {
+    private int ticket_id;
+    private String order_no;
+    private String train_number;
+    private String start_station;
+    private String end_station;
+    private String start_time;
+    private String arrive_time;
+    private String departure_date;
+    private String passenger_name;
+    private String card_type;
+    private String card_code;
+    private int ticket_type;//成人票、儿童票等
+    private int seat_type_id;
+    private int carriage_number;
+    private String seat_number;
+    private double ticket_price;
+    private String QR_code;//二维码
+    private String create_time;
+    private String update_time;
+    private int ticket_status;
+}
