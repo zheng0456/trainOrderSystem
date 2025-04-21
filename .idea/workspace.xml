@@ -10,11 +10,15 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
         <option name="localRepository" value="D:\software\Maven\MyLocalRepository" />
         <option name="mavenHome" value="$PROJECT_DIR$/../../software/Maven/apache-maven-3.9.0" />
+        <option name="useMavenConfig" value="true" />
         <option name="userSettingsFile" value="D:\software\Maven\apache-maven-3.9.0\conf\settings.xml" />
       </MavenGeneralSettings>
     </option>
