@@ -222,9 +222,28 @@
                         </div>
                     </div>
                     <!--查询-->
-                    <input type="submit" value="查询" class="searchbtn" id="searchbtn" style="margin-top: -9px;background-color: #ff8000">
+                    <input type="submit" value="查询" class="searchbtn" id="searchbtn" style="margin-top: -9px;background-color: #ff8000" onclick="select_ticket()">
                 </form>
 
+                <script>
+                    function select_ticket(){
+                        if($("flag").val()==0){
+                            $.ajax({
+                                url:"/home/show",
+                                type:"GET",
+                                data:{
+                                    "cityChoice":cityChoice,  //出发地
+                                    "cityChoice1":cityChoice1,   //目的地
+                                    "start":start    //出发日期
+                                },success:function (data){
+
+                                },error:function (data=null){
+                                    alert("网络不可用");
+                                }
+                            })
+                        }
+                    }
+                </script>
 
 
 

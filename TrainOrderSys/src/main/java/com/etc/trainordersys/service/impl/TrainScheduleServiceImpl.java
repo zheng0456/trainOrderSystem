@@ -14,16 +14,15 @@ public class TrainScheduleServiceImpl implements ITrainScheduleService {
 
     @Autowired
     private TrainScheduleMapper trainScheduleMapper;
-
-    //查询火车票当天发行的所有票，价格，出发时间，到达时间
+    //查询火车时刻表信息
     @Override
-    public List<TrainScheduleEntity> findSelectTicket(String goTime, String startStation, String endStation) {
-        return trainScheduleMapper.findSelectTicket(goTime,startStation,endStation);
+    public List<TrainScheduleEntity> findTrainSchedule(String cityChoice, String cityChoice1, String start) {
+        return trainScheduleMapper.findTrainSchedule(cityChoice,cityChoice1,start);
     }
 
-    //查询火车票的价格
+    //查询火车的座位和票价
     @Override
-    public List<ScheduleSeatInfoEntity> findSelectTicketPrices(String goTime, String startStation, String endStation) {
-        return trainScheduleMapper.findSelectTicketPrices(goTime,startStation,endStation);
+    public List<ScheduleSeatInfoEntity> findScheduleSeatInfo(String trainName) {
+        return trainScheduleMapper.findScheduleSeatInfo(trainName);
     }
 }

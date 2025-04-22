@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+//座位信息表
 public class ScheduleSeatInfoEntity {
     private int id;
     private String train_number;

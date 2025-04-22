@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+//火车时刻表
 public class TrainScheduleEntity {
     private int id;
     private int train_code;
