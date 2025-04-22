@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface UserMapper {
     //登录
-    @Select("select * from t_user where (name = #{account} or email = #{account} or phone = #{account}) and password = #{password}")
+    @Select("select * from t_user where (username = #{account} or email = #{account} or phone = #{account}) and password = #{password}")
     UserEntity login(String account, String password);
     //注册-1 验证用户名
     @Select("select * from t_user where username = #{username}")
