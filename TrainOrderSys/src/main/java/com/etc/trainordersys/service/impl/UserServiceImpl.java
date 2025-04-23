@@ -35,4 +35,9 @@ public class UserServiceImpl implements IUserService {
     public UserEntity checkEmail(String email) {
         return userMapper.checkEmail(email);
     }
+    //用户注册
+    @Override
+    public int register(UserEntity user) {
+        return userMapper.register(user);
+    }
 }

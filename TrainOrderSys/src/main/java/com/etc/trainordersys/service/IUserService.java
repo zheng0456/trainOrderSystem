@@ -13,4 +13,6 @@ public interface IUserService {
     UserEntity checkPhone(String phone);
     //注册-4 验证邮箱格式
     UserEntity checkEmail(String email);
+    //用户注册
+     int register(UserEntity user);
 }

@@ -1,6 +1,7 @@
 package com.etc.trainordersys.mapper;
 
 import com.etc.trainordersys.entity.UserEntity;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -21,4 +22,7 @@ public interface UserMapper {
     //注册-4 验证邮箱格式
     @Select("select * from t_user where email = #{email}")
     UserEntity checkEmail(String email);
+    //用户注册
+    @Insert("insert into t_user values(null,#{username},#{password},#{name},null,null,#{phone},#{email},null,null,null,2,#{card_code},#{user_type},null,now(),now(),#{card_type},1)")
+    int register(UserEntity user);
 }

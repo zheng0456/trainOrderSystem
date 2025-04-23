@@ -15,7 +15,7 @@
             let strName = document.getElementById("userName").value;
             let divName = document.getElementById("w1");
             divName.style.display = "inline";
-            let flag =false;
+            let flag = false;
             if (strName.trim() == "") {
                 divName.innerHTML = "<font color='red'>用户名不能为空</font>";
                 return false;
@@ -28,15 +28,15 @@
                 $.ajax({
                     type: "get",
                     url: "/system/user/checkUserName",
-                    data: {"username":$("#userName").val() },
+                    data: {"username": $("#userName").val()},
                     dataType: "json",
-                    async:false,
+                    async: false,
                     success: function (data) {
                         if (data == false) {
                             divName.innerHTML = "<font color='red'>用户名已经存在，不能重复注册</font>";
                         } else {
                             divName.innerHTML = "<font color='green'>&check;</font>";
-                            flag =true;
+                            flag = true;
                         }
                     },
                     error: function () {
@@ -44,11 +44,8 @@
                     }
                 });
             }
-                return flag;
+            return flag;
         }
-
-
-
 
 
         /***********验证密码*************/
@@ -60,7 +57,7 @@
                 divName.innerHTML = "<font color='red'>密码不能为空</font>";
                 return false;
             }
-            let passwordZZ = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,16}$/ ;
+            let passwordZZ = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,16}$/;
             if (!passwordZZ.test(strPass)) {
                 divName.innerHTML = "<font color='red'>密码为6-16位字符,必须包含大小写字母和数字</font>";
                 return false;
@@ -69,7 +66,6 @@
             }
             return true;
         }
-
 
 
         /***********验证确认密码*************/
@@ -93,36 +89,36 @@
 
 
         /************验证证件号***********/
-        function checkCardCode(){
+        function checkCardCode() {
             let cardCode = $("#card_code");
             let cardError = document.getElementById("cardCodeError")
             let cardCodeNum = cardCode.val();
-            let flag =false;
+            let flag = false;
             cardError.style.display = "inline";
-            if (cardCodeNum==null || cardCodeNum.trim()==""){
+            if (cardCodeNum == null || cardCodeNum.trim() == "") {
                 cardError.innerHTML = "<font color='red'>证件号不能为空！</font>";
                 return false;
             }
-            let regCard  = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/ ;
-            if (!regCard.test(cardCodeNum)){
+            let regCard = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
+            if (!regCard.test(cardCodeNum)) {
                 cardError.innerHTML = "<font color='red'>证件号格式错误！</font>";
                 return false;
-            }else {
+            } else {
                 $.ajax({
-                    type:"get",
-                    url:"/system/user/checkCardCode",
-                    data:{"card_code":$("#card_code").val()},
-                    dataType:"json",
-                    async:false,
-                    success:function (response){
-                        if (response){
+                    type: "get",
+                    url: "/system/user/checkCardCode",
+                    data: {"card_code": $("#card_code").val()},
+                    dataType: "json",
+                    async: false,
+                    success: function (response) {
+                        if (response == true) {
                             cardError.innerHTML = "<font color='green'>&check;</font>";
-                            flag =true;
-                        }else {
+                            flag = true;
+                        } else {
                             cardError.innerHTML = "<font color='red'>该证件号已被注册！</font>";
                         }
                     },
-                    error:function (){
+                    error: function () {
                         alert("网络错误，请刷新试一试")
                     }
                 })
@@ -152,13 +148,13 @@
                     url: "/system/user/checkPhone",
                     data: {"phone": $("#phone").val()},
                     dataType: "json",
-                    async:false,
+                    async: false,
                     success: function (data) {
                         if (data == false) {
                             divName.innerHTML = "<font color='red'>该手机号已经注册过了！</font>";
                         } else {
                             divName.innerHTML = "<font color='green'>&check;</font>";
-                            flag =true;
+                            flag = true;
                         }
                     },
                     error: function () {
@@ -174,13 +170,13 @@
             var email = document.getElementById("email").value;
             var divName = document.getElementById("w6");
             divName.style.display = "inline";
-            let flag =false;
+            let flag = false;
             if (email.trim() == "") {
                 divName.innerHTML = "<font color='red'>邮箱不能为空</font>";
                 return false;
             }
             //定义邮箱格式
-            let emailZZ= /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            let emailZZ = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
             if (!emailZZ.test(email)) {
                 divName.innerHTML = "<font color='red'>邮箱格式错误！</font>";
                 return false;
@@ -190,13 +186,13 @@
                     url: "/system/user/checkEmail",
                     data: {"email": $("#email").val()},
                     dataType: "json",
-                    async:false,
+                    async: false,
                     success: function (data) {
                         if (data == false) {
                             divName.innerHTML = "<font color='red'>该邮箱已经存在！</font>";
                         } else {
                             divName.innerHTML = "<font color='green'>&check;</font>";
-                            flag =true;
+                            flag = true;
                         }
                     },
                     error: function () {
@@ -208,8 +204,8 @@
         }
 
 
+        let code;
 
-         let code;
         /**********生成验证码*************/
         function createCode() {
             code = "";
@@ -231,12 +227,12 @@
         function validateCode() {
             let inputCode = document.getElementById("inputCode").value;
             if (inputCode.length <= 0) {
-                $("#w7").text(" 请输入验证码").css("color","red");
+                $("#w7").text(" 请输入验证码").css("color", "red");
             } else if (inputCode.toUpperCase() != code.toUpperCase()) {
-                $("#w7").text(" 验证码错误").css("color","red");
+                $("#w7").text(" 验证码错误").css("color", "red");
                 createCode();
             } else {
-                $("#w7").text(" 验证码正确").css("color","green");
+                $("#w7").text(" 验证码正确").css("color", "green");
             }
         }
 
@@ -260,6 +256,7 @@
                 return false;
             }
         }
+
     </script>
 
 </head>
@@ -283,7 +280,7 @@
                 <div class="tab_box">
                     <div class="regin_tw">
 
-                        <form name="loginForm" action="/system/user/register" method="post" onsubmit="return checkForm()">
+                        <form name="loginForm" action="/system/user/register" id="user-add-form" method="post">
                             <table width="700" border="0" cellspacing="0" cellpadding="0">
                                 <tr>
                                     <td>用户名：</td>
@@ -295,7 +292,8 @@
                                 <tr>
                                     <td>登录密码:</td>
                                     <td><input class="rg_in" type="password" name="password" id="password" value=""
-                                               style="padding:5px 8px;font-size: 14px;"     placeholder="6-20位的数字、字母或符号" onblur="checkPassword()">
+                                               style="padding:5px 8px;font-size: 14px;"
+                                               placeholder="6-20位的数字、字母或符号" onblur="checkPassword()">
                                         <div id="w2" style=" background-color:#FFF; display:none"></div>
                                     </td>
                                 </tr>
@@ -303,46 +301,49 @@
                                 <tr>
                                     <td>确认密码：</td>
                                     <td><input class="rg_in" type="password" name="RePassword" id="RePassword"
-                                               style="padding: 5px 8px;font-size: 14px;" value="" placeholder="与密码一致"
+                                               style="padding: 5px 8px;font-size: 14px;" value=""
+                                               placeholder="与密码一致"
                                                onblur="checkRepass()">
-                                           <div id="w3" style="background-color: #FFF;display:none"></div>
+                                        <div id="w3" style="background-color: #FFF;display:none"></div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>证件类型：</td>
                                     <td>
-                                       <select  id="card_type" name="card_type" >
-                                         <option value="0" selected>中国居民身份证</option>
-                                         <option value="1">港澳居民居住证</option>
-                                         <option value="2">台湾居民居住证</option>
-                                         <option value="3">外国人永久居留身份证</option>
-                                         <option value="4">外国护照</option>
-                                         <option value="5">中国护照</option>
-                                         <option value="6">港澳居民来往内地通行证</option>
-                                         <option value="7">台湾居民来往大陆通行证</option>
-                                       </select>
+                                        <select id="card_type" name="card_type">
+                                            <option value="0" selected>中国居民身份证</option>
+                                            <option value="1">港澳居民居住证</option>
+                                            <option value="2">台湾居民居住证</option>
+                                            <option value="3">外国人永久居留身份证</option>
+                                            <option value="4">外国护照</option>
+                                            <option value="5">中国护照</option>
+                                            <option value="6">港澳居民来往内地通行证</option>
+                                            <option value="7">台湾居民来往大陆通行证</option>
+                                        </select>
                                     </td>
                                 </tr>
 
                                 <tr>
                                     <td>姓名：</td>
                                     <td><input class="rg_in" type="text" name="name" id="name"
-                                               style="padding: 5px 8px;font-size: 14px;" value="" placeholder="请输入您的真实姓名">
+                                               style="padding: 5px 8px;font-size: 14px;" value=""
+                                               placeholder="请输入您的真实姓名">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>证件号码：</td>
                                     <td><input class="rg_in" type="password" name="card_code" id="card_code"
-                                               style="padding: 5px 8px;font-size: 14px;" value="" placeholder="请输入您的证件号码"
+                                               style="padding: 5px 8px;font-size: 14px;" value=""
+                                               placeholder="请输入您的证件号码"
                                                onblur="checkCardCode()">
-                                        <div id="cardCodeError"style=" display:none;background-color:#FFF" ></div>
+                                        <div id="cardCodeError" style=" display:none;background-color:#FFF"></div>
                                     </td>
                                 </tr>
 
                                 <tr>
                                     <td>优惠(待)类型：</td>
                                     <td>
-                                        <select  id="user_type" name="user_type" >
+                                        <select id="user_type" name="user_type">
                                             <option value="0" selected>成人</option>
                                             <option value="1">儿童</option>
                                             <option value="2">学生</option>
@@ -359,7 +360,8 @@
                                 </tr>
                                 <tr>
                                     <td>电子邮箱：</td>
-                                    <td><input class="rg_in" type="text" name="email" id="email" value="" placeholder="请填写正确邮箱"
+                                    <td><input class="rg_in" type="text" name="email" id="email" value=""
+                                               placeholder="请填写正确邮箱"
                                                onblur="checkEmail()">
                                         <div id="w6" style="background-color: #FFF;display:none"></div>
                                     </td>
@@ -386,14 +388,14 @@
                                 <tr></tr>
                                 <tr>
                                     <td>&nbsp;</td>
-                                    <td><input type="checkbox"  id="Box" value=""> 我已阅读并同意遵守
+                                    <td><input type="checkbox" id="Box" value=""> 我已阅读并同意遵守
                                         <a href="service.html">《中国梦想游服务协议》</a>
                                     </td>
 
                                 </tr>
                                 <tr>
                                     <td>&nbsp;</td>
-                                    <td><input type="image" src="/home/img/agree_b.jpg" value=""></td>
+                                    <td><input type="image" src="/home/img/agree_b.jpg" id="#add-form-submit-btn" onclick="return checkForm()"></td>
                                 </tr>
                             </table>
                         </form>
