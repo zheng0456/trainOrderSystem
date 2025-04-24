@@ -68,7 +68,6 @@ public class UserController {
     //用户注册
     @PostMapping( "/system/user/register")
     public String register(@ModelAttribute UserEntity user){
-        System.out.println(user);
         int res = userService.register(user);
         if (res>0){
             return "/home/login";
