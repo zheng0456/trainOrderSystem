@@ -45,4 +45,15 @@ public class RoleServiceImpl implements IRoleService {
     public String addMenu(MenuEntity menu) {
         return roleMapper.addMenu(menu)>0?"success":"fail";
     }
+
+    //根据菜单id查询菜单详情
+    @Override
+    public MenuEntity findMenuById(int menuId) {
+        return roleMapper.findMenuById(menuId);
+    }
+
+    @Override
+    public boolean editMenu(MenuEntity menu) {
+        return roleMapper.editMenu(menu);
+    }
 }

@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -60,5 +57,19 @@ public class RoleController {
     @PostMapping("/system/menu/add")
     public @ResponseBody String addMenu(MenuEntity menu){
         return roleService.addMenu(menu);
+    }
+    //显示编辑菜单的页面
+    @GetMapping("/system/menu/edit/{menu_id}")
+    public String showEditMenu(@PathVariable("menu_id") int menuId,Model model){
+        roleService.findAllMenuList(model);
+        MenuEntity menu=roleService.findMenuById(menuId);
+        model.addAttribute("menu",menu);
+        return "/admin/menu/edit";
+    }
+    //保存编辑的菜单信息
+    @PutMapping("/system/menu/edit")
+    public @ResponseBody String editMenu(MenuEntity menu){
+        log.info("编辑菜单信息的方法入参：menu={}",menu);
+        return roleService.editMenu(menu)==true?"success":"fail";
     }
 }
