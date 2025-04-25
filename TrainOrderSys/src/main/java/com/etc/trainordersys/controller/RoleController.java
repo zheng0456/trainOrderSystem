@@ -1,5 +1,6 @@
 package com.etc.trainordersys.controller;
 
+import com.etc.trainordersys.entity.MenuEntity;
 import com.etc.trainordersys.entity.RoleEntity;
 import com.etc.trainordersys.service.IRoleService;
 import com.github.pagehelper.PageHelper;
@@ -11,7 +12,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -40,5 +43,22 @@ public class RoleController {
     public String showRoleAdd(Model model){
         roleService.findAllMenuList(model);
         return "/admin/role/add";
+    }
+    //查询所有菜单列表
+    @GetMapping("/system/menu/list")
+    public String findAllMenuList(Model model){
+        roleService.findAllMenuList(model);
+        return "/admin/menu/list";
+    }
+    //显示添加菜单界面
+    @GetMapping("/system/menu/add")
+    public String showAddMenu(Model model){
+        roleService.findAllMenuList(model);
+        return "/admin/menu/add";
+    }
+    //保存添加菜单的信息
+    @PostMapping("/system/menu/add")
+    public @ResponseBody String addMenu(MenuEntity menu){
+        return roleService.addMenu(menu);
     }
 }

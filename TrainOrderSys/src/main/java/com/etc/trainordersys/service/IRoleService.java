@@ -1,5 +1,6 @@
 package com.etc.trainordersys.service;
 
+import com.etc.trainordersys.entity.MenuEntity;
 import com.etc.trainordersys.entity.RoleEntity;
 import org.springframework.ui.Model;
 
@@ -11,4 +12,6 @@ public interface IRoleService {
 
     //显示添加角色界面，查询所有菜单列表
     void findAllMenuList(Model model);
+
+    String addMenu(MenuEntity menu);
 }

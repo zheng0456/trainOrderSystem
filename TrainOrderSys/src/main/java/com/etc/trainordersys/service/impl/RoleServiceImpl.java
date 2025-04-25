@@ -39,4 +39,10 @@ public class RoleServiceImpl implements IRoleService {
         List<MenuEntity> thirdMenus =  MenuUtils.getThirdMenus(lists);
         model.addAttribute("thirdMenus",thirdMenus);
     }
+
+    //保存添加菜单信息
+    @Override
+    public String addMenu(MenuEntity menu) {
+        return roleMapper.addMenu(menu)>0?"success":"fail";
+    }
 }

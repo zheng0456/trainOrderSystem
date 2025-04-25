@@ -19,5 +19,5 @@ public class MenuEntity {
     private int is_button;
     private int is_show;
     private String remark;
-    private MenuEntity parent;
+    private MenuEntity parent;//父菜单分类
 }
