@@ -2,10 +2,7 @@ package com.etc.trainordersys.mapper;
 
 import com.etc.trainordersys.entity.MenuEntity;
 import com.etc.trainordersys.entity.RoleEntity;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -39,4 +36,16 @@ public interface RoleMapper
     @Update("update t_menu set update_time=now(),menu_name=#{menu_name},url=#{url},icon=#{icon},sort=#{sort},parent_id=#{parent_id},is_button=#{is_button},is_show=#{is_show},remark=#{remark}" +
             " where menu_id=#{menu_id}")
     boolean editMenu(MenuEntity menu);
+
+    @Insert("insert into t_role values(null,#{name},#{remark},#{status},now(),now(),#{del_flag})")
+    @Options(useGeneratedKeys = true,keyProperty = "role_id",keyColumn = "role_id")
+    int addRole(RoleEntity role);
+
+    @Insert(" <script> " +
+            " insert into t_role_authority values "+
+            " <foreach collection='authorities' item='mid' index='index' separator=','> "+
+            " (#{roleId},#{mid}) " +
+            " </foreach>" +
+            " </script> ")
+    void addRoleAuthority(int roleId, List<Integer> authorities);
 }

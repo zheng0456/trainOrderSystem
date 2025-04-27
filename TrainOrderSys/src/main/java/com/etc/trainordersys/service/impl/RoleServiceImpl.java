@@ -1,12 +1,14 @@
 package com.etc.trainordersys.service.impl;
 
 import com.etc.trainordersys.entity.MenuEntity;
+import com.etc.trainordersys.entity.RoleAuthorityEntity;
 import com.etc.trainordersys.entity.RoleEntity;
 import com.etc.trainordersys.mapper.RoleMapper;
 import com.etc.trainordersys.service.IRoleService;
 import com.etc.trainordersys.utils.MenuUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
 import java.util.List;
@@ -55,5 +57,17 @@ public class RoleServiceImpl implements IRoleService {
     @Override
     public boolean editMenu(MenuEntity menu) {
         return roleMapper.editMenu(menu);
+    }
+    //保存的添加角色信息
+    @Transactional
+
+    @Override
+    public boolean addRole(RoleEntity role) {
+        int res=roleMapper.addRole(role);
+        if (res>0){
+            roleMapper.addRoleAuthority(role.getRole_id(),role.getAuthorities());
+            return true;
+        }
+        return false;
     }
 }

@@ -1,6 +1,7 @@
 package com.etc.trainordersys.controller;
 
 import com.etc.trainordersys.entity.MenuEntity;
+import com.etc.trainordersys.entity.RoleAuthorityEntity;
 import com.etc.trainordersys.entity.RoleEntity;
 import com.etc.trainordersys.service.IRoleService;
 import com.github.pagehelper.PageHelper;
@@ -36,10 +37,17 @@ public class RoleController {
         log.info("角色列表，roleList={}",roleList);
         return "/admin/role/list";
     }
+    //显示添加角色页面，查询所有菜单列表
     @GetMapping("/system/role/add")
     public String showRoleAdd(Model model){
         roleService.findAllMenuList(model);
         return "/admin/role/add";
+    }
+    //保存添加的角色信息
+    @PostMapping("/system/role/add")
+    public @ResponseBody String addRole(RoleEntity role){
+        boolean res=roleService.addRole(role);
+        return res==true?"success":"fail";
     }
     //查询所有菜单列表
     @GetMapping("/system/menu/list")

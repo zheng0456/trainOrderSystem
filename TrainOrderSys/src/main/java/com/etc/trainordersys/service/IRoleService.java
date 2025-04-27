@@ -1,6 +1,7 @@
 package com.etc.trainordersys.service;
 
 import com.etc.trainordersys.entity.MenuEntity;
+import com.etc.trainordersys.entity.RoleAuthorityEntity;
 import com.etc.trainordersys.entity.RoleEntity;
 import org.springframework.ui.Model;
 
@@ -18,4 +19,6 @@ public interface IRoleService {
     MenuEntity findMenuById(int menuId);
     //保存编辑的菜单信息
     boolean editMenu(MenuEntity menu);
+    //保存添加的角色信息
+    boolean addRole(RoleEntity role);
 }
