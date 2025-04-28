@@ -21,4 +21,11 @@ public interface IRoleService {
     boolean editMenu(MenuEntity menu);
     //保存添加的角色信息
     boolean addRole(RoleEntity role);
+
+    RoleEntity findRoleById(int roleId);
+
+    //保存编辑的信息
+    boolean editRole(RoleEntity role);
+
+    String deleteRole(int roleId);
 }

@@ -70,4 +70,32 @@ public class RoleServiceImpl implements IRoleService {
         }
         return false;
     }
+
+    @Override
+    public RoleEntity findRoleById(int roleId) {
+        return roleMapper.findRoleById(roleId);
+    }
+
+    @Transactional
+    @Override
+    public boolean editRole(RoleEntity role) {
+        int res=roleMapper.updateRole(role);
+        if (res>0){
+            roleMapper.deleteRoleAuthorities(role.getRole_id(),role.getAuthorities());
+            roleMapper.addRoleAuthority(role.getRole_id(),role.getAuthorities());
+            return true;
+        }
+        return false;
+    }
+    //关闭角色（停用后可以通过编辑角色重新启动，逻辑删除）
+    @Override
+    public String deleteRole(int roleId) {
+        Integer userId=roleMapper.findUserByRole(roleId);
+        if (userId!=null){
+            return "存在用户使用此角色，请先处理再删除";
+        }else {
+            int res=roleMapper.deleteRole(roleId);
+            return res>0?"success":"fail";
+        }
+    }
 }
