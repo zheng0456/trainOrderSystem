@@ -9,14 +9,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TicketEntity {
     private int ticket_id;
-    private String order_no;
-    private String train_number;
+    private String order_no;      //订单号
+    private String train_number;    //火车名
     private String start_station;
     private String end_station;
     private String start_time;
     private String arrive_time;
     private String departure_date;
-    private String passenger_name;
+    private String passenger_name;   //乘车人姓名
     private String card_type;
     private String card_code;
     private int ticket_type;//成人票、儿童票等
