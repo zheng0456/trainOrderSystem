@@ -2,10 +2,12 @@ package com.etc.trainordersys.controller;
 
 import com.etc.trainordersys.entity.UserEntity;
 import com.etc.trainordersys.service.IUserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -16,9 +18,10 @@ public class UserController {
 
     //登录
     @RequestMapping("/home/login")
-    public @ResponseBody String login(String account,String password){
+    public @ResponseBody String login(String account, String password, HttpSession session){
         UserEntity user = userService.login(account,password);
         if (user!=null){
+            session.setAttribute("user",user);
             if (user.getRole_id()==2){
                 return "user_page";
             }else {
@@ -71,6 +74,33 @@ public class UserController {
         int res = userService.register(user);
         if (res>0){
             return "/home/login";
+        }
+        return "注册失败";
+    }
+
+    //退出系统
+    @PostMapping("/system/user/logout")
+    public @ResponseBody boolean logout(HttpSession session){
+        //销毁会话
+        session.invalidate();
+        return true;
+    }
+
+    //显示编辑用户页面,查询选用的用户信息
+    @GetMapping("/system/personal/info")
+    public String showEditByUserId(HttpSession session,Model model){
+        //获取session中的用户信息
+        Integer user_id = ((UserEntity)session.getAttribute("user")).getUser_id();
+        UserEntity user = userService.showEditByUserId(user_id);
+        model.addAttribute("user",user);
+        return "/home/center/personal/info";
+    }
+    //修改个人信息
+    @RequestMapping("/system/personal/editInformation")
+    public String editInformation(@ModelAttribute UserEntity user){
+        int res = userService.editInformation(user);
+        if (res>0){
+            return "/home/index";
         }
         return "注册失败";
     }

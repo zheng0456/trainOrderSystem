@@ -15,9 +15,8 @@ public class AppConfig implements WebMvcConfigurer {
         registry.addViewController("/admin/login.html").setViewName("/admin/system/login");
         registry.addViewController("/home/register.html").setViewName("/home/register");
 
-        registry.addViewController("/home_header.html").setViewName("/home/home_header");
-        registry.addViewController("/footer.html").setViewName("/admin/common/footer");
-        registry.addViewController("/header.html").setViewName("/admin/common/header");
+        registry.addViewController("/home/header").setViewName("/home/header");
+        registry.addViewController("/home/footer").setViewName("/home/footer");
         registry.addViewController("/header-menu.html").setViewName("/admin/common/header-menu");
         registry.addViewController("/icons.html").setViewName("/admin/common/icons");
         registry.addViewController("/left-menu.html").setViewName("/admin/common/left-menu");

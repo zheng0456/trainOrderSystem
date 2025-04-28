@@ -15,4 +15,8 @@ public interface IUserService {
     UserEntity checkEmail(String email);
     //用户注册
      int register(UserEntity user);
+    //显示编辑用户页面,查询选用的用户信息
+    UserEntity showEditByUserId(Integer userId);
+    //修改个人信息
+    int editInformation(UserEntity user);
 }
