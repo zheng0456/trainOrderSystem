@@ -4,10 +4,8 @@
 <head lang="en">
     <meta charset="utf-8"/>
     <title>个人信息</title>
-    <link rel="stylesheet" type="text/css" href="/home/css/public.css"/>
     <link rel="stylesheet" type="text/css" href="/home/css/mygrxx.css"/>
     <script type="text/javascript" src="/home/js/jquery-3.5.1.js"></script>
-
     <script>
         //上传头像，并且路径
         function upload1(show,headPic){
@@ -58,7 +56,7 @@
             }else {
                 $.ajax({
                     type: "get",
-                    url: "/view/personal/checkUserName",
+                    url: "/system/user/checkUserName",
                     data: { "username": strName ,"user_id":$("#user_id").val()},
                     dataType: "json",
                     async: false,
@@ -93,7 +91,7 @@
             } else {
                 $.ajax({
                     type: "get",
-                    url: "/view/personal/checkPhone",
+                    url: "/system/user/checkPhone",
                     data: {"phone": $("#phone").val(),"user_id":$("#user_id").val()},
                     dataType: "json",
                     async:false,
@@ -129,7 +127,7 @@
             } else {
                 $.ajax({
                     type: "get",
-                    url: "/view/personal/checkEmail",
+                    url: "/system/user/checkEmail",
                     data: {"email": $("#email").val(),"user_id":$("#user_id").val()},
                     dataType: "json",
                     async:false,
@@ -155,13 +153,19 @@
         function checkForm() {
             if (checkUsername() && checkPhone() && checkEmail()) {
                 if (confirm("确认要提交么？")) {
-                    $("#form").submit(); // 修改 "from" 为正确的表单ID "form"
+                    //$("#form").submit(); // 修改 "from" 为正确的表单ID "form"
+                    // 这里可以添加表单提交逻辑
+                    //document.getElementById('from').submit();
+                    // 或者使用AJAX提交
                     alert("修改成功！");
+                    return true;
                 } else {
                     alert("您取消了修改信息的提交!!");
+                    return false;
                 }
             } else {
                 alert("信息错误");
+                return false;
             }
         }
 
@@ -203,13 +207,14 @@
 
                 <h3 class="clearfix">
                     <strong class="fl">基本信息</strong>
-                    <a href="#" class="fr" id="edit1">编辑</a>
+                    <a href="#" class="fr" id="edit1" onclick="openEditModal()">编辑</a>
                 </h3>
                     <div>用户名：[[${session.user.username}]]</div>
                     <div>姓名：[[${session.user.name}]]</div>
                     <div>性别：
                         <font th:if="${user.sex == 1}">男</font>
-                        <font th:if="${user.sex == 0}">女</font>
+                        <font th:if="${user.sex == 2}">女</font>
+                        <font th:if="${user.sex == 0}">未知</font>
                     </div>
                     <div>证件类型：
                         <font th:if="${user.card_type == 0}">居民身份证</font>
@@ -244,52 +249,134 @@
 </div><!------------------------------Bott------------------------------>
 
 <!--遮罩-->
-<div class="mask"></div>
+<!--<div class="mask"></div>-->
+
 
 
 <!--个人信息编辑弹框-->
-<div class="bj">
-    <div class="clearfix"><a href="#" class="fr gb">
-        <img src="/home/img/cancel.png"/></a></div>
-    <h3>编辑基础资料</h3>
+<!--<div class="bj">-->
+<!--    <div class="clearfix"><a href="#" class="fr gb">-->
+<!--        <img src="/home/img/cancel.png"/></a></div>-->
+<!--    <h3>编辑基础资料</h3>-->
+<!--    <div>-->
+<!--        <form action="/view/personal/editInformation" method="post"  id="from">-->
+<!--            <input type="hidden" name="user_id" id="user_id" th:value="${user.user_id}">-->
+<!--            <div>-->
+<!--                <label>用户名：</label>-->
+<!--                <input  name="username" id="username" th:value="${user.username} " onblur="checkUsername()" />-->
+<!--            </div>-->
+<!--            <div>-->
+<!--                <label>电话号：</label>-->
+<!--                <input  name="phone" id="phone" th:value="${user.phone} " onblur="checkPhone()" style="padding-top: 10px;padding-bottom: 10px; width: 200px;"/>-->
+<!--            </div>-->
+<!--            <div>-->
+<!--                <label>邮箱：</label>-->
+<!--                <input  name="email" id="email" th:value="${user.email} " onblur="checkEmail()" />-->
+<!--            </div>-->
+<!--            <div>-->
+<!--                <label>出生日期：</label>-->
+<!--                <input type="date" name="birthday" id="birthday"/>-->
+<!--            </div>-->
+<!--            <div>-->
+<!--                性别：-->
+<!--                <label>-->
+<!--                    <input type="radio" name="sex" value="1"  th:checked="${user.sex == 1}" >-->
+<!--                    <span>男</span>-->
+<!--                </label>-->
+<!--                <label class="">-->
+<!--                    <input type="radio" name="sex" value="2" th:checked="${user.sex == 2}"  >-->
+<!--                    <span>女</span>-->
+<!--                </label>-->
+<!--            </div>-->
+<!--            <div>-->
+<!--                <label>优惠(待)类型:</label>-->
+<!--                <select  id="user_type" name="user_type"  th:selected="${user.user_type} ">-->
+<!--                    <option value="0" >成人</option>-->
+<!--                    <option value="1">儿童</option>-->
+<!--                    <option value="2">学生</option>-->
+<!--                    <option value="3">残疾军人</option>-->
+<!--                </select>-->
+<!--            </div>-->
+<!--            <span id="errorMsg"></span>-->
+<!--            <div class="bc">-->
+<!--                <input  onclick="checkForm()" value="保存"/>-->
+<!--                <input type="button" value="取消"/>-->
+<!--            </div>-->
 
-    <div>
-    <form action="/view/personal/editInformation" method="post"  id="from">
-        <input type="hidden" name="user_id" id="user_id" th:value="${user.user_id}">
+<!--        </form>-->
+<!--    </div>-->
+<!--</div>-->
 
-        <p><label>用户名：</label>
-      <input  style="padding:0px" name="username" id="username" th:value="${user.username} " onblur="checkUsername()" />
-        </p>
-
-
-            <span>电话号：</span>
-            <input width="100px" name="phone" id="phone" th:value="${user.phone} " onblur="checkPhone()" />
-
-
-        <p><label>邮箱：</label>
-            <input style="padding:0px" name="email" id="email" th:value="${user.email} " onblur="checkEmail()" />
-        </p>
-
-
-        <p>优惠(待)类型
-           <select  id="user_type" name="user_type"  th:selected="${user.user_type}">
-               <option value="0" >成人</option>
-               <option value="1">儿童</option>
-               <option value="2">学生</option>
-               <option value="3">残疾军人</option>
-           </select>
-       </p>
-       <span id="errorMsg"></span>
-
-
-        <div class="bc">
-            <input  onclick="checkForm()" value="保存"/>
-            <input type="button" value="取消"/>
+<!--个人信息编辑弹框-->
+<div style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;" id="editModal">
+    <div style="background-color: white; padding: 20px; border-radius: 5px; width: 400px;">
+        <div style="overflow: hidden;">
+            <a href="javascript:void(0)" onclick="closeEditModal()" style="float: right; text-decoration: none;">
+                <img src="/home/img/cancel.png" style="width: 20px; height: 20px;"/>
+            </a>
         </div>
-
-    </form>
+        <h3 style="margin-top: 0; margin-bottom: 20px;">编辑基础资料</h3>
+        <div>
+            <form action="/system/personal/editInformation" method="post" id="from">
+                <input type="hidden" name="user_id" id="user_id" th:value="${user.user_id}">
+                <div style="margin-bottom: 15px;">
+                    <label style="display: inline-block; width: 80px;">用户名：</label>
+                    <input type="text" name="username" id="username" th:value="${user.username}" onblur="checkUsername()" style="padding: 8px; width: 200px;"/>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: inline-block; width: 80px;">电话号：</label>
+                    <input type="text" name="phone" id="phone" th:value="${user.phone}" onblur="checkPhone()" style="padding: 8px; width: 200px;"/>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: inline-block; width: 80px;">邮箱：</label>
+                    <input type="text" name="email" id="email" th:value="${user.email}" onblur="checkEmail()" style="padding: 8px; width: 200px;"/>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: inline-block; width: 80px;">出生日期：</label>
+                    <input type="date" name="birthday" id="birthday" style="padding: 8px;"/>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <span style="display: inline-block; width: 80px;">性别：</span>
+                    <label style="margin-right: 15px;">
+                        <input type="radio" name="sex" value="1" th:checked="${user.sex == 1}">
+                        <span>男</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="sex" value="2" th:checked="${user.sex == 2}">
+                        <span>女</span>
+                    </label>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: inline-block; width: 80px;">优惠(待)类型:</label>
+                    <select id="user_type" name="user_type" style="padding: 8px; width: 200px;" th:selected="${user.user_type}">
+                        <option value="0">成人</option>
+                        <option value="1">儿童</option>
+                        <option value="2">学生</option>
+                        <option value="3">残疾军人</option>
+                    </select>
+                </div>
+                <span id="errorMsg" style="color: red; display: block; margin-bottom: 15px;"></span>
+                <div style="text-align: right;">
+                    <input type="submit" value="保存"  onclick="return checkForm()" style="padding: 8px 15px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    <input type="button" value="取消" onclick="closeEditModal()" style="padding: 8px 15px; background-color: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px;">
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
+<script>
+    // 显示弹窗
+    function openEditModal() {
+        document.getElementById('editModal').style.display = 'flex';
+    }
+
+    // 关闭弹窗
+    function closeEditModal() {
+        document.getElementById('editModal').style.display = 'none';
+    }
+</script>
+</body>
 
 
 <!--引入底部footer.html文件-->

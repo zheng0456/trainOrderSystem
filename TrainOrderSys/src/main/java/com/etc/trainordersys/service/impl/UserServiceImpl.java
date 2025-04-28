@@ -40,4 +40,14 @@ public class UserServiceImpl implements IUserService {
     public int register(UserEntity user) {
         return userMapper.register(user);
     }
+    //显示编辑用户页面,查询选用的用户信息
+    @Override
+    public UserEntity showEditByUserId(Integer userId) {
+        return userMapper.showEditByUserId(userId);
+    }
+    //修改个人信息
+    @Override
+    public int editInformation(UserEntity user) {
+        return userMapper.editInformation(user);
+    }
 }

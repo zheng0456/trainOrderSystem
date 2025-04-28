@@ -4,6 +4,7 @@ import com.etc.trainordersys.entity.UserEntity;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 @Mapper
 public interface UserMapper {
@@ -25,4 +26,10 @@ public interface UserMapper {
     //用户注册
     @Insert("insert into t_user values(null,#{username},#{password},#{name},null,null,#{phone},#{email},null,null,null,2,#{card_code},#{user_type},null,now(),now(),#{card_type},1)")
     int register(UserEntity user);
+    //显示编辑用户页面,查询选用的用户信息
+    @Select("select * from t_user where user_id = #{userId}")
+    UserEntity showEditByUserId(Integer userId);
+    //修改个人信息
+    @Update("update t_user set username=#{username},phone=#{phone},email=#{email},birthday=#{birthday},sex=#{sex},user_type=#{user_type} where user_id = #{user_id}")
+    int editInformation(UserEntity user);
 }

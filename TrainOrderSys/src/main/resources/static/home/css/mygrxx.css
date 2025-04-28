@@ -154,6 +154,7 @@ body {
     display: none;
 }
 
+
 /*编辑个人信息*/
 .bj, .xg {
     width: 410px;
@@ -207,7 +208,6 @@ body {
     margin-right: 5px;
     vertical-align: middle;
 }
-
 .bj form p:nth-child(3) span {
     margin-right: 20px;
 }
