@@ -100,4 +100,5 @@ public class RoleController {
         log.info("编辑菜单信息的方法入参：menu={}",menu);
         return roleService.editMenu(menu)==true?"success":"fail";
     }
+    //删除菜单
 }
