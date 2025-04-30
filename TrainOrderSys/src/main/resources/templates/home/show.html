@@ -529,9 +529,9 @@
         //判断当前用户是否处于登录状态
         if (user!=null){
             $.ajax({
-                url: "/view/ticketing/findUnPayOrder",
+                url: "/view/ticketing/findUnPayOrder",   //请求查看是否有没支付的订单
                 type: "get",
-                async: false,
+                async: false,   //请求异步 改为同步
                 success: function (msg) {
                     if (!msg) {
                         alert("您还有未支付订单，请前往(个人中心/未完成订单)界面查看确认");
@@ -549,7 +549,7 @@
         }else {
             let login = window.confirm("您当前还没有登录，是否去登录！");
             if (login == true){
-                window.location.href = "/login.html";
+                window.location.href = "/home/login.html";
             }
         }
     }
