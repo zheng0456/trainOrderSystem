@@ -98,4 +98,20 @@ public class RoleServiceImpl implements IRoleService {
             return res>0?"success":"fail";
         }
     }
+    //删除菜单
+    @Override
+    public String deleteMenu(int menuId) {
+        Integer roleId=roleMapper.findRoleByMenuId(menuId);
+        if (roleId!=null){
+            return "有角色拥有操作此菜单的权限，请处理完角色权限，再删除菜单";
+        }else {
+            Integer mid=roleMapper.findMenuChild(menuId);
+            if (mid!=null){
+                return "请先删除该菜单下的子菜单，否则无法删除";
+            }else {
+                int res=roleMapper.deleteMenu(menuId);
+                return res>0?"success":"fail";
+            }
+        }
+    }
 }

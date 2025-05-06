@@ -74,4 +74,11 @@ public interface RoleMapper
 
     @Update(("update t_role set status=0 where role_id=#{roleId}"))
     int deleteRole(int roleId);
+
+    @Select("select role_id from t_role_authority where authority_id=#{menuId} limit 1")
+    Integer findRoleByMenuId(int menuId);
+    @Select("select * from t_menu where parent_id=#{menuId} limit 1")
+    Integer findMenuChild(int menuId);
+    @Delete("delete from t_menu where menu_id=#{menuId}")
+    int deleteMenu(int menuId);
 }

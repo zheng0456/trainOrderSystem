@@ -27,5 +27,9 @@ public interface IRoleService {
     //保存编辑的信息
     boolean editRole(RoleEntity role);
 
+    //删除角色
     String deleteRole(int roleId);
+
+    //删除菜单
+    String deleteMenu(int menuId);
 }

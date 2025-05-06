@@ -101,4 +101,10 @@ public class RoleController {
         return roleService.editMenu(menu)==true?"success":"fail";
     }
     //删除菜单
+    @DeleteMapping("/system/menu/delete")
+    public @ResponseBody String deleteMenu(@RequestParam("id")int menu_id){
+        log.info("参数菜单信息的方法入参：menu_id={}",menu_id);
+        String res=roleService.deleteMenu(menu_id);
+        return res;
+    }
 }
