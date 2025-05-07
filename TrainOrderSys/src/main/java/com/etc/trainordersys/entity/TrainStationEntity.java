@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+//火车车站实体类
 public class TrainStationEntity {
     private int id;
     private String train_number;
@@ -17,4 +18,5 @@ public class TrainStationEntity {
     private int station_id;
     private String create_time;
     private String update_time;
+
 }

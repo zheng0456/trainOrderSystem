@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,4 +23,9 @@ public class TrainScheduleEntity {
     private String end_time;
     private String create_time;
     private String update_time;
+    private String totalTime;  //总时间
+
+    private List<ScheduleSeatInfoEntity> seatInfoEntityList;  //座位信息表
+
+    private TrainEntity trainEntity;  //  火车实体类
 }

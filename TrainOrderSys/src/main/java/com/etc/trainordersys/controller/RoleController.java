@@ -1,7 +1,6 @@
 package com.etc.trainordersys.controller;
-
+import com.alibaba.fastjson.JSONArray;
 import com.etc.trainordersys.entity.MenuEntity;
-import com.etc.trainordersys.entity.RoleAuthorityEntity;
 import com.etc.trainordersys.entity.RoleEntity;
 import com.etc.trainordersys.service.IRoleService;
 import com.github.pagehelper.PageHelper;
@@ -49,6 +48,27 @@ public class RoleController {
         boolean res=roleService.addRole(role);
         return res==true?"success":"fail";
     }
+    //显示编辑角色页面，根据角色id查询角色详情，包括对应的权限信息
+    @GetMapping("/system/role/edit/{role_id}")
+    public String showEditRole(Model model,@PathVariable("role_id") int role_id){
+        RoleEntity role=roleService.findRoleById(role_id);
+        model.addAttribute("role",role);
+        model.addAttribute("authorities", JSONArray.toJSON(role.getAuthorities()).toString());
+        roleService.findAllMenuList(model);
+        return "/admin/role/edit";
+    }
+    //保存编辑的角色信息
+    @PutMapping("/system/role/edit")
+    public @ResponseBody String editRole(RoleEntity role){
+        boolean res=roleService.editRole(role);
+        return res==true?"success":"fail";
+    }
+    //关闭角色（停用后可以通过编辑角色重新启动，逻辑删除）
+    @DeleteMapping("/system/role/delete")
+    public @ResponseBody String deleteRole(@RequestParam("id") int role_id){
+        String res=roleService.deleteRole(role_id);
+        return res;
+    }
     //查询所有菜单列表
     @GetMapping("/system/menu/list")
     public String findAllMenuList(Model model){
@@ -79,5 +99,12 @@ public class RoleController {
     public @ResponseBody String editMenu(MenuEntity menu){
         log.info("编辑菜单信息的方法入参：menu={}",menu);
         return roleService.editMenu(menu)==true?"success":"fail";
+    }
+    //删除菜单
+    @DeleteMapping("/system/menu/delete")
+    public @ResponseBody String deleteMenu(@RequestParam("id")int menu_id){
+        log.info("参数菜单信息的方法入参：menu_id={}",menu_id);
+        String res=roleService.deleteMenu(menu_id);
+        return res;
     }
 }

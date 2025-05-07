@@ -7,6 +7,9 @@ import com.etc.trainordersys.service.ITrainScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service("ScheduleService")
@@ -14,15 +17,17 @@ public class TrainScheduleServiceImpl implements ITrainScheduleService {
 
     @Autowired
     private TrainScheduleMapper trainScheduleMapper;
-    //查询火车时刻表信息
+
+    //出发地，开始时间，目的地，去查询火车时刻表 ：TrainScheduleEntity
     @Override
-    public List<TrainScheduleEntity> findTrainSchedule(String cityChoice, String cityChoice1, String start) {
-        return trainScheduleMapper.findTrainSchedule(cityChoice,cityChoice1,start);
+    public List<TrainScheduleEntity> findtrainScheduleList(String start_station, String end_station, String go_time) {
+        //删除前端传来的数据的一个字符
+        char station_name='市';
+        String start_station_now=start_station.replace(String.valueOf(station_name),"");
+        String end_station_now=end_station.replace(String.valueOf(station_name),"");
+        return trainScheduleMapper.findtrainScheduleList(start_station_now,end_station_now,go_time);
     }
 
-    //查询火车的座位和票价
-    @Override
-    public List<ScheduleSeatInfoEntity> findScheduleSeatInfo(String trainName) {
-        return trainScheduleMapper.findScheduleSeatInfo(trainName);
-    }
+
+
 }

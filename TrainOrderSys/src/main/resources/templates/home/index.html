@@ -122,13 +122,14 @@
             return true;
         }
 
+
         function checkForm() {
             // alert($("#start").text())
             if ($("#flag").val() == 0) {
                 if (chufa() && fanhui() && chengshi() && chutime()) {
                     var time1 = $("#start").text()
                     $("#time1").val(time1)
-                    return true;
+
                 } else {
                     return false;
                 }
@@ -178,7 +179,7 @@
 
 
 
-                <form action="view/ticketing/list" method="get" onsubmit="return checkForm()">
+                <form action="/home/index" method="get" onsubmit="return checkForm()">
                     <div class="search_txt">
                         <!--flag判断选择的是单程(flag=0)还是往返(flag=1)-->
                         <input type="hidden" value="0" name="flag" id="flag">
@@ -224,28 +225,6 @@
                     <!--查询-->
                     <input type="submit" value="查询" class="searchbtn" id="searchbtn" style="margin-top: -9px;background-color: #ff8000" onclick="select_ticket()">
                 </form>
-
-                <script>
-                    function select_ticket(){
-                        if($("flag").val()==0){
-                            $.ajax({
-                                url:"/home/show",
-                                type:"GET",
-                                data:{
-                                    "cityChoice":cityChoice,  //出发地
-                                    "cityChoice1":cityChoice1,   //目的地
-                                    "start":start    //出发日期
-                                },success:function (data){
-
-                                },error:function (data=null){
-                                    alert("网络不可用");
-                                }
-                            })
-                        }
-                    }
-                </script>
-
-
 
 
             </div>

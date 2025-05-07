@@ -28,7 +28,17 @@
     maxPoolPreparedStatementPerConnectionSize: 20
     useGlobalDataSourceStat: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
-
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+  rabbitmq:
+    host: 127.0.0.1
+    post: 5672
+    username: guest
+    password: guest
+  elasticsearch: #搜索引擎配置
+    uris: http://127.0.0.1:9200
 
 
 #加载mybatis配置文件
