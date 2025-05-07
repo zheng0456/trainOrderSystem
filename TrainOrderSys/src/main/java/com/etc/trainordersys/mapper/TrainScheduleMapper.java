@@ -55,7 +55,7 @@ public interface TrainScheduleMapper {
     //再次查询座位信息
     @Select("select * from t_schedule_seat_info where train_number=#{train_number}")
     @Results({
-
+            @Result(column = "seat_type_id",property = "seat_type_id"),
             @Result(column = "seat_type_id",
                     property = "seatType",
                     javaType =SeatTypeEntity.class,

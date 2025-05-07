@@ -31,4 +31,6 @@ public class TicketEntity {
     private String update_time;
     private int ticket_status;
     private SeatTypeEntity seatType;//一张火车票只能有一种座位类型
+
+    private int sort;   //排序
 }
