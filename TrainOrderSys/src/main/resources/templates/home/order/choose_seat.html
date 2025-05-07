@@ -192,7 +192,7 @@
         </p>
             <p class="t-con" id="ticket_con_id">
                 <span id="ticket_status_id" th:each="seat:${trainInfo.seatInfoEntityList}"
-                      class="s1">[[${seat.seat_type}]]（<span class="colorA">￥[[${seat.price}]]</span>）有票</span>
+                      class="s1">[[${seat.seatType.seat_type_name}]]（<span class="colorA">￥[[${seat.price}]]</span>）有票</span>
             </p>
             <p style="color: #3177BF;">
                 *显示的卧铺票价均为上铺票价，供您参考。具体票价以您确认支付时实际购买的铺别票价为准。

@@ -8,6 +8,7 @@ import java.util.List;
 
 @Mapper
 public interface TicketAdminMapper {
+    //显示车票列表
     @Select(" <script> " +
             " select * from t_ticket "+
             " <where> " +

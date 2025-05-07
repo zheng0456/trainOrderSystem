@@ -14,6 +14,7 @@ public class TicketAdminServiceImpl implements ITicketAdminService {
     @Autowired
     private TicketAdminMapper ticketAdminMapper;
 
+    //显示车票列表
     @Override
     public List<TicketEntity> findAllTicketPageList(String name) {
         return ticketAdminMapper.findAllTicketPageList(name);
