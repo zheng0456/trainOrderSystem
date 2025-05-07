@@ -10,9 +10,9 @@
         //上传头像，并且路径
         function upload1(show,headPic){
             let $data = new FormData();
-            let imgShow = $("#user_img").val();
+            let imgShow = $("#headPic").val();
             $data.append("img",$("#select-file")[0].files[0]);
-            $data.append("type","headImg"); //路径中文件夹的名称 /upload/head/日期/图片名
+            $data.append("type",headPic); //路径中文件夹的名称 /upload/head/日期/图片名
             $.ajax({
                 url:'/uploadHeadImg',
                 type:'POST',
@@ -21,12 +21,13 @@
                 contentType:false,
                 success:function(data){
                     if (data!="fail"){
+                        $("#headPic").val(data);
                        if (imgShow == null){
                            $("#show-picture-img").attr("src",data);
                        }else {
                            $("#show-pic").attr("src",data);
                        }
-                        alert("头像修改成功!")
+                       alert("头像上传成功!")
                     }
                 },
                 error:function(data){
@@ -194,13 +195,17 @@
         <div class="you fl" style="min-height: 460px"><h2>个人信息</h2>
             <div class="gxin">
                 <div class="tx">
-                    <a href="#">
-                        <input type="hidden" id="user_img" th:value="${user.head_pic}">
-                        <img th:if="${user.head_pic} == null " src="/upload/headImg/defaultHeadImg.webp" id="show-picture-img" alt="默认头像" width="92px" height="92px" style="border-radius: 40px" />
-                        <img th:if="${user.head_pic} != null" th:src="${user.head_pic}" id="show-pic"  width="92px" height="92px" style="border-radius: 40px" />
-                        <input  th:text="更换头像" type="file" id="select-file"  onchange="upload1('show-picture-img','headImg')"/>
-<!--                        <p>更换头像</p>-->
-                    </a>
+                    <form action="/system/personal/headPic" method="post">
+                        <a href="#">
+                            <img th:if="${user.head_pic} == null " src="/upload/headImg/defaultHeadImg.webp" id="show-picture-img" alt="默认头像" width="92px" height="92px" style="border-radius: 40px" />
+                            <img th:if="${user.head_pic} != null" th:src="${user.head_pic}" id="show-pic"  width="92px" height="92px" style="border-radius: 40px" />
+                            <input type="hidden" name="head_pic" id="headPic" th:value="${user.head_pic}">
+                            <input type="file" id="select-file" name="img" onchange="upload1('show-picture-img','headPic')"/>
+                            <button type="submit">保存图片</button>
+                            <!--                        <p>更换头像</p>-->
+                        </a>
+                    </form>
+
                 </div>
 
                 <div class="xx">
@@ -319,6 +324,9 @@
         <div>
             <form action="/system/personal/editInformation" method="post" id="from">
                 <input type="hidden" name="user_id" id="user_id" th:value="${user.user_id}">
+                <input type="hidden" name="name" id="name" th:value="${user.name}">
+                <input type="hidden" name="card_type" id="card_type" th:value="${user.card_type}">
+                <input type="hidden" name="card_code" id="card_code" th:value="${user.card_code}">
                 <div style="margin-bottom: 15px;">
                     <label style="display: inline-block; width: 80px;">用户名：</label>
                     <input type="text" name="username" id="username" th:value="${user.username}" onblur="checkUsername()" style="padding: 8px; width: 200px;"/>

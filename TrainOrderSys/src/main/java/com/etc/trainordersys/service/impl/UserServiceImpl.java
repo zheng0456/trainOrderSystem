@@ -50,4 +50,11 @@ public class UserServiceImpl implements IUserService {
     public int editInformation(UserEntity user) {
         return userMapper.editInformation(user);
     }
+    //修改头像
+    @Override
+    public int editHeadPic(String headPic, Integer userId) {
+        return userMapper.editHeadPic(headPic,userId);
+    }
+
+
 }

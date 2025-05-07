@@ -75,7 +75,7 @@ public class UserController {
         if (res>0){
             return "/home/login";
         }
-        return "注册失败";
+        return "redirect:/error-page";
     }
 
     //退出系统
@@ -87,7 +87,7 @@ public class UserController {
     }
 
     //显示编辑用户页面,查询选用的用户信息
-    @GetMapping("/system/personal/info")
+    @RequestMapping("/system/personal/info")
     public String showEditByUserId(HttpSession session,Model model){
         //获取session中的用户信息
         Integer user_id = ((UserEntity)session.getAttribute("user")).getUser_id();
@@ -97,11 +97,23 @@ public class UserController {
     }
     //修改个人信息
     @RequestMapping("/system/personal/editInformation")
-    public String editInformation(@ModelAttribute UserEntity user){
+    public String editInformation(@ModelAttribute UserEntity user,HttpSession session){
         int res = userService.editInformation(user);
         if (res>0){
-            return "/home/index";
+            session.setAttribute("user",user);
+            return "forward:/system/personal/info";
         }
-        return "注册失败";
+        return "redirect:/error-page";
+    }
+    //修改头像
+    @RequestMapping("/system/personal/headPic")
+    public String editHeadPic(@RequestParam String head_pic,HttpSession session){
+        //获取session中的用户信息
+        Integer user_id = ((UserEntity)session.getAttribute("user")).getUser_id();
+        int res = userService.editHeadPic(head_pic,user_id);
+        if (res>0){
+            return "forward:/system/personal/info";
+        }
+        return "redirect:/error-page";
     }
 }

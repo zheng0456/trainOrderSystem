@@ -30,6 +30,11 @@ public interface UserMapper {
     @Select("select * from t_user where user_id = #{userId}")
     UserEntity showEditByUserId(Integer userId);
     //修改个人信息
-    @Update("update t_user set username=#{username},phone=#{phone},email=#{email},birthday=#{birthday},sex=#{sex},user_type=#{user_type} where user_id = #{user_id}")
+    @Update("update t_user set username=#{username},phone=#{phone},email=#{email},birthday=#{birthday},sex=#{sex},user_type=#{user_type},head_pic=#{headPic},update_time=now() where user_id = #{user_id}")
     int editInformation(UserEntity user);
+    //修改头像
+    @Update("update t_user set head_pic=#{headPic} where user_Id=#{userId}")
+    int editHeadPic(String headPic, Integer userId);
+
+
 }

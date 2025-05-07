@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,4 +30,5 @@ public class TicketEntity {
     private String create_time;
     private String update_time;
     private int ticket_status;
+    private SeatTypeEntity seatType;//一张火车票只能有一种座位类型
 }

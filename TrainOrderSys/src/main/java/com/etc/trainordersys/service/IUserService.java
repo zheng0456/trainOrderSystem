@@ -19,4 +19,6 @@ public interface IUserService {
     UserEntity showEditByUserId(Integer userId);
     //修改个人信息
     int editInformation(UserEntity user);
+    //修改头像
+    int editHeadPic(String headPic, Integer userId);
 }
