@@ -23,6 +23,7 @@ public class TicketAdminController {
     @Autowired
     @Qualifier("ticketAdminService")
     ITicketAdminService ticketAdminService;
+    //显示车票列表
     @GetMapping("/system/ticket/list")
     public String findAllRoleList(Model model, @RequestParam(value = "name",required = false)String name,
                                   @RequestParam(value = "currentPage",required = false,defaultValue = "1")Integer currentPage){
