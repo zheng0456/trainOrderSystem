@@ -17,6 +17,11 @@ public class MyOrderServiceImpl implements IMyOrderService {
     public List<OrderEntity> showMyTrainOrder(Integer userId) {
         return myOrderMapper.showMyTrainOrder(userId);
     }
+    //退票
+    @Override
+    public boolean refundTicket(Integer ticketId) {
+        return myOrderMapper.refundTicket(ticketId);
+    }
 
 
 }

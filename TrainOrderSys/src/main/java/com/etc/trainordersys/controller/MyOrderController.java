@@ -1,8 +1,6 @@
 package com.etc.trainordersys.controller;
 
-import com.etc.trainordersys.entity.OrderEntity;
-import com.etc.trainordersys.entity.TicketEntity;
-import com.etc.trainordersys.entity.UserEntity;
+import com.etc.trainordersys.entity.*;
 import com.etc.trainordersys.service.IMyOrderService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -11,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -43,5 +43,15 @@ public class MyOrderController {
         //6.把数据保存到model中
         model.addAttribute("page",pageInfo);
         return "/home/center/order/train_order";
+    }
+    //退票
+    @PutMapping("/system/order/refundTicket")
+    public @ResponseBody ResponseResult refundTicket(@RequestParam(value = "ticket_id") Integer ticket_id){
+        boolean isSuccess = myOrderService.refundTicket(ticket_id);
+        if (isSuccess){
+            return ResponseResult.success(ResultEnum.SUCCESS);
+        }else {
+            return ResponseResult.fail(ResultEnum.FAIL);
+        }
     }
 }

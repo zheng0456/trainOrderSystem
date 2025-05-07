@@ -7,4 +7,6 @@ import java.util.List;
 public interface IMyOrderService {
     //查询我的车票订单
     List<OrderEntity> showMyTrainOrder(Integer userId);
+    //退票
+    boolean refundTicket(Integer ticketId);
 }

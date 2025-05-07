@@ -1,6 +1,7 @@
 package com.etc.trainordersys.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -23,5 +24,13 @@ public class AppConfig implements WebMvcConfigurer {
         registry.addViewController("/left-menu.html").setViewName("/admin/common/left-menu");
         registry.addViewController("/third-menu.html").setViewName("/admin/common/third-menu");
 
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry){
+        //addResourceHandler("/upload/**"): url请求路径，自定义的/upload/**
+        //.addResourceLocations("C:\\Users\\31315\\Desktop\\upload\\"):图片存储的真实路径
+        registry.addResourceHandler("/upload/**")
+                .addResourceLocations("file:C:\\Users\\Lenovo\\Desktop\\upload\\");
     }
 }

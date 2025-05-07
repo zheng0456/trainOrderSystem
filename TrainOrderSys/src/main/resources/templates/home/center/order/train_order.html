@@ -26,10 +26,10 @@
           }
       }
 
-
+      <!--退票-->
       function refund(ticket_id){
         $.ajax({
-          url: "/view/order/refundTicket",
+          url: "/system/order/refundTicket",
           type: 'PUT',
           data: {
             "ticket_id": ticket_id,
@@ -231,7 +231,7 @@
                                     <div>
                                       <span th:if="${ticket.ticket_status} == 0"> 未使用</span>
                                       <span th:if="${ticket.ticket_status} == 2"> 已使用</span>
-                                      <span th:if="${ticket.ticket_status} == 3 "> 已退票</span>
+                                      <span th:if="${ticket.ticket_status} == 3"> 已退票</span>
                                       <span th:if="${ticket.ticket_status} == 4"> 已过期</span>
                                       <span th:if="${ticket.ticket_status} == 5"> 已改签</span>
                                       <span th:if="${ticket.ticket_status} == 6"> 已取消</span>
