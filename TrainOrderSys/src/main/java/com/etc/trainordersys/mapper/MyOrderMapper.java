@@ -9,7 +9,7 @@ import java.util.List;
 
 @Mapper
 public interface MyOrderMapper {
-    //查询我的车票订单
+    //查询我预定的所有订单
     @Select("select * from t_order  where  user_id = #{userId}")
     @Results({
         @Result(column = "order_no",property = "order_no"),
@@ -35,4 +35,27 @@ public interface MyOrderMapper {
     //退票
     @Update("update t_ticket set update_time = now(), ticket_status = 7 where ticket_Id = #{ticketId}")
     boolean refundTicket(Integer ticketId);
+
+    //查询我预定的未支付订单
+    @Select("select * from t_order  where  user_id = #{userId} and order_status = 1 and payment = 0")
+    @Results({
+            @Result(column = "order_no",property = "order_no"),
+            @Result(column = "order_no",
+                    property = "tickets",
+                    javaType = List.class,
+                    many = @Many(select = "com.etc.trainordersys.mapper.MyOrderMapper.showMyTrainDetail"))
+    })
+    OrderEntity showMyUnpaidOrder(Integer userId);
+    //1.根据order_no,departure_date将t_order表中的order_status的值改为0，0代表已取消
+    @Update("update t_order set order_status = 0 where order_no=#{orderNo} and departure_date=#{departureDate}")
+    boolean updateOrder(Integer orderNo, String departureDate);
+    //2.1根据order_no,departure_date查询t_ticket表
+    @Select("select * from t_ticket where order_no = #{orderNo} and departure_date=#{departureDate}")
+    List<TicketEntity> showMyTrainDetailByDate(Integer orderNo, String departureDate);
+    //2.2 循环修改t_ticket表中的ticket_status为6，6--已取消
+    @Update("update t_ticket set ticket_status = 6,update_time = now() where ticket_id = #{ticketId} and departure_date=#{departureDate}")
+    boolean updateTicketStatus(int ticketId, String departureDate);
+    //3.根据train_number,seat_type_id将t_schedule_seat_info表中的remain_nums+1
+    @Update("update t_schedule_seat_info set remain_nums = remain_nums+1 where train_number=#{trainNumber} and seat_type_id =#{seatTypeId}")
+    boolean updateTrainNum(String trainNumber, int seatTypeId);
 }

@@ -32,7 +32,7 @@
             let flag = window.confirm("你确定要取消订单嘛？");
             if (flag) {
                 $.ajax({
-                    url: "/view/order/cancelOrder",
+                    url: "/system/order/cancelOrder",
                     type: "POST",
                     data: {
                         "order_no": order_no,
@@ -43,7 +43,7 @@
                     success: function (msg) {
                         if (msg) {
                             alert("取消订单成功！！");
-                            window.location.href = "/view/order/unpaidOrder";
+                            window.location.href = "/system/order/unpaidOrder";
                         } else {
                             alert("取消订单失败!!!");
                         }
@@ -65,7 +65,7 @@
     <div class="wrapper clearfix">
         <a>当前位置：</a>
         <a href="http://localhost:8080/index.html"  style="">首页</a><span>></span>
-        <a href="/view/personal/info" class="go">个人中心</a><span>></span>
+        <a href="/system/personal/info" class="go">个人中心</a><span>></span>
         <a href="" class="go">车票订单</a><span>></span>
         <a href="" class="go">未完成的订单</a>
     </div>
@@ -86,8 +86,8 @@
                             <ul class="tab-hd-list" id="order_tab">
                                 <li class="active"><a href="javascript:void(0);">未完成订单 </a>
                                 </li>
-                                <li data-type="0"><a href="/view/order/train_order">未出行订单 </a></li>
-                                <li data-type="1"><a href="/view/order/history_order">历史订单</a></li>
+                                <li data-type="0"><a href="/system/order/train_order">未出行订单 </a></li>
+                                <li data-type="1"><a href="/system/order/history_order">历史订单</a></li>
                             </ul>
                         </div>
                         <div class="tab-bd">
