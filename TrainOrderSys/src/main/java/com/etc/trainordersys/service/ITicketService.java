@@ -2,6 +2,7 @@ package com.etc.trainordersys.service;
 
 import com.etc.trainordersys.entity.OrderEntity;
 import com.etc.trainordersys.entity.PassengerEntity;
+import com.etc.trainordersys.entity.TicketEntity;
 import com.etc.trainordersys.entity.TrainScheduleEntity;
 
 
@@ -22,4 +23,7 @@ public interface ITicketService {
 
     //查询火车列表
     TrainScheduleEntity findTrainInfoList(Integer id);
+
+    //创建临时缓存添加乘客数据
+    List<TicketEntity> TemporaryAddTickets(Integer[] sort, Integer[] ticketType, String[] seatType, String[] passengerName, String[] cardType, String[] cardCode);
 }

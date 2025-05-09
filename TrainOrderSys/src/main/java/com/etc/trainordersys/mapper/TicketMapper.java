@@ -28,12 +28,7 @@ public interface TicketMapper {
             @Result(column = "train_number",
                     property = "seatInfoEntityList",
                     javaType = List.class,
-                    many = @Many(select = "com.etc.trainordersys.mapper.TicketMapper.findSeatTypeList")),
-            //查询火车车票信息
-            @Result(column = "train_number",
-                    property = "tickets",
-                    javaType = List.class,
-                    many = @Many(select = "com.etc.trainordersys.mapper.TicketMapper.findTickets"))
+                    many = @Many(select = "com.etc.trainordersys.mapper.TicketMapper.findSeatTypeList"))
     })
     TrainScheduleEntity findTrainInfoList(Integer id);
 
