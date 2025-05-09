@@ -17,5 +17,5 @@ public class StationEntity {
     private String create_time;
     private String update_time;
     private int del_flag;   //是否删除标志  1-还存在  0-不存在
-
+    private RailwaybureauEntity railwayBureaus;
 }
