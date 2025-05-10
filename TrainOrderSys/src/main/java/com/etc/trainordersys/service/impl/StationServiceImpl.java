@@ -14,14 +14,19 @@ import java.util.List;
 public class StationServiceImpl implements IStationService {
     @Autowired
     private StationMapper stationMapper;
-
+    //显示车站列表
     @Override
     public List<StationEntity> findAllStationPageList(String name) {
         return stationMapper.findAllStationPageList(name);
     }
-
+    //显示添加车站页面
     @Override
     public List<RailwaybureauEntity> findRailwayBureau() {
         return stationMapper.findRailwayBureau();
+    }
+    //保存添加车站信息
+    @Override
+    public String addStation(StationEntity station) {
+        return stationMapper.addStation(station)>0?"true":"fail";
     }
 }

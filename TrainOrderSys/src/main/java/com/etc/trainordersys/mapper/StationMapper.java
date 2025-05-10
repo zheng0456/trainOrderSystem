@@ -11,7 +11,7 @@ public interface StationMapper {
     @Select(" <script> " +
             " select * from t_station "+
             " <where> " +
-            " <if test='name!=null'> name like '%' #{name} '%' </if> "+
+            " <if test='station_name!=null'> station_name like '%' #{station_name} '%' </if> "+
             " </where>" +
             " </script> ")
     @Results({
@@ -27,4 +27,8 @@ public interface StationMapper {
 
     @Select("select * from t_railwayBureau ")
     List<RailwaybureauEntity> findRailwayBureau();
+
+
+    @Insert("insert into t_station(station_name,city,railwayBureau_id,phone,create_time,update_time) values(#{station_name},#{city},#{railwayBureau_id},#{phone},now(),now())")
+    int addStation(StationEntity station);
 }
