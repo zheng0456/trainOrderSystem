@@ -31,4 +31,7 @@ public interface StationMapper {
 
     @Insert("insert into t_station(station_name,city,railwayBureau_id,phone,create_time,update_time) values(#{station_name},#{city},#{railwayBureau_id},#{phone},now(),now())")
     int addStation(StationEntity station);
+    //根据车站id显示编辑页面
+    @Select("select * from t_station where station_id=#{stationId}")
+    StationEntity findStationById(int stationId);
 }
