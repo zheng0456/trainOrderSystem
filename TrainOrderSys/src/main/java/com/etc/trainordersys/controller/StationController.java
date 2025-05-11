@@ -63,4 +63,16 @@ public class StationController {
         model.addAttribute("station",station);
         return "/admin/station/edit";
     }
+    //保存编辑车站信息
+    @PutMapping ("/system/station/edit")
+    public @ResponseBody String editStation(StationEntity station){
+        return stationService.edit(station);
+    }
+    //删除车站信息
+    @DeleteMapping("/system/station/delete")
+    public @ResponseBody String deleteStation(@RequestParam("id")int station_id){
+        log.info("参数菜单信息的方法入参：station_id={}",station_id);
+        String res=stationService.deleteStation(station_id);
+        return res;
+    }
 }

@@ -34,4 +34,12 @@ public interface StationMapper {
     //根据车站id显示编辑页面
     @Select("select * from t_station where station_id=#{stationId}")
     StationEntity findStationById(int stationId);
+    //保存编辑车站信息
+    @Update("update t_station set station_name=#{station_name},city=#{city},railwayBureau_id=#{railwayBureau_id},phone=#{phone},update_time=now()" +
+            "where station_id=#{station_id}")
+    int edit(StationEntity station);
+
+    @Delete("delete from t_station where station_id=#{station_id}")
+    //删除车站信息
+    int deleteStation(int stationId);
 }
