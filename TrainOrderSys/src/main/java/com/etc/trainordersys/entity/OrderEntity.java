@@ -19,6 +19,6 @@ public class OrderEntity {
     private int user_id;
     private String order_remark;
     private String create_time;
-    private int order_status;//0-取消订单 1-默认为1  2-已支付
+    private int order_status;//0-取消订单 1-默认为1
     private List<TicketEntity> tickets;
 }

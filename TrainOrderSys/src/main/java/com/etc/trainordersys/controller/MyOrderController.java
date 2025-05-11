@@ -2,6 +2,7 @@ package com.etc.trainordersys.controller;
 
 import com.etc.trainordersys.entity.*;
 import com.etc.trainordersys.service.IMyOrderService;
+import com.etc.trainordersys.utils.AlipayUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import jakarta.servlet.http.HttpSession;
@@ -60,7 +61,7 @@ public class MyOrderController {
             return ResponseResult.fail(ResultEnum.FAIL);
         }
     }
-    //查询并跳转未查询订单页面
+    //查询并跳转未支付订单页面
     @GetMapping("/system/order/unpaidOrder")
     public String showUnpaidOrder(HttpSession session,Model model){
         //获取session中的用户信息
@@ -73,20 +74,22 @@ public class MyOrderController {
     //用户取消订单
     @Transactional
     @RequestMapping("/system/order/cancelOrder")
-    public @ResponseBody boolean cancelOrder(@RequestParam(value = "order_no") Integer order_no,
+    public @ResponseBody boolean cancelOrder(@RequestParam(value = "order_no") String order_no,
                                             @RequestParam(value = "train_number") String train_number,
                                             @RequestParam(value = "departure_date") String departure_date){
-        //1.根据order_no,departure_date将t_order表中的order_status的值改为0，0代表已取消
-        boolean updateOrder = myOrderService.updateOrder(order_no,departure_date);
+        //1.根据order_no将t_order表中的order_status的值改为0，0代表已取消
+        boolean updateOrder = myOrderService.updateOrder(order_no);
         if (updateOrder){
-            //2.1根据order_no,departure_date查询t_ticket表
-            List<TicketEntity> tickets = myOrderService.showMyTrainDetailByDate(order_no,departure_date);
+            //2.1根据order_no查询t_ticket表
+            List<TicketEntity> tickets = myOrderService.showMyTrainDetail(order_no);
             for (TicketEntity ticket:tickets){
                 //2.2 循环修改t_ticket表中的ticket_status为6，6--已取消
-                boolean updateTicketStatus = myOrderService.updateTicketStatus(ticket.getTicket_id(),departure_date);
+                ticket.setTicket_status(6);
+                boolean updateTicketStatus = myOrderService.updateTicketStatus(ticket.getTicket_id(),ticket.getTicket_status());
                 if (updateTicketStatus){
                     //3.根据train_number,seat_type_id将t_schedule_seat_info表中的remain_nums+1
                     myOrderService.updateTrainSeatNum(train_number,ticket.getSeat_type_id());
+                    //4.恢复
                 }
             }
             return true;
@@ -119,5 +122,37 @@ public class MyOrderController {
         //6.把数据保存到model中
         model.addAttribute("page",pageInfo);
         return "/home/center/order/history_order";
+    }
+    //支付订单
+    @Autowired
+    AlipayUtils alipayUtils;
+    //支付订单
+    @RequestMapping("/system/ticketing/toPay")
+    public @ResponseBody String payOrder(String order_no,double total_price,String train_number,String departure_date){
+        System.out.println(order_no);
+        System.out.println(total_price);
+        System.out.println(train_number);
+        System.out.println(departure_date);
+        String form = alipayUtils.pay(order_no,total_price,train_number);  //调用支付宝支付接口
+        return form;
+    }
+    //支付成功的回调方法
+    @RequestMapping("/return")
+    @Transactional
+    public String returnPage(String out_trade_no){
+        System.out.println("out_trade_no："+ out_trade_no);
+        //1.支付成功后，修改支付状态
+        boolean res = myOrderService.updateOrderStatus(out_trade_no);
+        if (res){
+            //2.查询该订单下的车票详情
+            List<TicketEntity> tickets = myOrderService.showMyTrainDetail(out_trade_no);
+            for (TicketEntity ticket:tickets){
+                //3.循环修改该订单下的车票详情的车票状态为未使用
+                ticket.setTicket_status(0);
+                myOrderService.updateTicketStatus(ticket.getTicket_id(),ticket.getTicket_status());
+            }
+            return "forward:/system/order/unpaidOrder";
+        }
+        return "redirect:/error-page";
     }
 }
