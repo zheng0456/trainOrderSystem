@@ -27,7 +27,9 @@ public class TrainScheduleServiceImpl implements ITrainScheduleService {
         String end_station_now=end_station.replace(String.valueOf(station_name),"");
         return trainScheduleMapper.findtrainScheduleList(start_station_now,end_station_now,go_time);
     }
-
-
-
+    //显示车次信息
+    @Override
+    public List<TrainScheduleEntity> findAllSchedulePageList(String name) {
+        return trainScheduleMapper.findAllSchedulePageList(name);
+    }
 }
