@@ -39,7 +39,7 @@ public interface StationMapper {
             "where station_id=#{station_id}")
     int edit(StationEntity station);
 
-    @Delete("delete from t_station where station_id=#{station_id}")
+    @Delete("delete from t_station where station_id=#{stationId}")
     //删除车站信息
     int deleteStation(int stationId);
 }
