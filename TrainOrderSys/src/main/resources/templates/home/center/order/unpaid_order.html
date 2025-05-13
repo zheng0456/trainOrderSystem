@@ -17,8 +17,8 @@
 
     <script>
         //用户去支付，跳转到支付页面
-        function toPay(order_no,train_number,departure_date) {
-            window.location.href = "/view/ticketing/toPay?order_no=" + order_no+"&train_number="+train_number+"&departure_date="+departure_date;
+        function toPay(order_no,total_price,train_number,departure_date,) {
+            window.location.href = "/system/ticketing/toPay?order_no=" + order_no+"&total_price="+total_price+"&departure_date="+departure_date+"&train_number="+train_number;
         }
 
         $(document).ready(function() {
@@ -204,7 +204,10 @@
                                                                    th:onclick="cancelOrder([[${order.order_no}]],[[${order.train_number}]],[[${order.departure_date}]])">取消订单</a>
                                                                 <a href="javascript:void(0)" id="countdown0"
                                                                    class="btn btn-primary"
-                                                                   th:onclick="toPay([[${order.order_no}]],[[${order.train_number}]],[[${order.departure_date}]])">去支付</a>
+                                                                   th:onclick="toPay([[${order.order_no}]],[[${order.total_price}]],[[${order.train_number}]]),[[${order.departure_date}]]">去支付</a>
+<!--                                                                <a href="javascript:void(0)" id="countdown0"-->
+<!--                                                                   class="btn btn-primary"-->
+<!--                                                                   th:onclick="toPay([[${order.order_no}]],[[${order.train_number}]],[[${order.departure_date}]])">去支付</a>-->
                                                             </div>
                                                         </td>
                                                     </tr>

@@ -33,52 +33,6 @@ public class TicketServiceImpl implements ITicketService {
         return ticketMapper.findUserPasseragesInformation(userId);
     }
 
-    //添加用户选择的票
-    @Override
-    public int addTickets(String departureDate, String departureTime, String trainNumber, String startStation, String endStation, String arriveTime, Integer[] sort, Integer [] ticketType, String[] seatType, String[] passengerName, String[] cardType, String[] cardCode) {
-        int res=0;
-        int seat_type_id=0;
-        double prices=0;
-        String[]seatPars=new String[sort.length];
-        for (int i=0;i<sort.length;i++){
-            if (sort.length>1) {
-                seatPars = seatType[i].split(",");    //将传过来的数据进行拆分
-                seat_type_id = Integer.parseInt(seatPars[0]);    //取出座位类型id编号
-                prices = Double.parseDouble(seatPars[1]);     //取出不同座位的价格
-                if (ticketType[i] == 0) {     //成人票
-                    prices = prices;
-                }
-                if (ticketType[i] == 1) {    //儿童票
-                    prices = prices * 0.5;
-                }
-                if (ticketType[i] == 2) {   //学生票
-                    prices = prices * 0.7;
-                }
-                if (ticketType[i] == 3) {   //军人票
-                    prices = prices * 0.75;
-                }
-                res = ticketMapper.addTickets(departureDate, departureTime, trainNumber, startStation, endStation, arriveTime, sort[i], ticketType[i], prices, seat_type_id, passengerName[i], cardType[i], cardCode[i]);
-            }else {
-                seatType[i].split(",");
-                seat_type_id = Integer.parseInt(seatType[0]);    //取出座位类型id编号
-                prices = Double.parseDouble(seatType[1]);     //取出不同座位的价格
-                if (ticketType[i] == 0) {     //成人票
-                    prices = prices;
-                }
-                if (ticketType[i] == 1) {    //儿童票
-                    prices = prices * 0.5;
-                }
-                if (ticketType[i] == 2) {   //学生票
-                    prices = prices * 0.7;
-                }
-                if (ticketType[i] == 3) {   //军人票
-                    prices = prices * 0.75;
-                }
-                res = ticketMapper.addTickets(departureDate, departureTime, trainNumber, startStation, endStation, arriveTime, sort[i], ticketType[i], prices, seat_type_id, passengerName[i], cardType[i], cardCode[i]);
-            }
-        }
-        return res;
-    }
 
     //判断用户选的座位类型
     @Override
@@ -88,9 +42,9 @@ public class TicketServiceImpl implements ITicketService {
             String [] seatPars=seatType[i].split(",");   //将传过来的数据进行拆分
             int seat_type_id=Integer.parseInt(seatPars[0]);    //取出座位类型id编号
             //根据不同的类型号进行返回不同的数据
-            if (seat_type_id==1 || seat_type_id==4){
+            if (seat_type_id==4){
                 flagSeat=1;
-            }else if (seat_type_id==5 || seat_type_id==6){
+            }else if (seat_type_id==5 || seat_type_id==6||seat_type_id==1){
                 flagSeat=3;
             }
         }
@@ -170,5 +124,11 @@ public class TicketServiceImpl implements ITicketService {
             }
         }
         return tickets;
+    }
+
+    //根据火车名和火车开始日期，查询火车抢票详情
+    @Override
+    public TrainOrderEntity findSeckillDetail(String trainName, String departureDate) {
+        return ticketMapper.findSeckillDetail(trainName,departureDate);
     }
 }

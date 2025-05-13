@@ -186,12 +186,12 @@
             列车信息<span class="small">（以下余票信息仅供参考）</span>
         </div>
         <div class="lay-bd"><p class="t-tit" id="ticket_tit_id">
-            <strong class="mr5">[[${trainInfo.departure_date}]]</strong>
-            <strong class="ml5">[[${trainInfo.train_number}]]</strong>次<strong title="北京南" class="ml5">[[${trainInfo.start_station}]]</strong>站
-            <strong title="">（[[${trainInfo.start_time}]]开）— [[${trainInfo.end_station}]]</strong>站（[[${trainInfo.arrive_time}]]到）
+            <strong class="mr5">[[${trainInfos.departure_date}]]</strong>
+            <strong class="ml5">[[${trainInfos.train_number}]]</strong>次<strong title="北京南" class="ml5">[[${trainInfos.start_station}]]</strong>站
+            <strong title="">（[[${trainInfos.start_time}]]开）— [[${trainInfos.end_station}]]</strong>站（[[${trainInfos.arrive_time}]]到）
         </p>
             <p class="t-con" id="ticket_con_id">
-                <span id="ticket_status_id" th:each="seat:${trainInfo.seatInfoEntityList}"
+                <span id="ticket_status_id" th:each="seat:${trainInfos.seatInfoEntityList}"
                       class="s1">[[${seat.seatType.seat_type_name}]]（<span class="colorA">￥[[${seat.price}]]</span>）有票</span>
             </p>
             <p style="color: #3177BF;">
@@ -246,7 +246,7 @@
                     </tr>
                     </tbody>
                     <tbody id="ticketInfo_id">
-                    <tr id="tr_id_1" th:each="t:${trainInfo.tickets}" >
+                    <tr id="tr_id_1" th:each="t:${trainInfos.tickets}" >
                         <td align="center" name="sortNumber">
                             <input type="hidden" name="sort" value="5">[[${t.sort}]]
                         </td>

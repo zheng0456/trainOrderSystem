@@ -15,21 +15,8 @@ public interface TicketMapper {
     @Select("select * from t_passenger where userId=#{userId}")
     List<PassengerEntity> findUserPasseragesInformation(int userId);
 
-    //添加用户购票信息
-    @Insert("insert into t_ticket(train_number,start_station,end_station,start_time,arrive_time,departure_date,passenger_name,card_type,card_code,ticket_type,seat_type_id,ticket_price,sort) values(#{trainNumber},#{startStation},#{endStation},#{departureTime},#{arriveTime},#{departureDate},#{passengerName},#{cardType},#{cardCode},#{ticketType},#{seatTypeId},#{prices},#{sort})")
-    int addTickets(String departureDate, String departureTime, String trainNumber, String startStation, String endStation, String arriveTime, Integer sort, Integer ticketType, double prices, int seatTypeId, String passengerName, String cardType, String cardCode);
-
     //查询火车列表
     @Select("select * from t_train_schedule where id=#{id}")
-    @Results({
-            //防止再次查询数据丢失
-            @Result(column = "train_number",property = "train_number"),
-            //再次查询火车座位列表
-            @Result(column = "train_number",
-                    property = "seatInfoEntityList",
-                    javaType = List.class,
-                    many = @Many(select = "com.etc.trainordersys.mapper.TicketMapper.findSeatTypeList"))
-    })
     TrainScheduleEntity findTrainInfoList(Integer id);
 
     //再次查询火车座位列表
@@ -61,4 +48,8 @@ public interface TicketMapper {
                     many = @Many(select = "com.etc.trainordersys.mapper.TicketMapper.findSeatTypeNames"))
     })
     List<TicketEntity> findTickets(String train_number);
+
+    //根据火车名和火车开始日期，查询火车抢票详情
+    @Select("select * from t_train_schedule t left join t_schedule_seat_info s on t.train_number=s.train_number where t.train_number=#{trainName} and t.departure_date=#{departureDate} and TIMESTAMPDIFF(SECOND, departure_time, arrival_time) != 0")
+    TrainOrderEntity findSeckillDetail(String trainName, String departureDate);
 }

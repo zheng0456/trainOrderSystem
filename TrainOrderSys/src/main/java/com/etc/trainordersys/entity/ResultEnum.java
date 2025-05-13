@@ -12,7 +12,7 @@ public enum ResultEnum {
     REPEATED_SUBMIT(5005,"重复提交"),
     SYSTEM_BUSY(5006,"系统繁忙"),
     REQUEST_BUSY(5007,"请求繁忙"),
-    SECKILL_OVER(5008,"秒杀结束");
+    SECKILL_OVER(5008,"抢票结束");
 
     //枚举值
     //成员变量

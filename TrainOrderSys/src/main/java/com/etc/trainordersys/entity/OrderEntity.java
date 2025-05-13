@@ -19,6 +19,13 @@ public class OrderEntity {
     private int user_id;
     private String order_remark;
     private String create_time;
-    private int order_status;//0-取消订单 1-默认为1  2-已支付
+    private int order_status;//0-取消订单 1-默认为1
     private List<TicketEntity> tickets;
+
+    public OrderEntity(String order_no,String train_number,String departure_date,int user_id){
+        this.order_no=order_no;
+        this.train_number=train_number;
+        this.departure_date=departure_date;
+        this.user_id=user_id;
+    }
 }

@@ -27,6 +27,8 @@ public class TrainScheduleEntity {
 
     private List<ScheduleSeatInfoEntity> seatInfoEntityList;  //座位信息表
 
+    private List<SeatTypeEntity> seatType;   //火车作为类型
+
     private TrainEntity trainEntity;  //  火车实体类
     private List<TicketEntity> tickets;   //一列火车有多个票
 }

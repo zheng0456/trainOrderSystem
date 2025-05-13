@@ -2,6 +2,7 @@ package com.etc.trainordersys.service.impl;
 
 import com.etc.trainordersys.entity.ScheduleSeatInfoEntity;
 import com.etc.trainordersys.entity.TrainScheduleEntity;
+import com.etc.trainordersys.entity.TrainStationEntity;
 import com.etc.trainordersys.mapper.TrainScheduleMapper;
 import com.etc.trainordersys.service.ITrainScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,11 @@ public class TrainScheduleServiceImpl implements ITrainScheduleService {
         return trainScheduleMapper.findtrainScheduleList(start_station_now,end_station_now,go_time);
     }
 
+    //查询经过站点
+    @Override
+    public List<TrainStationEntity> findTrainStations(String trainNumber) {
+        return trainScheduleMapper.findTrainStations(trainNumber);
+    }
 
 
 }

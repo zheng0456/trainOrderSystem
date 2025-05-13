@@ -1,7 +1,7 @@
 package com.etc.trainordersys.controller;
 
-import com.etc.trainordersys.entity.ScheduleSeatInfoEntity;
 import com.etc.trainordersys.entity.TrainScheduleEntity;
+import com.etc.trainordersys.entity.TrainStationEntity;
 import com.etc.trainordersys.service.ITrainScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -35,6 +35,12 @@ public class TrainScheduleController {
         return "/home/show";
     }
 
-    
+    //经过站点查询
+    @GetMapping("/view/ticketing/findTrain_station")
+    public @ResponseBody List<TrainStationEntity> findTrainStation(@RequestParam("train_number") String train_number){
+        //查找该火车从起始站 到终点站途径哪些站点
+        List<TrainStationEntity> trainStation=trainScheduleService.findTrainStations(train_number);
+        return trainStation;
+    }
 
 }

@@ -29,7 +29,7 @@ public class TicketEntity {
     private String QR_code;//二维码
     private String create_time;
     private String update_time;
-    private int ticket_status;
+    private int ticket_status;    //默认为1
     private SeatTypeEntity seatType;//一张火车票只能有一种座位类型
 
     private int sort;   //排序

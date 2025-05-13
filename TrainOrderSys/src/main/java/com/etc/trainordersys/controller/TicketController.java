@@ -64,9 +64,19 @@ public class TicketController {
 
         //创建临时存储购票人信息
         List<TicketEntity> tickets = ticketService.TemporaryAddTickets(sort, ticket_type, seat_type, passenger_name, card_type, card_code);
-
         //查询火车列表
-        TrainScheduleEntity trainInfo = ticketService.findTrainInfoList(id);
+        TrainScheduleEntity trainInfos=ticketService.findTrainInfoList(id);
+        trainInfos.setTickets(tickets);
+        //将查询的列表存放到TrainInfo中
+        TrainInfoDTO trainInfo=new TrainInfoDTO();
+        trainInfo.setTrain_number(trainInfos.getTrain_number());
+        trainInfo.setStart_station(trainInfos.getStart_station());
+        trainInfo.setEnd_station(trainInfos.getEnd_station());
+        trainInfo.setDeparture_date(trainInfos.getDeparture_date());
+        trainInfo.setDeparture_time(trainInfos.getDeparture_time());
+        trainInfo.setArrive_time(trainInfos.getArrive_time());
+        trainInfo.setStart_time(trainInfos.getStart_time());
+        trainInfo.setEnd_time(trainInfos.getEnd_time());
         trainInfo.setTickets(tickets);
 
         //查询用户下的乘车人信息
@@ -77,6 +87,8 @@ public class TicketController {
         model.addAttribute("flagSeat", flagSeat);
         //保存火车信息
         model.addAttribute("trainInfo", trainInfo);
+        //保存火车信息
+        model.addAttribute("trainInfos",trainInfos);
         //跳转页面到选座页面
         return "/home/order/choose_seat";
     }

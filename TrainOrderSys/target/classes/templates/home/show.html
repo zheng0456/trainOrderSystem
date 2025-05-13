@@ -488,16 +488,16 @@
                     <span>[[${seat.seatType.seat_type_name}]]</span>
                     <font>￥<b class="piaozi1">[[${seat.price}]]</b></font>
 
-                    <a th:if="${seat.remain_nums==0 and train.status==2}" style="float: right ;margin-right: 70px;">已售罄</a>
-                    <a th:if="${train.status==3 }" style="float: right ;margin-right: 70px;">已结束</a>
-                    <a th:if="${seat.remain_nums!=0 and train.status==2}" style="float: right ;margin-right: 70px;">余<b class="shengyu1">[[${seat.remain_nums}]]</b>张</a>
-                    <a th:if="${train.status==1 }" style="float: right ;margin-right: 70px;">未开始</a>
+                    <a th:if="${seat.remain_nums==0 and train.trainEntity.status==2}" style="float: right ;margin-right: 70px;">已售罄</a>
+                    <a th:if="${train.trainEntity.status==3 }" style="float: right ;margin-right: 70px;">已结束</a>
+                    <a th:if="${seat.remain_nums!=0 and train.trainEntity.status==2}" style="float: right ;margin-right: 70px;">余<b class="shengyu1">[[${seat.remain_nums}]]</b>张</a>
+                    <a th:if="${train.trainEntity.status==1 }" style="float: right ;margin-right: 70px;">未开始</a>
                 </span>
             </div>
             <div class="w6">
                 <div th:each="seatInfo:${train.seatInfoEntityList}">
-                    <a th:if="${seatInfo.remain_nums > 0 and train.status==2 }" class="qp_btn1" href="javascript:void(0);" canthese="True" th:onclick="buyTicket([[${session.user}]],'[[${train}]]')">预定</a>
-                    <a th:if="${seatInfo.remain_nums == 0 or train.status==1  or train.status==3 }" class="qp_btn1" href="javascript:void(0);" canthese="True" >无法预定</a>
+                    <a th:if="${seatInfo.remain_nums > 0 and train.trainEntity.status==2 }" class="qp_btn1" href="javascript:void(0);" canthese="True" th:onclick="buyTicket([[${session.user}]],'[[${train}]]')">预定</a>
+                    <a th:if="${seatInfo.remain_nums == 0 or train.trainEntity.status==1  or train.trainEntity.status==3 }" class="qp_btn1" href="javascript:void(0);" canthese="True" >无法预定</a>
                 </div>
             </div>
 
@@ -529,9 +529,9 @@
         //判断当前用户是否处于登录状态
         if (user!=null){
             $.ajax({
-                url: "/view/ticketing/findUnPayOrder",
+                url: "/view/ticketing/findUnPayOrder",   //请求查看是否有没支付的订单
                 type: "get",
-                async: false,
+                async: false,   //请求异步 改为同步
                 success: function (msg) {
                     if (!msg) {
                         alert("您还有未支付订单，请前往(个人中心/未完成订单)界面查看确认");
@@ -549,7 +549,7 @@
         }else {
             let login = window.confirm("您当前还没有登录，是否去登录！");
             if (login == true){
-                window.location.href = "/login.html";
+                window.location.href = "/home/login.html";
             }
         }
     }

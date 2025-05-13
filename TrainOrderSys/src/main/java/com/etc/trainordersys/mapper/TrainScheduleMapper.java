@@ -66,4 +66,18 @@ public interface TrainScheduleMapper {
     @Select("select * from t_seat_type where id=#{seat_type_id}" )
     SeatTypeEntity findSeatTypeList(int seat_type_id);
 
+    //查询经过站点
+    @Select("select * from t_train_station where train_number=#{trainNumber}")
+    @Results({
+            //查询经过几个站点
+            @Result(column = "station_id",
+                    property = "trainStation",
+                    javaType = StationEntity.class,
+                    many = @Many(select = "com.etc.trainordersys.mapper.TrainScheduleMapper.findTrainStation"))
+    })
+    List<TrainStationEntity> findTrainStations(String trainNumber);
+
+    //查询经过几个站点
+    @Select("select * from t_station where station_id=#{station_id}")
+    StationEntity findTrainStation(int station_id);
 }
