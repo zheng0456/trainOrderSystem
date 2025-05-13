@@ -1,10 +1,13 @@
 package com.etc.trainordersys.service.impl;
 
+import com.etc.trainordersys.entity.PassengerEntity;
 import com.etc.trainordersys.entity.UserEntity;
 import com.etc.trainordersys.mapper.UserMapper;
 import com.etc.trainordersys.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service("userService")
 public class UserServiceImpl implements IUserService {
@@ -54,6 +57,49 @@ public class UserServiceImpl implements IUserService {
     @Override
     public int editHeadPic(String headPic, Integer userId) {
         return userMapper.editHeadPic(headPic,userId);
+    }
+    //根据user_id查询本账号下所添加的所有乘车人信息
+    @Override
+    public List<PassengerEntity> showPassenger(Integer userId) {
+        return userMapper.showPassenger(userId);
+    }
+    //编辑乘客信息--1.显示乘客信息
+    @Override
+    public PassengerEntity showEdit(Integer id) {
+        return userMapper.showEdit(id);
+    }
+    //保存修改信息
+    @Override
+    public boolean editPassenger(PassengerEntity passenger) {
+        return userMapper.editPassenger(passenger);
+    }
+    //验证乘车人证件号
+    @Override
+    public UserEntity checkPassengerCardCode(String cardCode) {
+        return userMapper.checkPassengerCardCode(cardCode);
+    }
+    //验证乘车人手机号
+    @Override
+    public UserEntity checkPassengerPhone(String phone) {
+        return userMapper.checkPassengerPhone(phone);
+    }
+    //删除乘客信息
+    @Override
+    public boolean deletePassenger(Integer id) {
+        return userMapper.deletePassenger(id);
+    }
+    //批量删除乘客信息
+    @Override
+    public boolean deleteSelectPassenger(List<Integer> ids) {
+        for (Integer id:ids){
+            userMapper.deletePassenger(id);
+        }
+        return true;
+    }
+    //新增乘车人信息
+    @Override
+    public boolean addPassenger(PassengerEntity passenger, Integer userId) {
+        return userMapper.addPassenger(passenger,userId);
     }
 
 

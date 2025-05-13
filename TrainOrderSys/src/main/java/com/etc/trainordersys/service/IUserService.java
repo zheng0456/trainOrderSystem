@@ -1,6 +1,9 @@
 package com.etc.trainordersys.service;
 
+import com.etc.trainordersys.entity.PassengerEntity;
 import com.etc.trainordersys.entity.UserEntity;
+
+import java.util.List;
 
 public interface IUserService {
     //登录
@@ -21,4 +24,20 @@ public interface IUserService {
     int editInformation(UserEntity user);
     //修改头像
     int editHeadPic(String headPic, Integer userId);
+    //根据user_id查询本账号下所添加的所有乘车人信息
+    List<PassengerEntity> showPassenger(Integer userId);
+    //编辑乘客信息--1.显示乘客信息
+    PassengerEntity showEdit(Integer id);
+    //保存修改信息
+    boolean editPassenger(PassengerEntity passenger);
+    //验证乘车人证件号
+    UserEntity checkPassengerCardCode(String cardCode);
+    //验证乘车人手机号
+    UserEntity checkPassengerPhone(String phone);
+    //删除乘客信息
+    boolean deletePassenger(Integer id);
+    //批量删除乘客信息
+    boolean deleteSelectPassenger(List<Integer> ids);
+    //新增乘车人信息
+    boolean addPassenger(PassengerEntity passenger, Integer userId);
 }

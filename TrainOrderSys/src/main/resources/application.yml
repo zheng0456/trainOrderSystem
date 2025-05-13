@@ -39,6 +39,12 @@
     password: guest
   elasticsearch: #搜索引擎配置
     uris: http://127.0.0.1:9200
+  ai:
+    dashscope:
+      agent:
+        app-id: ${APP_ID} # 大模型应用ID
+      api-key: ${DASHSCOPE_API_KEY} # 百炼API Key
+      #workspace-id: ${WORKSPACE_ID} # 业务空间ID，可选，未配置时使用主账号空间
 
 
 #加载mybatis配置文件

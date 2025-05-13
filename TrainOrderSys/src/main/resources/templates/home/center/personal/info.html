@@ -57,7 +57,7 @@
             }else {
                 $.ajax({
                     type: "get",
-                    url: "/system/user/checkUserName",
+                    url: "/view/user/checkUserName",
                     data: { "username": strName ,"user_id":$("#user_id").val()},
                     dataType: "json",
                     async: false,
@@ -92,7 +92,7 @@
             } else {
                 $.ajax({
                     type: "get",
-                    url: "/system/user/checkPhone",
+                    url: "/view/user/checkPhone",
                     data: {"phone": $("#phone").val(),"user_id":$("#user_id").val()},
                     dataType: "json",
                     async:false,
@@ -128,7 +128,7 @@
             } else {
                 $.ajax({
                     type: "get",
-                    url: "/system/user/checkEmail",
+                    url: "/view/user/checkEmail",
                     data: {"email": $("#email").val(),"user_id":$("#user_id").val()},
                     dataType: "json",
                     async:false,
@@ -195,7 +195,7 @@
         <div class="you fl" style="min-height: 460px"><h2>个人信息</h2>
             <div class="gxin">
                 <div class="tx">
-                    <form action="/system/personal/headPic" method="post">
+                    <form action="/view/personal/headPic" method="post">
                         <a href="#">
                             <img th:if="${user.head_pic} == null " src="/upload/headImg/defaultHeadImg.webp" id="show-picture-img" alt="默认头像" width="92px" height="92px" style="border-radius: 40px" />
                             <img th:if="${user.head_pic} != null" th:src="${user.head_pic}" id="show-pic"  width="92px" height="92px" style="border-radius: 40px" />
@@ -322,7 +322,7 @@
         </div>
         <h3 style="margin-top: 0; margin-bottom: 20px;">编辑基础资料</h3>
         <div>
-            <form action="/system/personal/editInformation" method="post" id="from">
+            <form action="/view/personal/editInformation" method="post" id="from">
                 <input type="hidden" name="user_id" id="user_id" th:value="${user.user_id}">
                 <input type="hidden" name="name" id="name" th:value="${user.name}">
                 <input type="hidden" name="card_type" id="card_type" th:value="${user.card_type}">

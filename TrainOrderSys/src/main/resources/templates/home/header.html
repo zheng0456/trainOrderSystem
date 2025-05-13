@@ -91,11 +91,11 @@
             if (confirm == true){
                 $.ajax({
                     type:"POST",  //修改提交方式
-                    url:"/system/user/logout",
+                    url:"/view/user/logout",
                     success:function (msg){
                         if(msg){
                             alert("你已经成功退出系统！！！");
-                            window.location = "/home/index.html";
+                            window.location = "/home/login.html";
                         }else {
                             alert("退出系统失败，请刷新页面重试！");
                         }
@@ -119,7 +119,7 @@
 
             <a href="#" th:if="${session.user != null}">
                 <span style="color: black;font-size: 14px; margin-left: 0px">您好,</span>
-                <a  href="/system/personal/info">[[${session.user.username}]]</a><span>|</span>
+                <a  href="/view/personal/info">[[${session.user.username}]]</a><span>|</span>
             </a>
             <a href="javascript:void(0);" th:if="${session.user != null}" onclick="Logout()">退出</a>
             <a href="login.html" th:if="${session.user == null}"    target="_top">登录<span>|</span></a>
