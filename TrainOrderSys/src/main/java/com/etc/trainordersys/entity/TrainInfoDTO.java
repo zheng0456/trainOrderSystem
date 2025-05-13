@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TrainInfoDTO {
+    private Integer id;    //火车id
     private String train_number;  //火车名字
     private String start_station; //火车开始站
     private String end_station;   //火车结束站

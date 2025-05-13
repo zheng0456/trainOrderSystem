@@ -33,8 +33,8 @@ public class OrderController {
 
     //内存标记，减少redis访问，存储菜品id是否秒杀结束，库存预减后，取值如果库存小于0设置此标识
     private Map<Integer, Boolean> localOverMap = new HashMap<>();
-    //每秒允许50个操作通过
-    private static final RateLimiter rateLimiter = RateLimiter.create(10);
+    //每秒请求一个令牌
+    private static final RateLimiter rateLimiter = RateLimiter.create(1);
     @Autowired
     private RedisDistributedLock redisDistributedLock;
     @Autowired
@@ -46,7 +46,6 @@ public class OrderController {
         try {
             //将前端传来数据进行转换为 火车列表实体类
             TrainInfoDTO train=redisUtils.stringToBean(trainInfo,TrainInfoDTO.class);
-
             //将前端传来数据进行转换为 座位实体类
             SeatInfoDTO seat = redisUtils.stringToBean(seatInfo, SeatInfoDTO.class);
             //获取用户id
@@ -57,12 +56,12 @@ public class OrderController {
                 return ResponseResult.fail(ResultEnum.REQUEST_BUSY);
             }
             //判断是否抢票结束标记 如果结束响应数据，如果没有结束，继续执行下一步
-            Boolean over = localOverMap.get(train.getEnd_time());
+            Boolean over = localOverMap.get(train.getId());
             if (over != null && over == true) {   //true 秒杀结束   false秒杀没结束
                 return ResponseResult.fail(ResultEnum.SECKILL_OVER);
             }
             //判断用户是否重复秒杀，系统把订单存入到Redis中，所以从Redis中获取订单
-            RepeatedTicketsEntity repeatedTickets = redisUtils.get("orderInfo", train.getTrain_number() + ":" + userId, RepeatedTicketsEntity.class);
+            RepeatedTicketsEntity repeatedTickets = redisUtils.get("orderInfo", train.getId()+ ":" + userId, RepeatedTicketsEntity.class);
             if (repeatedTickets != null) {
                 return ResponseResult.fail(ResultEnum.REPEATED_SUBMIT);
             }
