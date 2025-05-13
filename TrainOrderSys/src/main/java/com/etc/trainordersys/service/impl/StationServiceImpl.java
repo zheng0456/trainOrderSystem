@@ -37,4 +37,14 @@ public class StationServiceImpl implements IStationService {
     public StationEntity findStationById(int stationId) {
         return stationMapper.findStationById(stationId);
     }
+    //保存编辑车站信息
+    @Override
+    public String edit(StationEntity station) {
+        return stationMapper.edit(station)>0?"true":"fail";
+    }
+    //删除车站信息
+    @Override
+    public String deleteStation(int stationId) {
+        return stationMapper.deleteStation(stationId)>0?"success":"fail";
+    }
 }

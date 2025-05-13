@@ -18,4 +18,8 @@ public interface IStationService {
 
     //根据车站id显示编辑页面
     StationEntity findStationById(int stationId);
+    //保存编辑车站信息
+    String edit(StationEntity station);
+    //删除车站信息
+    String deleteStation(int stationId);
 }

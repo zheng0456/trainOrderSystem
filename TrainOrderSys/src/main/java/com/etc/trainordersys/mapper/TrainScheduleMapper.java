@@ -65,5 +65,7 @@ public interface TrainScheduleMapper {
     //查询座位信息和票数
     @Select("select * from t_seat_type where id=#{seat_type_id}" )
     SeatTypeEntity findSeatTypeList(int seat_type_id);
-
+    //显示车次信息
+    @Select("select * from t_train_schedule")
+    List<TrainScheduleEntity> findAllSchedulePageList(String name);
 }

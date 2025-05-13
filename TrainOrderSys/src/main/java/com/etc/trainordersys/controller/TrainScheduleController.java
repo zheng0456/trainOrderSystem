@@ -1,8 +1,12 @@
 package com.etc.trainordersys.controller;
 
 import com.etc.trainordersys.entity.ScheduleSeatInfoEntity;
+import com.etc.trainordersys.entity.StationEntity;
 import com.etc.trainordersys.entity.TrainScheduleEntity;
 import com.etc.trainordersys.service.ITrainScheduleService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -15,6 +19,7 @@ import java.util.List;
  * 火车时刻表控制类
  */
 @Controller
+@Slf4j
 public class TrainScheduleController {
     @Autowired
     @Qualifier("ScheduleService")
@@ -34,7 +39,20 @@ public class TrainScheduleController {
 
         return "/home/show";
     }
-
-    
-
+    //显示车次信息
+    @GetMapping("/system/train/train_schedule_list")
+    public String findAllScheduleList(Model model, @RequestParam(value = "station_name",required = false)String name,
+                                  @RequestParam(value = "currentPage",required = false,defaultValue = "1")Integer currentPage){
+        int pageSize=2;
+        PageHelper.startPage(currentPage,pageSize);
+        List<TrainScheduleEntity> scheduleList=trainScheduleService.findAllSchedulePageList(name);
+        PageInfo<TrainScheduleEntity> pageInfo=new PageInfo<>(scheduleList);
+        model.addAttribute("page",pageInfo);
+        if (name!=null){
+            model.addAttribute("StationName",name);
+        }
+        log.info("车站列表，scheduleList={}",scheduleList);
+        return "/admin/train/train_schedule_list";
+    }
+    //
 }
