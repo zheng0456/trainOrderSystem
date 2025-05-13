@@ -1,10 +1,10 @@
 package com.etc.trainordersys.mapper;
 
+import com.etc.trainordersys.entity.PassengerEntity;
 import com.etc.trainordersys.entity.UserEntity;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
 
 @Mapper
 public interface UserMapper {
@@ -36,5 +36,25 @@ public interface UserMapper {
     @Update("update t_user set head_pic=#{headPic} where user_Id=#{userId}")
     int editHeadPic(String headPic, Integer userId);
 
-
+    //根据user_id查询本账号下所添加的所有乘车人信息
+    @Select("select * from t_passenger where userId = #{userId}")
+    List<PassengerEntity> showPassenger(Integer userId);
+    //编辑乘客信息--1.显示乘客信息
+    @Select("select * from t_passenger where id=#{id}")
+    PassengerEntity showEdit(Integer id);
+    //保存修改信息
+    @Update("update t_passenger set card_type=#{card_type},passenger_name=#{passenger_name},card_code=#{card_code},phone=#{phone},passenger_type=#{passenger_type},update_time=now() where id=#{id}")
+    boolean editPassenger(PassengerEntity passenger);
+    //验证乘车人证件号
+    @Select("select card_code from t_passenger where card_code = #{cardCode}")
+    UserEntity checkPassengerCardCode(String cardCode);
+    //验证乘车人手机号
+    @Select("select phone from t_passenger where phone = #{phone}")
+    UserEntity checkPassengerPhone(String phone);
+    //删除乘客信息
+    @Delete("delete from t_passenger where id=#{id}")
+    boolean deletePassenger(Integer id);
+    //新增乘车人信息
+    @Insert("insert into t_passenger values(null,#{card_type},#{passenger_name},#{card_code},#{phone},#{passenger_type},1,#{userId},now(),now())")
+    boolean addPassenger(PassengerEntity passenger, Integer userId);
 }

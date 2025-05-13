@@ -44,7 +44,7 @@
             } else {
                 $.ajax({
                     type: "get",
-                    url: "/system/user/checkCardCode",
+                    url: "/view/user/checkPassengerCardCode",
                     data: {"card_code": cardCode},
                     dataType: "json",
                     async:false,
@@ -79,7 +79,7 @@
                 $("#phoneErrorMsg").text("");
                 $.ajax({
                     type: "get",
-                    url: "/system/user/checkPhone",
+                    url: "/view/user/checkPassengerPhone",
                     data: {"phone": $("#phone").val()},
                     dataType: "json",
                     async:false,

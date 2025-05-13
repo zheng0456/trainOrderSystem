@@ -27,7 +27,7 @@
             } else {
                 $.ajax({
                     type: "get",
-                    url: "/system/user/checkUserName",
+                    url: "/view/user/checkUserName",
                     data: {"username": $("#userName").val()},
                     dataType: "json",
                     async: false,
@@ -106,7 +106,7 @@
             } else {
                 $.ajax({
                     type: "get",
-                    url: "/system/user/checkCardCode",
+                    url: "/view/user/checkCardCode",
                     data: {"card_code": $("#card_code").val()},
                     dataType: "json",
                     async: false,
@@ -145,7 +145,7 @@
             } else {
                 $.ajax({
                     type: "get",
-                    url: "/system/user/checkPhone",
+                    url: "/view/user/checkPhone",
                     data: {"phone": $("#phone").val()},
                     dataType: "json",
                     async: false,
@@ -183,7 +183,7 @@
             } else {
                 $.ajax({
                     type: "get",
-                    url: "/system/user/checkEmail",
+                    url: "/view/user/checkEmail",
                     data: {"email": $("#email").val()},
                     dataType: "json",
                     async: false,
@@ -280,7 +280,7 @@
                 <div class="tab_box">
                     <div class="regin_tw">
 
-                        <form name="loginForm" action="/system/user/register" id="user-add-form" method="post">
+                        <form name="loginForm" action="/view/user/register" id="user-add-form" method="post">
                             <table width="700" border="0" cellspacing="0" cellpadding="0">
                                 <tr>
                                     <td>用户名：</td>

@@ -14,7 +14,7 @@ public class PassengerEntity {
     private String card_code;
     private String phone;
     private String passenger_type;
-    private String status;
+    private int status;
     private String userId;
     private String create_time;
     private String update_time;

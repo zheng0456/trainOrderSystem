@@ -66,7 +66,7 @@
             } else {
                 $.ajax({
                     type: "get",
-                    url: "/system/user/checkCardCode",
+                    url: "/view/user/checkPassengerCardCode",
                     data: {"card_code": cardCode},
                     dataType: "json",
                     async:false,
@@ -75,7 +75,7 @@
                             $("#errorCardMsg").text("");
                             flag =true;
                         } else {
-                            $("#errorCardMsg").text("该身份证已经注册，不能重复添加！").css("color","red");
+                            $("#errorCardMsg").text("该身份证已经添加，不能重复添加！").css("color","red");
                         }
                     },
                     error: function () {
@@ -101,7 +101,7 @@
                 $("#phoneErrorMsg").text("");
                 $.ajax({
                     type: "get",
-                    url: "/system/user/checkPhone",
+                    url: "/view/user/checkPassengerPhone",
                     data: {"phone": $("#phone").val()},
                     dataType: "json",
                     async:false,

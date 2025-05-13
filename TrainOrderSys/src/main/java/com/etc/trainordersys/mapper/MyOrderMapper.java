@@ -59,4 +59,14 @@ public interface MyOrderMapper {
     //支付成功后，支付状态
     @Update("update t_order set payment = 1 where order_no=#{outTradeNo}")
     boolean updateOrderStatus(String outTradeNo);
+    //查询我的车票订单详情
+    @Select("select * from t_ticket where card_Code=#{cardCode}")
+    @Results({
+            @Result(column = "seat_type_id",property = "seat_type_id"),
+            @Result(column = "seat_type_id",
+                    property = "seatType",
+                    javaType = SeatTypeEntity.class,
+                    one = @One(select = "com.etc.trainordersys.mapper.MyOrderMapper.showMySeatType"))
+    })
+    List<TicketEntity> showMyTickets(String cardCode);
 }
