@@ -2,6 +2,7 @@ package com.etc.trainordersys.controller;
 
 import com.etc.trainordersys.entity.*;
 import com.etc.trainordersys.service.IMyOrderService;
+import com.etc.trainordersys.utils.AlipayUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import jakarta.servlet.http.HttpSession;
@@ -12,6 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +29,7 @@ public class MyOrderController {
     IMyOrderService myOrderService;
 
     //显示订单中心----显示车票订单页面
-    @RequestMapping("/system/order/train_order")
+    @RequestMapping("/view/order/train_order")
     public String showMyTrainOrder(HttpSession session, Model model,
                                    @RequestParam(value = "currentPage",required = false,defaultValue = "1")Integer currentPage){
         //获取session中的用户信息
@@ -36,14 +40,7 @@ public class MyOrderController {
         //3.设置起始页和每页展示的条数
         PageHelper.startPage(currentPage,pageSize);
         //4.分页查询我的车票订单,如果有搜索条件就模糊查询，没有就分页查询所有订单列表
-        List<OrderEntity> allOrders = myOrderService.showMyTrainOrder(user_id);
-        //将已支付订单方法新的数组中
-        List<OrderEntity> orders = new ArrayList<>();
-        for (OrderEntity order:allOrders){
-            if (order.getPayment()==1 && order.getOrder_status()==1){
-                orders.add(order);
-            }
-        }
+        List<OrderEntity> orders = myOrderService.showMyTrainOrder(user_id);
         //5.封装结果集
         PageInfo<OrderEntity> pageInfo = new PageInfo<>(orders);
         //6.把数据保存到model中
@@ -51,7 +48,7 @@ public class MyOrderController {
         return "/home/center/order/train_order";
     }
     //退票
-    @PutMapping("/system/order/refundTicket")
+    @PutMapping("/view/order/refundTicket")
     public @ResponseBody ResponseResult refundTicket(@RequestParam(value = "ticket_id") Integer ticket_id){
         boolean isSuccess = myOrderService.refundTicket(ticket_id);
         if (isSuccess){
@@ -61,7 +58,7 @@ public class MyOrderController {
         }
     }
     //查询并跳转未支付订单页面
-    @GetMapping("/system/order/unpaidOrder")
+    @GetMapping("/view/order/unpaidOrder")
     public String showUnpaidOrder(HttpSession session,Model model){
         //获取session中的用户信息
         Integer user_id = ((UserEntity)session.getAttribute("user")).getUser_id();
@@ -72,7 +69,7 @@ public class MyOrderController {
     }
     //用户取消订单
     @Transactional
-    @RequestMapping("/system/order/cancelOrder")
+    @RequestMapping("/view/order/cancelOrder")
     public @ResponseBody boolean cancelOrder(@RequestParam(value = "order_no") String order_no,
                                             @RequestParam(value = "train_number") String train_number,
                                             @RequestParam(value = "departure_date") String departure_date){
@@ -97,7 +94,7 @@ public class MyOrderController {
     }
 
     //查询历史订单
-    @RequestMapping("/system/order/history_order")
+    @RequestMapping("/view/order/history_order")
     public String showMyHistoryTrainOrder(HttpSession session, Model model,
                                    @RequestParam(value = "currentPage",required = false,defaultValue = "1")Integer currentPage){
         //获取session中的用户信息
@@ -107,17 +104,10 @@ public class MyOrderController {
         int pageSize=2;
         //3.设置起始页和每页展示的条数
         PageHelper.startPage(currentPage,pageSize);
-        //4.分页查询我的车票订单,如果有搜索条件就模糊查询，没有就分页查询所有订单列表
-        List<OrderEntity> allOrders = myOrderService.showMyTrainOrder(user_id);
-        //将不是默认状态订单方法新的数组中(0未支付，1订单默认）
-        List<OrderEntity> orders = new ArrayList<>();
-        for (OrderEntity order:allOrders){
-            if (!(order.getPayment()==0 && order.getOrder_status()==1)){
-                orders.add(order);
-            }
-        }
+        //4.分页查询历史车票订单,如果有搜索条件就模糊查询，没有就分页查询所有订单列表
+        List<OrderEntity> historyOrders = myOrderService.showMyHistoryTrainOrder(user_id);
         //5.封装结果集
-        PageInfo<OrderEntity> pageInfo = new PageInfo<>(orders);
+        PageInfo<OrderEntity> pageInfo = new PageInfo<>(historyOrders);
         //6.把数据保存到model中
         model.addAttribute("page",pageInfo);
         return "/home/center/order/history_order";
@@ -126,7 +116,7 @@ public class MyOrderController {
     @Autowired
     AlipayUtils alipayUtils;
     //支付订单
-    @RequestMapping("/system/ticketing/toPay")
+    @RequestMapping("/view/ticketing/toPay")
     public @ResponseBody String payOrder(String order_no,double total_price,String train_number,String departure_date){
         System.out.println(order_no);
         System.out.println(total_price);
@@ -137,21 +127,63 @@ public class MyOrderController {
     }
     //支付成功的回调方法
     @RequestMapping("/return")
-    @Transactional
     public String returnPage(String out_trade_no){
         System.out.println("out_trade_no："+ out_trade_no);
         //1.支付成功后，修改支付状态
-        boolean res = myOrderService.updateOrderStatus(out_trade_no);
+        boolean res = myOrderService.successPay(out_trade_no);
         if (res){
-            //2.查询该订单下的车票详情
-            List<TicketEntity> tickets = myOrderService.showMyTrainDetail(out_trade_no);
-            for (TicketEntity ticket:tickets){
-                //3.循环修改该订单下的车票详情的车票状态为未使用
-                ticket.setTicket_status(0);
-                myOrderService.updateTicketStatus(ticket.getTicket_id(),ticket.getTicket_status());
-            }
-            return "forward:/system/order/unpaidOrder";
+            return "forward:/view/order/unpaidOrder";
         }
         return "redirect:/error-page";
+    }
+    //查看本人车票
+    @RequestMapping("/view/order/my_tickets")
+    public String showMyTickets(HttpSession session, Model model,
+                                @RequestParam(value = "currentPage",required = false,defaultValue = "1") Integer currentPage){
+        //获取session中我的身份证号
+        String card_code = ((UserEntity)session.getAttribute("user")).getCard_code();
+        //1.方法入参
+        //2.每页展示的条数
+        int pageSize=2;
+        //3.设置起始页和每页展示的条数
+        PageHelper.startPage(currentPage,pageSize);
+        //4.分页查询我的车票订单详情,如果有搜索条件就模糊查询，没有就分页查询所有订单列表
+        List<TicketEntity> myTickets = myOrderService.showMyTickets(card_code);
+        for (TicketEntity ticket:myTickets) {
+            //根据发车日期转换成星期几
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate ticketDate = LocalDate.parse(ticket.getDeparture_date(), formatter);
+            // 获取星期几
+            DayOfWeek dayOfWeek = ticketDate.getDayOfWeek();
+            System.out.println("星期几: " + dayOfWeek); // 输出：WEDNESDAY
+            // 中文输出
+            String[] chineseDays = {"星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"};
+            System.out.println("中文星期几: " + chineseDays[dayOfWeek.getValue() - 1]); // 输出：星期三
+            ticket.setDayOfWeek(chineseDays[dayOfWeek.getValue() - 1]);
+        }
+        //5.封装结果集
+        PageInfo<TicketEntity> pageInfo = new PageInfo<>(myTickets);
+        //6.把数据保存到model中
+        model.addAttribute("page",pageInfo);
+        return "/home/center/ticket/my_tickets";
+    }
+    //查询退票车票
+    @RequestMapping("/view/order/findRefundTicket")
+    public String showRefundTickets(HttpSession session, Model model,
+                                    @RequestParam(value = "currentPage",required = false,defaultValue = "1") Integer currentPage){
+        //获取session中我的身份证号
+        Integer user_id = ((UserEntity)session.getAttribute("user")).getUser_id();
+        //1.方法入参
+        //2.每页展示的条数
+        int pageSize=2;
+        //3.设置起始页和每页展示的条数
+        PageHelper.startPage(currentPage,pageSize);
+        //查询退票的订单
+        List<TicketEntity> refundTickets = myOrderService.showRefundTickets(user_id);
+        //5.封装结果集
+        PageInfo<TicketEntity> pageInfo = new PageInfo<>(refundTickets);
+        //6.把数据保存到model中
+        model.addAttribute("page",pageInfo);
+        return "/home/center/ticket/my_tickets";
     }
 }

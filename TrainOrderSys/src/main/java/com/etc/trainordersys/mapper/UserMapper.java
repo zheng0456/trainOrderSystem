@@ -55,6 +55,6 @@ public interface UserMapper {
     @Delete("delete from t_passenger where id=#{id}")
     boolean deletePassenger(Integer id);
     //新增乘车人信息
-    @Insert("insert into t_passenger values(null,#{card_type},#{passenger_name},#{card_code},#{phone},#{passenger_type},1,#{userId},now(),now())")
+    @Insert("insert into t_passenger values(null,#{passenger.card_type},#{passenger.passenger_name},#{passenger.card_code},#{passenger.phone},#{passenger.passenger_type},1,#{userId},now(),now())")
     boolean addPassenger(PassengerEntity passenger, Integer userId);
 }

@@ -183,17 +183,22 @@ public class UserController {
         }
         return false;
     }
-    //新增乘车人信息
-    @RequestMapping("/view/passenger/add")
-    public String addPassenger(@ModelAttribute PassengerEntity passenger,HttpSession session){
-//        //获取session中的用户信息
-//        Integer user_id = ((UserEntity)session.getAttribute("user")).getUser_id();
-//        //插入乘车人信息
-//        boolean res = userService.addPassenger(passenger,user_id);
-//        if (res){
-//
-//        }
-//        return "redirect:/error-page";
+    //跳转添加乘车人信息页面
+    @RequestMapping("/view/passenger/showAdd")
+    public String showAddPassenger(){
         return "/home/center/passenger/passenger_add";
     }
+    //添加乘车人信息
+    @PostMapping("/view/passenger/add")
+    public @ResponseBody boolean addPassenger(@ModelAttribute PassengerEntity passenger,HttpSession session){
+        //获取session中的用户信息
+        Integer user_id = ((UserEntity)session.getAttribute("user")).getUser_id();
+        //插入乘车人信息
+        boolean res = userService.addPassenger(passenger,user_id);
+        if (res){
+            return true;
+        }
+        return false;
+    }
+
 }

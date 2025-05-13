@@ -20,6 +20,12 @@ public interface IMyOrderService {
     boolean updateTicketStatus(int ticketId, int ticketStatus);
     //3.根据train_number,seat_type_id将t_schedule_seat_info表中的remain_nums+1
     boolean updateTrainSeatNum(String trainNumber, int seatTypeId);
-    //支付成功后，修改支付状态
-    boolean updateOrderStatus(String outTradeNo);
+    //支付成功回调方法
+    boolean successPay(String outTradeNo);
+    //查询我的车票订单详情
+    List<TicketEntity> showMyTickets(String cardCode);
+    //查询历史订单
+    List<OrderEntity> showMyHistoryTrainOrder(Integer userId);
+    //查询退票订单
+    List<TicketEntity> showRefundTickets(Integer userId);
 }

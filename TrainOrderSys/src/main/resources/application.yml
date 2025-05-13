@@ -42,8 +42,8 @@
   ai:
     dashscope:
       agent:
-        app-id: ${APP_ID} # 大模型应用ID
-      api-key: ${DASHSCOPE_API_KEY} # 百炼API Key
+        app-id: ${9ba392cfd8414fb9ba0d127b01cd7a23} # 大模型应用ID
+      api-key: ${sk-5f0d27b07f3a49f3913fb130a1c9e530} # 百炼API Key
       #workspace-id: ${WORKSPACE_ID} # 业务空间ID，可选，未配置时使用主账号空间
 
 
