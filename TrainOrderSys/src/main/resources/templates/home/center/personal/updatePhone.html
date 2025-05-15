@@ -50,7 +50,7 @@
           //验证新电话是否重复--ajax
           $.ajax({
             type: "get",
-            url: "/system/user/checkPhone",
+            url: "/view/user/checkPhone",
             data: {"phone": $("#newPhone").val()},
             dataType: "json",
             success: function (data) {
@@ -89,7 +89,7 @@
           success: function (msg) {
             if (msg) {
               alert("电话修改成功！");
-              window.location.href="/home/personal/security";
+              window.location.href="/view/personal/security";
             } else {
               alert("电话修改失败，请重试");
             }
@@ -125,7 +125,7 @@
       <form method="post" class="remima">
         <input type="hidden" name="user_id" id="user_id" th:value="${session.user.getUser_id()}">
 
-        <p> <span>原手机号：</span>  <span> [[${user.phone}]] </span>  <span style="color: #0e9aef">已通过核验</span></p>
+        <p> <span>原手机号：</span>  <span> [[${phone}]] </span>  <span style="color: #0e9aef">已通过核验</span></p>
         <p><span>新手机号：</span><input type="text" id="newPhone" name="phone"   required onblur="checkPhone()"/> <span></span> </p>
         <p class="op">请输入您要更改的手机号</p>
         <p> <span>登陆密码：</span><input type="password" id="oldPwd" required onblur="checkOldPwd()"/>  <span></span></p>

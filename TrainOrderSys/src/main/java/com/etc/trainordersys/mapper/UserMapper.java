@@ -57,4 +57,16 @@ public interface UserMapper {
     //新增乘车人信息
     @Insert("insert into t_passenger values(null,#{passenger.card_type},#{passenger.passenger_name},#{passenger.card_code},#{passenger.phone},#{passenger.passenger_type},1,#{userId},now(),now())")
     boolean addPassenger(PassengerEntity passenger, Integer userId);
+    //旧密码校验
+    @Select("select * from t_user where user_id=#{userId} and password=#{password}")
+    UserEntity checkOldPassword(Integer userId, String password);
+    //修改密码
+    @Update("update t_user set password=#{password} where user_id=#{userId}")
+    boolean editPassword(String password, Integer userId);
+    //修改手机号
+    @Update("update t_user set phone=#{phone} where user_id=#{userId}")
+    boolean editPhone(String phone, Integer userId);
+    //修改邮箱
+    @Update("update t_user set email=#{email} where user_id=#{userId}")
+    boolean editEmail(String email, Integer userId);
 }

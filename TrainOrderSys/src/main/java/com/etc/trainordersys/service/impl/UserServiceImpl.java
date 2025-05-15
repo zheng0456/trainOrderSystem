@@ -101,6 +101,26 @@ public class UserServiceImpl implements IUserService {
     public boolean addPassenger(PassengerEntity passenger, Integer userId) {
         return userMapper.addPassenger(passenger,userId);
     }
+    //旧密码校验
+    @Override
+    public UserEntity checkOldPassword(Integer userId, String password) {
+        return userMapper.checkOldPassword(userId,password);
+    }
+    //修改密码
+    @Override
+    public boolean editPassword(String password, Integer userId) {
+        return userMapper.editPassword(password,userId);
+    }
+    //修改手机号
+    @Override
+    public boolean editPhone(String phone, Integer userId) {
+        return userMapper.editPhone(phone,userId);
+    }
+    //修改邮箱
+    @Override
+    public boolean editEmail(String email, Integer userId) {
+        return userMapper.editEmail(email,userId);
+    }
 
 
 }
