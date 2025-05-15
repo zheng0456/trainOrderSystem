@@ -121,6 +121,29 @@ public class UserServiceImpl implements IUserService {
     public boolean editEmail(String email, Integer userId) {
         return userMapper.editEmail(email,userId);
     }
-
-
+    //查询用户列表
+    @Override
+    public List<UserEntity> findUserList(String userName) {
+        return userMapper.findUserList(userName);
+    }
+    //添加用户-2.保存用户信息
+    @Override
+    public boolean addUser(UserEntity user) {
+        return userMapper.addUser(user);
+    }
+    //显示编辑用户页面,查询选用的用户信息
+    @Override
+    public UserEntity findUserById(int userId) {
+        return userMapper.findUserById(userId);
+    }
+    //保存修改的用户信息
+    @Override
+    public boolean editUser(UserEntity user) {
+        return userMapper.editUser(user);
+    }
+    //删除用户，物理删除，实际应该是逻辑删除
+    @Override
+    public boolean deleteUser(int userId) {
+        return userMapper.deleteUser(userId);
+    }
 }

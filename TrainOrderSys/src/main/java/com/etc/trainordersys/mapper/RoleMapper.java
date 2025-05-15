@@ -81,4 +81,6 @@ public interface RoleMapper
     Integer findMenuChild(int menuId);
     @Delete("delete from t_menu where menu_id=#{menuId}")
     int deleteMenu(int menuId);
+    @Select("select * from t_role")
+    List<RoleEntity> findAllRoleList();
 }

@@ -16,7 +16,7 @@ public class UserEntity {
     private String birthday;  //出生日期
     private String phone;     //用户手机号
     private String email;     //邮件
-    private String adress;    //地址
+    private String address;    //地址
     private String head_pic;  //头像
     private int status;       //状态
     private int role_id;      //1--管理员，2--用户

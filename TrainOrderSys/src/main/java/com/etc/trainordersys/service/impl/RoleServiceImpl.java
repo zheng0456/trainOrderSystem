@@ -114,4 +114,9 @@ public class RoleServiceImpl implements IRoleService {
             }
         }
     }
+
+    @Override
+    public List<RoleEntity> findAllRoleList() {
+        return roleMapper.findAllRoleList();
+    }
 }

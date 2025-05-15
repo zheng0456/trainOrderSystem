@@ -32,4 +32,6 @@ public interface IRoleService {
 
     //删除菜单
     String deleteMenu(int menuId);
+    //添加用户-1.显示用户添加页面，查询所有的角色列表
+    List<RoleEntity> findAllRoleList();
 }

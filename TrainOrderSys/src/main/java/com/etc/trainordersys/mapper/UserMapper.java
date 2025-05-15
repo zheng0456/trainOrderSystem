@@ -69,4 +69,26 @@ public interface UserMapper {
     //修改邮箱
     @Update("update t_user set email=#{email} where user_id=#{userId}")
     boolean editEmail(String email, Integer userId);
+    //查询用户列表
+    @Select("<script>" +
+            "select u.*,ifnull(r.name,'前台用户') as role_name from t_user u left join t_role r on u.role_id=r.role_id" +
+            "<where>" +
+            "<if test='userName!=null'> u.username like '%' #{userName} '%'</if>" +
+            "</where>" +
+            "</script>")
+    List<UserEntity> findUserList(String userName);
+    //添加用户-2.保存用户信息
+    @Insert("insert into t_user values(null,#{username},#{password},#{name},#{sex},#{birthday},#{phone},#{email},#{address},#{head_pic},#{status},#{role_id},#{card_code},#{user_type},7,now(),now(),#{card_type},1)")
+    boolean addUser(UserEntity user);
+    //显示编辑用户页面,查询选用的用户信息
+    @Select("select * from t_user where user_id=#{userId}")
+    UserEntity findUserById(int userId);
+    //保存修改的用户信息
+    @Update("update t_user set username=#{username},password=#{password},head_pic=#{head_pic},role_id=#{role_id},phone=#{phone},email=#{email},birthday=#{birthday},card_code=#{card_code},address=#{address},user_type=#{user_type},card_type=#{card_type},sex=#{sex},status=#{status},update_time=now()" +
+            "where user_id=#{user_id}")
+    boolean editUser(UserEntity user);
+
+    //删除用户，物理删除，实际应该是逻辑删除
+    @Update("update t_user set status=3 where user_id=#{user_id}")
+    boolean deleteUser(int userId);
 }

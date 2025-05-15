@@ -1,20 +1,27 @@
 package com.etc.trainordersys.controller;
 
 import com.etc.trainordersys.entity.PassengerEntity;
+import com.etc.trainordersys.entity.RoleEntity;
 import com.etc.trainordersys.entity.UserEntity;
+import com.etc.trainordersys.service.IRoleService;
 import com.etc.trainordersys.service.IUserService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Controller
+@Slf4j
 public class UserController {
     @Autowired
     @Qualifier("userService")
@@ -276,5 +283,62 @@ public class UserController {
     @RequestMapping("/view/personal/showNotice")
     public String showNotice(){
         return "/home/center/personal/updateNotice";
+    }
+    //查询用户列表
+    @RequestMapping("/system/user/list")
+    public String findUserList(Model model, @RequestParam(value="username",required=false)String userName,
+                               @RequestParam(value = "currentPage",required = false,defaultValue = "1")Integer currentPage){
+        //1.方法入参
+        //2.每页展示的条数
+        int pageSize=2;
+        //3.设置起始页和每页展示的条数
+        PageHelper.startPage(currentPage,pageSize);
+        //4.分页查询用户列表，如果有搜索条件就模糊查询，没有就分页查询所有用户列表
+        List<UserEntity> users=userService.findUserList(userName);
+        //5.封装结果集
+        PageInfo<UserEntity> pageInfo =new PageInfo<>(users);
+        //6.把数据保存到model中
+        model.addAttribute("page",pageInfo);
+        //7.如果有搜索条件，把username也保存到model中
+        if (userName!=null){
+            model.addAttribute("username",userName);
+        }
+        //8.请求转发
+        return "/admin/user/list";
+    }
+    @Autowired
+    @Qualifier("roleService")
+    private IRoleService roleService;
+    //添加用户-1.显示用户添加页面，查询所有的角色列表
+    @RequestMapping("/system/user/add")
+    public String showAdd(Model model){
+        //调用查询所有角色列表的方法
+        List<RoleEntity> roles=roleService.findAllRoleList();
+        model.addAttribute("roles",roles);
+        return "/admin/user/add";
+    }
+    //添加用户-2.保存用户信息
+    @PostMapping("/system/user/add")
+    public @ResponseBody String addUser(@Validated UserEntity user){
+        return userService.addUser(user)==true?"true":"fail";
+    }
+    //显示编辑用户页面,查询选用的用户信息
+    @GetMapping("/system/user/edit/{id}")
+    public String showEdit(@PathVariable("id")int user_id,Model model){
+        UserEntity user=userService.findUserById(user_id);//根据用户id查询用户详情
+        List<RoleEntity> roles=roleService.findAllRoleList();//查询所有角色列表
+        model.addAttribute("user",user);
+        model.addAttribute("roles",roles);
+        return "/admin/user/edit";
+    }
+    //保存修改的用户信息
+    @PutMapping("/system/user/edit")
+    public @ResponseBody String editUser(@Validated UserEntity user){
+        return userService.editUser(user)==true?"true":"fail";
+    }
+    //删除用户，物理删除，实际应该是逻辑删除
+    @DeleteMapping("/system/user/delete")
+    public @ResponseBody boolean deleteUser(@RequestParam("id")int user_id){
+        return userService.deleteUser(user_id);
     }
 }
