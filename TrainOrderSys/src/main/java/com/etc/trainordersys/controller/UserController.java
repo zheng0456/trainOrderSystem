@@ -200,5 +200,81 @@ public class UserController {
         }
         return false;
     }
-
+    //跳转账号安全页面
+    @RequestMapping("/view/personal/security")
+    public String showSecurity(){
+        return "/home/center/personal/security";
+    }
+    //跳转修改密码页面
+    @RequestMapping("/view/personal/showEditPassword")
+    public String showEditPassword(){
+        return "/home/center/personal/updatePwd";
+    }
+    //旧密码校验
+    @RequestMapping("/view/personal/checkOldPassword")
+    public @ResponseBody boolean checkOldPassword(@RequestParam(value = "password") String password,
+                                                  @RequestParam(value = "user_id") Integer user_id){
+        UserEntity user = userService.checkOldPassword(user_id,password);
+        if (user!=null){
+            return true;
+        }else {
+            return false;
+        }
+    }
+    //修改密码
+    @RequestMapping("/view/personal/editPassword")
+    public @ResponseBody boolean editPassword(@RequestParam(value = "password") String password,
+                                              @RequestParam(value = "user_id") Integer user_id){
+        boolean res = userService.editPassword(password,user_id);
+        if (res){
+            return true;
+        }else {
+            return false;
+        }
+    }
+    //跳转修改手机号页面
+    @RequestMapping("/view/personal/showEditPhone")
+    public String showEditPhone(HttpSession session,Model model){
+        //获取session中的用户信息
+        Integer user_id = ((UserEntity)session.getAttribute("user")).getUser_id();
+        UserEntity user = userService.showEditByUserId(user_id);
+        model.addAttribute("phone",user.getPhone());
+        return "/home/center/personal/updatePhone";
+    }
+    //修改手机号
+    @RequestMapping("/view/personal/editPhone")
+    public @ResponseBody boolean editPhone(@RequestParam(value = "phone") String phone,
+                                              @RequestParam(value = "user_id") Integer user_id){
+        boolean res = userService.editPhone(phone,user_id);
+        if (res){
+            return true;
+        }else {
+            return false;
+        }
+    }
+    //跳转修改邮箱页面
+    @RequestMapping("/view/personal/showEditEmail")
+    public String showEditEmail(HttpSession session,Model model){
+        //获取session中的用户信息
+        Integer user_id = ((UserEntity)session.getAttribute("user")).getUser_id();
+        UserEntity user = userService.showEditByUserId(user_id);
+        model.addAttribute("email",user.getEmail());
+        return "/home/center/personal/updateEmail";
+    }
+    //修改邮箱
+    @RequestMapping("/view/personal/editEmail")
+    public @ResponseBody boolean editEmail(@RequestParam(value = "email") String email,
+                                           @RequestParam(value = "user_id") Integer user_id){
+        boolean res = userService.editEmail(email,user_id);
+        if (res){
+            return true;
+        }else {
+            return false;
+        }
+    }
+    //跳转修改通知的页面
+    @RequestMapping("/view/personal/showNotice")
+    public String showNotice(){
+        return "/home/center/personal/updateNotice";
+    }
 }

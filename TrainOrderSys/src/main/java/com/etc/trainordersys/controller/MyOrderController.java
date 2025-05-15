@@ -96,6 +96,9 @@ public class MyOrderController {
     //查询历史订单
     @RequestMapping("/view/order/history_order")
     public String showMyHistoryTrainOrder(HttpSession session, Model model,
+                                   @RequestParam(value = "order_on",required = false) String order_no,
+                                   @RequestParam(value = "startDate",required = false) String startDate,
+                                   @RequestParam(value = "endDate",required = false) String endDate,
                                    @RequestParam(value = "currentPage",required = false,defaultValue = "1")Integer currentPage){
         //获取session中的用户信息
         Integer user_id = ((UserEntity)session.getAttribute("user")).getUser_id();
@@ -110,6 +113,16 @@ public class MyOrderController {
         PageInfo<OrderEntity> pageInfo = new PageInfo<>(historyOrders);
         //6.把数据保存到model中
         model.addAttribute("page",pageInfo);
+        //7.如果有搜索条件，把order_no也保存到model中
+        if (order_no!=null){
+            model.addAttribute("order_no",order_no);
+        }
+        if (startDate!=null){
+            model.addAttribute("startDate",startDate);
+        }
+        if (endDate!=null){
+            model.addAttribute("endDate",endDate);
+        }
         return "/home/center/order/history_order";
     }
     //支付订单

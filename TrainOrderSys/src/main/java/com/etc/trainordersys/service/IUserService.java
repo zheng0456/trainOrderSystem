@@ -40,4 +40,12 @@ public interface IUserService {
     boolean deleteSelectPassenger(List<Integer> ids);
     //新增乘车人信息
     boolean addPassenger(PassengerEntity passenger, Integer userId);
+    //旧密码校验
+    UserEntity checkOldPassword(Integer userId, String password);
+    //修改密码
+    boolean editPassword(String password, Integer userId);
+    //修改手机号
+    boolean editPhone(String phone, Integer userId);
+    //修改邮箱
+    boolean editEmail(String email, Integer userId);
 }
