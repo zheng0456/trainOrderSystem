@@ -11,8 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TrainAddDTO {
-    private Integer train_code;
-    private Integer train_type;
+    private Integer trainCode;
+    private Integer trainType;
     private Integer status;
     private List<CarriageDTO> carriages;//一趟火车有多个车厢
 }

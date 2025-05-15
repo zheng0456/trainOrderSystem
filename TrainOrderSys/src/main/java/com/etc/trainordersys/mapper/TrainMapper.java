@@ -23,6 +23,6 @@ public interface TrainMapper {
     @Insert("insert into t_train values(null,#{train.train_code},#{train.train_type},#{carriagesNum},#{train.status},now(),now(),1)")
     boolean addTrain(TrainEntity train, Integer carriagesNum);
     //将数据插入到车厢表中
-    @Insert("insert into t_train_carriage values(null,#{carriage.carriage_number},#{carriage.train_code},#{carriage.carriage_type},#{carriage.seat_nums},#{carriage.emp_seats},now(),now())")
+    @Insert("insert into t_train_carriage values(null,#{carriage_number},#{train_code},#{carriage_type},#{seat_nums},#{emp_seats},now(),now())")
     void addCarriages(TrainCarriageEntity carriage);
 }

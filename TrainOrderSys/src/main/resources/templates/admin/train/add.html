@@ -162,12 +162,15 @@
             let carriages = [];
             $(".input-group.m-b-10").each(function() {
                 let carriage = {
-                    carriageNumber: $(this).find("input[name='carriageNumber']").val(),
+                    carriageNumber: $(this).find("input[name='carriageNumber']").val() || "",
                     carriageType: $(this).find("select[name='carriageType']").val(),
                     seatCount: $(this).find("input[name='seatCount']").val(),
                     noSeatCount: $(this).find("input[name='noSeatCount']").val() || 0
                 };
-                carriages.push(carriage);
+                // 检查 carriageNumber 是否不为空
+                if (carriage.carriageNumber !== "") {
+                    carriages.push(carriage);
+                }
             });
 
             // 构建请求数据
@@ -184,7 +187,7 @@
                 contentType: 'application/json',
                 data: JSON.stringify(requestData),
                 success: function(response) {
-                    if (response === "true") {
+                    if (response) {
                         alert("列车添加成功");
                         window.location.href = "/system/train/list";
                     } else {
@@ -198,6 +201,5 @@
         });
     });
 </script>
-
 </body>
 </html>

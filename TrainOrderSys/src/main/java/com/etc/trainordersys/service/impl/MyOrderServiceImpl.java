@@ -67,6 +67,7 @@ public class MyOrderServiceImpl implements IMyOrderService {
         return myOrderMapper.updateTrainNum(trainNumber,seatTypeId);
     }
     //支付成功后，修改订单状态和支付状态
+    @Override
     @Transactional
     public boolean successPay(String outTradeNo) {
         //1.支付成功后，修改支付状态

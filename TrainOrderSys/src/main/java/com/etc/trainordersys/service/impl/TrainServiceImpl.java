@@ -28,8 +28,8 @@ public class TrainServiceImpl implements ITrainService {
     public boolean addTrain(TrainAddDTO trainAdd) {
         // 创建列车对象
         TrainEntity train = new TrainEntity();
-        train.setTrain_code(trainAdd.getTrain_code());
-        train.setTrain_type(train.getTrain_type());
+        train.setTrain_code(trainAdd.getTrainCode());
+        train.setTrain_type(trainAdd.getTrainType());
         train.setStatus(trainAdd.getStatus());
         //获取车厢数
         Integer carriagesNum = trainAdd.getCarriages().size();
@@ -52,9 +52,10 @@ public class TrainServiceImpl implements ITrainService {
                     //将数据插入到车厢表中
                     trainMapper.addCarriages(carriage);
                 }
-                return true;
             }
+        }else {
+            return false;
         }
-        return false;
+        return true;
     }
 }
