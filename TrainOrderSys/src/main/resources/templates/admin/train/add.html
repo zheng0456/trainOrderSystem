@@ -96,7 +96,7 @@
             let carriageHtml = `
             <div class="input-group m-b-10 "  id="carriage-${index}">
                 <span class="input-group carriage-number">车厢编号 ${index}</span>
-                <input  class="form-control" name="carriageCode" placeholder="请输入车厢编号" required />
+                <input  class="form-control" name="carriageNumber" placeholder="请输入车厢编号" required />
 
                 <span class="input-group">车厢类型</span>
                 <select name="carriageType" class="form-control">
@@ -120,7 +120,7 @@
                 <button type="button" class="btn" style="color: red" onclick="removeCarriage(${index})">删除</button>
                 <div>
                 <span>--------------------------------------------------------------------------------------------</span>
-</div>
+                </div>
             </div>`;
             $("#carriage-container").append(carriageHtml);
 
@@ -158,12 +158,31 @@
 
         // 提交表单
         $("#add-form-submit-btn").click(function() {
-            // 序列化表单数据
-            let data = $("#train-add-form").serialize();
+            // 收集车厢数据
+            let carriages = [];
+            $(".input-group.m-b-10").each(function() {
+                let carriage = {
+                    carriageNumber: $(this).find("input[name='carriageNumber']").val(),
+                    carriageType: $(this).find("select[name='carriageType']").val(),
+                    seatCount: $(this).find("input[name='seatCount']").val(),
+                    noSeatCount: $(this).find("input[name='noSeatCount']").val() || 0
+                };
+                carriages.push(carriage);
+            });
+
+            // 构建请求数据
+            let requestData = {
+                trainCode: $("#train_code").val(),
+                trainType: $("#train_type").val(),
+                status: $("#user_type").val(),
+                carriages: carriages
+            };
+
             $.ajax({
                 url: '/system/train/add',
                 type: 'POST',
-                data: data,
+                contentType: 'application/json',
+                data: JSON.stringify(requestData),
                 success: function(response) {
                     if (response === "true") {
                         alert("列车添加成功");

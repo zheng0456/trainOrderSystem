@@ -17,6 +17,7 @@ public class TrainEntity {
     private int status;  //判断是否有票
     private String create_time;
     private String update_time;
+    private int carriage_num;
     private int del_flag;
 
     private TrainTypeEntity trainType;  //火车类型
