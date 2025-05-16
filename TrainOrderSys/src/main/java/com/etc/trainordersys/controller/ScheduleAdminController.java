@@ -2,6 +2,7 @@ package com.etc.trainordersys.controller;
 import com.etc.trainordersys.entity.StationEntity;
 import com.etc.trainordersys.entity.TrainCarriageEntity;
 import com.etc.trainordersys.entity.TrainScheduleEntity;
+import com.etc.trainordersys.entity.TrainStationEntity;
 import com.etc.trainordersys.service.IScheduleAdminService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -55,5 +56,24 @@ public class ScheduleAdminController {
     public @ResponseBody String editSchedule(TrainScheduleEntity trainSchedule){
         return scheduleAdminService.edit(trainSchedule);
     }
-    //
+    //删除车次信息
+    @DeleteMapping("/system/train/delete")
+    public @ResponseBody String deleteSchedule(@RequestParam("id")int id){
+        String res=scheduleAdminService.deleteSchedule(id);
+        return res;
+    }
+    //显示添加中间站点页面
+    @GetMapping("/system/train/train_station_add/{id}")
+    public String showStationAdd(@PathVariable("id")int id,Model model){
+        TrainScheduleEntity trainSchedule=scheduleAdminService.findAllscheduleById(id);
+        model.addAttribute("trainSchedule",trainSchedule);
+        List<StationEntity> station=scheduleAdminService.findAllStationPageList();
+        model.addAttribute("station",station);
+        return "/admin/train/train_station_add";
+    }
+    //保存添加中间站点
+    @PostMapping("/system/train/train_station_add")
+    public @ResponseBody String addTrainStation(TrainStationEntity trainStation){
+        return scheduleAdminService.addStation(trainStation);
+    }
 }

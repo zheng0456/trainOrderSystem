@@ -3,6 +3,7 @@ package com.etc.trainordersys.service.impl;
 import com.etc.trainordersys.entity.StationEntity;
 import com.etc.trainordersys.entity.TrainCarriageEntity;
 import com.etc.trainordersys.entity.TrainScheduleEntity;
+import com.etc.trainordersys.entity.TrainStationEntity;
 import com.etc.trainordersys.mapper.ScheduleAdminMapper;
 import com.etc.trainordersys.service.IScheduleAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,5 +44,20 @@ public class ScheduleAdminServiceImpl implements IScheduleAdminService {
     @Override
     public String edit(TrainScheduleEntity trainSchedule) {
         return adminMapper.edit(trainSchedule)>0?"true":"fail";
+    }
+    //删除车次信息
+    @Override
+    public String deleteSchedule(int id) {
+        return adminMapper.deleteSchedule(id)>0?"success":"fail";
+    }
+
+    @Override
+    public TrainScheduleEntity findAllschedule() {
+        return adminMapper.findAllschedule();
+    }
+    //保存添加中间站点
+    @Override
+    public String addStation(TrainStationEntity trainStation) {
+        return adminMapper.addStation(trainStation)>0?"true":"fail";
     }
 }
