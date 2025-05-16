@@ -54,7 +54,7 @@
                                     </div>
 
                                     <div class="input-group m-b-10">
-                                        <span class="input-group-addon">起始站</span>
+                                        <span class="input-group-addon">终点站</span>
                                         <select name="end_station" class="form-control" id="end_station">
                                             <option  th:each="s:${station}" th:value="${s.station_name}"  th:selected="${s.station_id == trainSchedule.end_station}" th:text="${s.station_name}"></option>
                                         </select>
@@ -108,7 +108,7 @@
         $("#train-form-submit-btn").click(function(){
             let data = $("#train-edit-form").serialize();
             $.ajax({
-                url:'/system/train/train_schedule_edit',
+                url:'/system/train/train_schedule_showEdit',
                 type:'PUT',
                 data:data,
                 success:function(data){
