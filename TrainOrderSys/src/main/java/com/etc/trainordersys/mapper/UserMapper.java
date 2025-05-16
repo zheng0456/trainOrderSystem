@@ -37,8 +37,14 @@ public interface UserMapper {
     int editHeadPic(String headPic, Integer userId);
 
     //根据user_id查询本账号下所添加的所有乘车人信息
-    @Select("select * from t_passenger where userId = #{userId}")
-    List<PassengerEntity> showPassenger(Integer userId);
+    @Select("<script>" +
+            "select * from t_passenger" +
+            "<where>" +
+            " userId = #{userId} " +
+            "<if test='passengerName!=null'> AND passenger_name like '%' #{passengerName} '%'</if>" +
+            "</where>" +
+            "</script>")
+    List<PassengerEntity> showPassenger(Integer userId,String passengerName);
     //编辑乘客信息--1.显示乘客信息
     @Select("select * from t_passenger where id=#{id}")
     PassengerEntity showEdit(Integer id);

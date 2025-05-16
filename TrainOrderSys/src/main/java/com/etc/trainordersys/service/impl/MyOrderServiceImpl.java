@@ -17,17 +17,20 @@ public class MyOrderServiceImpl implements IMyOrderService {
     private MyOrderMapper myOrderMapper;
     //查询我的车票订单
     @Override
-    public List<OrderEntity> showMyTrainOrder(Integer userId) {
-        List<OrderEntity> allOrders = myOrderMapper.showMyTrainOrder(userId);
+    public List<OrderEntity> showMyTrainOrder(Integer userId,String orderNo,String startDate,String endDate) {
+        List<OrderEntity> allOrders = myOrderMapper.showMyTrainOrder(userId,orderNo,startDate,endDate);
         //将已支付订单方法放到新的数组中
         List<OrderEntity> orders = new ArrayList<>();
+        List<OrderEntity> nullOrders = new ArrayList<>();
         for (OrderEntity order:allOrders){//订单已支付，状态正常
             if (order.getPayment()==1 && order.getOrder_status()==1){
                 List<TicketEntity> tickets = new ArrayList<>();
                 for (TicketEntity ticket:order.getTickets()){
                     //车票状态未使用或已改签
-                    if (ticket.getTicket_status()==0||ticket.getTicket_status()==5){
+                    if (ticket.getTicket_status()==0||ticket.getTicket_status()==5||ticket.getTicket_status()==7){
                         tickets.add(ticket);
+                    }else {
+                        return nullOrders;
                     }
                 }
                 order.setTickets(tickets);
@@ -90,8 +93,8 @@ public class MyOrderServiceImpl implements IMyOrderService {
     }
     //查询历史订单
     @Override
-    public List<OrderEntity> showMyHistoryTrainOrder(Integer userId) {
-        List<OrderEntity> allOrders = myOrderMapper.showMyTrainOrder(userId);
+    public List<OrderEntity> showMyHistoryTrainOrder(Integer userId,String orderNo,String startDate,String endDate) {
+        List<OrderEntity> allOrders = myOrderMapper.showMyTrainOrder(userId,orderNo,startDate,endDate);
         //将不是默认状态订单方法新的数组中(0未支付，1订单默认）
         List<OrderEntity> orders = new ArrayList<>();
         for (OrderEntity order:allOrders){
@@ -105,7 +108,7 @@ public class MyOrderServiceImpl implements IMyOrderService {
     @Override
     public List<TicketEntity> showRefundTickets(Integer userId) {
         //查询本账号所有的订单
-        List<OrderEntity> allOrders = myOrderMapper.showMyTrainOrder(userId);
+        List<OrderEntity> allOrders = myOrderMapper.showRefundTrainOrder(userId);
         //将查到的本人订单中的改签中的车票状态添加到新列表中
         //4.分页查询退款中的车票订单详情,如果有搜索条件就模糊查询，没有就分页查询所有订单列表
         List<TicketEntity> refundTickets = new ArrayList<>();

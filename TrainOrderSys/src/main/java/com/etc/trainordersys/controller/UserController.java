@@ -129,12 +129,16 @@ public class UserController {
     }
     //显示乘客信息页面
     @RequestMapping("/view/passenger/list")
-    public String showPassenger(HttpSession session,Model model){
+    public String showPassenger(HttpSession session,Model model,
+                                @RequestParam(value = "passenger_name",required = false)String passenger_name){
         //获取session中的用户信息
         Integer user_id = ((UserEntity)session.getAttribute("user")).getUser_id();
         //根据user_id查询本账号下所添加的所有乘车人信息
-        List<PassengerEntity> passengers = userService.showPassenger(user_id);
+        List<PassengerEntity> passengers = userService.showPassenger(user_id,passenger_name);
         model.addAttribute("passengers",passengers);
+        if (passenger_name!=null){
+            model.addAttribute("passenger_name",passenger_name);
+        }
         return "/home/center/passenger/passengers";
     }
     //验证乘车人证件号

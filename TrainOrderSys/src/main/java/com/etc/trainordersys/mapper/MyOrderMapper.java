@@ -10,7 +10,14 @@ import java.util.List;
 @Mapper
 public interface MyOrderMapper {
     //查询我预定的所有订单
-    @Select("select * from t_order  where  user_id = #{userId}")
+    @Select("<script>" +
+            "select * from t_order " +
+            "<where>" +
+            " user_id = #{userId} " +
+            "<if test='orderNo != null '> AND order_no like concat('%', #{orderNo}, '%')</if>" +
+            "<if test='startDate != null and endDate != null and !startDate.isEmpty() and !endDate.isEmpty()'> AND create_time BETWEEN #{startDate} and #{endDate}</if>" +
+            "</where>" +
+            "</script>")
     @Results({
         @Result(column = "order_no",property = "order_no"),
         @Result(column = "order_no",
@@ -18,7 +25,7 @@ public interface MyOrderMapper {
                 javaType = List.class,
                 many = @Many(select = "com.etc.trainordersys.mapper.MyOrderMapper.showMyTrainDetail"))
     })
-    List<OrderEntity> showMyTrainOrder(Integer userId);
+    List<OrderEntity> showMyTrainOrder(Integer userId,String orderNo,String startDate,String endDate);
     //二次查询，查询车票订单详情
     @Select("select * from t_ticket where order_no = #{order_no}")
     @Results({
@@ -69,4 +76,14 @@ public interface MyOrderMapper {
                     one = @One(select = "com.etc.trainordersys.mapper.MyOrderMapper.showMySeatType"))
     })
     List<TicketEntity> showMyTickets(String cardCode);
+    //查询退票信息
+    @Select("select * from t_order  where  user_id = #{userId}")
+    @Results({
+            @Result(column = "order_no",property = "order_no"),
+            @Result(column = "order_no",
+                    property = "tickets",
+                    javaType = List.class,
+                    many = @Many(select = "com.etc.trainordersys.mapper.MyOrderMapper.showMyTrainDetail"))
+    })
+    List<OrderEntity> showRefundTrainOrder(Integer userId);
 }

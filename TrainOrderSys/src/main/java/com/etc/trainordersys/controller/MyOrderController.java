@@ -31,6 +31,9 @@ public class MyOrderController {
     //显示订单中心----显示车票订单页面
     @RequestMapping("/view/order/train_order")
     public String showMyTrainOrder(HttpSession session, Model model,
+                                   @RequestParam(value = "order_no",required = false) String orderNo,
+                                   @RequestParam(value = "startDate",required = false) String startDate,
+                                   @RequestParam(value = "endDate",required = false) String endDate,
                                    @RequestParam(value = "currentPage",required = false,defaultValue = "1")Integer currentPage){
         //获取session中的用户信息
         Integer user_id = ((UserEntity)session.getAttribute("user")).getUser_id();
@@ -40,11 +43,21 @@ public class MyOrderController {
         //3.设置起始页和每页展示的条数
         PageHelper.startPage(currentPage,pageSize);
         //4.分页查询我的车票订单,如果有搜索条件就模糊查询，没有就分页查询所有订单列表
-        List<OrderEntity> orders = myOrderService.showMyTrainOrder(user_id);
+        List<OrderEntity> orders = myOrderService.showMyTrainOrder(user_id,orderNo,startDate,endDate);
         //5.封装结果集
         PageInfo<OrderEntity> pageInfo = new PageInfo<>(orders);
         //6.把数据保存到model中
         model.addAttribute("page",pageInfo);
+        //7.如果有搜索条件，把order_no也保存到model中
+        if (orderNo!=null){
+            model.addAttribute("order_no",orderNo);
+        }
+        if (startDate!=null){
+            model.addAttribute("startDate",startDate);
+        }
+        if (endDate!=null){
+            model.addAttribute("endDate",endDate);
+        }
         return "/home/center/order/train_order";
     }
     //退票
@@ -96,7 +109,7 @@ public class MyOrderController {
     //查询历史订单
     @RequestMapping("/view/order/history_order")
     public String showMyHistoryTrainOrder(HttpSession session, Model model,
-                                   @RequestParam(value = "order_on",required = false) String order_no,
+                                   @RequestParam(value = "order_no",required = false) String orderNo,
                                    @RequestParam(value = "startDate",required = false) String startDate,
                                    @RequestParam(value = "endDate",required = false) String endDate,
                                    @RequestParam(value = "currentPage",required = false,defaultValue = "1")Integer currentPage){
@@ -108,14 +121,14 @@ public class MyOrderController {
         //3.设置起始页和每页展示的条数
         PageHelper.startPage(currentPage,pageSize);
         //4.分页查询历史车票订单,如果有搜索条件就模糊查询，没有就分页查询所有订单列表
-        List<OrderEntity> historyOrders = myOrderService.showMyHistoryTrainOrder(user_id);
+        List<OrderEntity> historyOrders = myOrderService.showMyHistoryTrainOrder(user_id,orderNo,startDate,endDate);
         //5.封装结果集
         PageInfo<OrderEntity> pageInfo = new PageInfo<>(historyOrders);
         //6.把数据保存到model中
         model.addAttribute("page",pageInfo);
         //7.如果有搜索条件，把order_no也保存到model中
-        if (order_no!=null){
-            model.addAttribute("order_no",order_no);
+        if (orderNo!=null){
+            model.addAttribute("order_no",orderNo);
         }
         if (startDate!=null){
             model.addAttribute("startDate",startDate);

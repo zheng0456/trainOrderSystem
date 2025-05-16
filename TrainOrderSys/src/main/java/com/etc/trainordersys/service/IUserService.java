@@ -25,7 +25,7 @@ public interface IUserService {
     //修改头像
     int editHeadPic(String headPic, Integer userId);
     //根据user_id查询本账号下所添加的所有乘车人信息
-    List<PassengerEntity> showPassenger(Integer userId);
+    List<PassengerEntity> showPassenger(Integer userId,String passengerName);
     //编辑乘客信息--1.显示乘客信息
     PassengerEntity showEdit(Integer id);
     //保存修改信息

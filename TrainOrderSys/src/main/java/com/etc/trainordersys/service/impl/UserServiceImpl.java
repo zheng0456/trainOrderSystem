@@ -60,8 +60,8 @@ public class UserServiceImpl implements IUserService {
     }
     //根据user_id查询本账号下所添加的所有乘车人信息
     @Override
-    public List<PassengerEntity> showPassenger(Integer userId) {
-        return userMapper.showPassenger(userId);
+    public List<PassengerEntity> showPassenger(Integer userId,String passengerName) {
+        return userMapper.showPassenger(userId,passengerName);
     }
     //编辑乘客信息--1.显示乘客信息
     @Override

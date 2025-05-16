@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface IMyOrderService {
     //查询我的车票订单
-    List<OrderEntity> showMyTrainOrder(Integer userId);
+    List<OrderEntity> showMyTrainOrder(Integer userId,String orderNo,String startDate,String endDate);
     //退票
     boolean refundTicket(Integer ticketId);
     //查询未支付订单
@@ -25,7 +25,7 @@ public interface IMyOrderService {
     //查询我的车票订单详情
     List<TicketEntity> showMyTickets(String cardCode);
     //查询历史订单
-    List<OrderEntity> showMyHistoryTrainOrder(Integer userId);
+    List<OrderEntity> showMyHistoryTrainOrder(Integer userId,String orderNo,String startDate,String endDate);
     //查询退票订单
     List<TicketEntity> showRefundTickets(Integer userId);
 }
