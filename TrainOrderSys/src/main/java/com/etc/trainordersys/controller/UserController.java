@@ -2,12 +2,14 @@ package com.etc.trainordersys.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.etc.trainordersys.entity.MenuEntity;
 import com.etc.trainordersys.entity.PassengerEntity;
 import com.etc.trainordersys.entity.RoleEntity;
 import com.etc.trainordersys.entity.UserEntity;
 import com.etc.trainordersys.service.IRoleService;
 import com.etc.trainordersys.service.IUserService;
 import com.etc.trainordersys.utils.FaceUtils;
+import com.etc.trainordersys.utils.MenuUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import jakarta.servlet.http.HttpSession;
@@ -82,6 +84,16 @@ public class UserController {
             if (user.getRole_id()==2){
                 return "user_page";
             }else {
+                //(1)根据用户信息，获取角色id，根据角色id查询该用户下所有的菜单列表
+                List<MenuEntity> menuList = roleService.findUserRoleMenuList(user.getRole_id());
+                // (2)获取一级菜单
+                List<MenuEntity> topMenus = MenuUtils.getTopMenus(menuList);
+                //(3)获取二级菜单
+                List<MenuEntity> secondMenus = MenuUtils.getSecondMenus(menuList);
+                //(4)把获取的数据保存到session
+                session.setAttribute("userTopMenus", topMenus);
+                session.setAttribute("userSecondMenus", secondMenus);
+                session.setAttribute("menuList", menuList);
                 return "admin_page";
             }
         }

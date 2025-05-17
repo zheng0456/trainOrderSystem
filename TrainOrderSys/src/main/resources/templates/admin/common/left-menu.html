@@ -1,65 +1,79 @@
 <nav class="sidebar-main" xmlns:th="http://www.thymeleaf.org" th:fragment="leftMenu">
 	<ul class="nav nav-drawer">
-		<li class="nav-item"> <a href="/aIndex.html"><i class="mdi mdi-home"></i> 后台首页</a> </li>
+		<li class="nav-item"> <a href="/system/index"><i class="mdi mdi-home"></i> 后台首页</a> </li>
 
-		<li  class="nav-item nav-item-has-subnav">
-			<a href="javascript:;"><i class="mdi-settings"></i>系统管理</a>
-
-			<ul class="nav nav-subnav">
-				<li class="second-menu">
-					<a href="/system/role/list">
-						<i class="mdi-account-settings-variant">角色管理</i>
-					</a>
-				</li>
-				<li class="second-menu">
-					<a href="/system/user/list">
-						<i class="mdi-account-multiple">用户管理</i>
-					</a>
-				</li>
-				<li class="second-menu">
-					<a href="/system/menu/list">
-						<i class="mdi-account-multiple">菜单管理</i>
-					</a>
-				</li>
-			</ul>
-		<li  class="nav-item nav-item-has-subnav">
-			<a href="javascript:;"><i class="mdi-settings"></i>列车管理</a>
-			<ul class="nav nav-subnav">
-				<li class="second-menu">
-					<a href="/system/train/train_schedule_list">
-						<i class="mdi-account-settings-variant">车次管理</i>
-					</a>
-				</li>
-				<li class="second-menu">
-					<a href="/system/train/train_type_list">
-						<i class="mdi-account-settings-variant">类型管理</i>
-					</a>
-				</li>
-				<li class="second-menu">
-					<a href="/system/train/list">
-						<i class="mdi-account-settings-variant">车辆管理</i>
-					</a>
-				</li>
-				<li class="second-menu">
-					<a href="/system/station/list">
-						<i class="mdi-account-multiple">车站管理</i>
-					</a>
-				</li>
-			</ul>
-		<li  class="nav-item nav-item-has-subnav">
-			<a href="javascript:;"><i class="mdi-settings"></i>票务管理</a>
+		<!--一级菜单的遍历-->
+		<li th:each="userTopMenu:${session.userTopMenus}" class="nav-item nav-item-has-subnav">
+			<a href="javascript:;"><i th:class="'mdi '+${userTopMenu.icon}"></i>[[${userTopMenu.menu_name}]]</a>
 			<ul class="nav nav-subnav">
 				<!--二级菜单遍历-->
-				<li class="second-menu">
-					<a href="/system/ticket/list">
-						<i class="mdi-account-settings-variant">车票管理</i>
-					</a>
-				</li>
-				<li class="second-menu">
-					<a href="/system/ticket/refundTicket">
-						<i class="mdi-account-multiple">退票管理</i>
+				<li th:each="userSecondMenu:${session.userSecondMenus}"
+					th:if="${userSecondMenu.parent_id == userTopMenu.menu_id}"
+					class="second-menu">
+					<a th:href="${userSecondMenu.url}">
+						<i th:class="'mdi '+${userSecondMenu.icon}"></i> [[${userSecondMenu.menu_name}]]
 					</a>
 				</li>
 			</ul>
+		</li>
+<!--		<li  class="nav-item nav-item-has-subnav">-->
+<!--			<a href="javascript:;"><i class="mdi-settings"></i>系统管理</a>-->
+
+<!--			<ul class="nav nav-subnav">-->
+<!--				<li class="second-menu">-->
+<!--					<a href="/system/role/list">-->
+<!--						<i class="mdi-account-settings-variant">角色管理</i>-->
+<!--					</a>-->
+<!--				</li>-->
+<!--				<li class="second-menu">-->
+<!--					<a href="/system/user/list">-->
+<!--						<i class="mdi-account-multiple">用户管理</i>-->
+<!--					</a>-->
+<!--				</li>-->
+<!--				<li class="second-menu">-->
+<!--					<a href="/system/menu/list">-->
+<!--						<i class="mdi-account-multiple">菜单管理</i>-->
+<!--					</a>-->
+<!--				</li>-->
+<!--			</ul>-->
+<!--		<li  class="nav-item nav-item-has-subnav">-->
+<!--			<a href="javascript:;"><i class="mdi-settings"></i>列车管理</a>-->
+<!--			<ul class="nav nav-subnav">-->
+<!--				<li class="second-menu">-->
+<!--					<a href="/system/train/train_schedule_list">-->
+<!--						<i class="mdi-account-settings-variant">车次管理</i>-->
+<!--					</a>-->
+<!--				</li>-->
+<!--				<li class="second-menu">-->
+<!--					<a href="/system/train/train_type_list">-->
+<!--						<i class="mdi-account-settings-variant">类型管理</i>-->
+<!--					</a>-->
+<!--				</li>-->
+<!--				<li class="second-menu">-->
+<!--					<a href="/system/train/list">-->
+<!--						<i class="mdi-account-settings-variant">车辆管理</i>-->
+<!--					</a>-->
+<!--				</li>-->
+<!--				<li class="second-menu">-->
+<!--					<a href="/system/station/list">-->
+<!--						<i class="mdi-account-multiple">车站管理</i>-->
+<!--					</a>-->
+<!--				</li>-->
+<!--			</ul>-->
+<!--		<li  class="nav-item nav-item-has-subnav">-->
+<!--			<a href="javascript:;"><i class="mdi-settings"></i>票务管理</a>-->
+<!--			<ul class="nav nav-subnav">-->
+<!--				&lt;!&ndash;二级菜单遍历&ndash;&gt;-->
+<!--				<li class="second-menu">-->
+<!--					<a href="/system/ticket/list">-->
+<!--						<i class="mdi-account-settings-variant">车票管理</i>-->
+<!--					</a>-->
+<!--				</li>-->
+<!--				<li class="second-menu">-->
+<!--					<a href="/system/ticket/refundTicket">-->
+<!--						<i class="mdi-account-multiple">退票管理</i>-->
+<!--					</a>-->
+<!--				</li>-->
+<!--			</ul>-->
    </ul>
 </nav>

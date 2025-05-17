@@ -83,4 +83,6 @@ public interface RoleMapper
     int deleteMenu(int menuId);
     @Select("select * from t_role")
     List<RoleEntity> findAllRoleList();
+    @Select("select * from t_role_authority ra left join t_menu m on ra.authority_id=m.menu_id where ra.role_id=#{roleId}")
+    List<MenuEntity> findUserRoleMenuList(int roleId);
 }

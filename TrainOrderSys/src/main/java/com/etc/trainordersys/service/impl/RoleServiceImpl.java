@@ -119,4 +119,17 @@ public class RoleServiceImpl implements IRoleService {
     public List<RoleEntity> findAllRoleList() {
         return roleMapper.findAllRoleList();
     }
+    @Override
+    public List<MenuEntity> findUserRoleMenuList(int roleId) {
+        List<MenuEntity> lists=roleMapper.findUserRoleMenuList(roleId);
+        for (int i = 0; i < lists.size(); i++) {
+            Integer parent_id=lists.get(i).getParent_id();
+            MenuEntity menu=roleMapper.findMenuByParentId(parent_id);
+            if (menu!=null && menu.getParent_id()!=0){
+                menu.setParent(roleMapper.findMenuByParentId(menu.getParent_id()));
+            }
+            lists.get(i).setParent(menu);
+        }
+        return lists;
+    }
 }
