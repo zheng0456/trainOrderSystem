@@ -58,4 +58,6 @@ public interface IUserService {
     boolean editUser(UserEntity user);
     //删除用户，物理删除，实际应该是逻辑删除
     boolean deleteUser(int userId);
+    //修改用户已经注册的标识
+    void updateIsFace(int userId);
 }

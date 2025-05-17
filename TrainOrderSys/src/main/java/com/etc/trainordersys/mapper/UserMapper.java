@@ -24,7 +24,7 @@ public interface UserMapper {
     @Select("select * from t_user where email = #{email}")
     UserEntity checkEmail(String email);
     //用户注册
-    @Insert("insert into t_user values(null,#{username},#{password},#{name},null,null,#{phone},#{email},null,null,null,2,#{card_code},#{user_type},null,now(),now(),#{card_type},1)")
+    @Insert("insert into t_user values(null,#{username},#{password},#{name},null,null,#{phone},#{email},null,null,null,2,#{card_code},#{user_type},null,now(),now(),#{card_type},1,1)")
     int register(UserEntity user);
     //显示编辑用户页面,查询选用的用户信息
     @Select("select * from t_user where user_id = #{userId}")
@@ -84,7 +84,7 @@ public interface UserMapper {
             "</script>")
     List<UserEntity> findUserList(String userName);
     //添加用户-2.保存用户信息
-    @Insert("insert into t_user values(null,#{username},#{password},#{name},#{sex},#{birthday},#{phone},#{email},#{address},#{head_pic},#{status},#{role_id},#{card_code},#{user_type},7,now(),now(),#{card_type},1)")
+    @Insert("insert into t_user values(null,#{username},#{password},#{name},#{sex},#{birthday},#{phone},#{email},#{address},#{head_pic},#{status},#{role_id},#{card_code},#{user_type},7,now(),now(),#{card_type},1,1)")
     boolean addUser(UserEntity user);
     //显示编辑用户页面,查询选用的用户信息
     @Select("select * from t_user where user_id=#{userId}")
@@ -97,4 +97,7 @@ public interface UserMapper {
     //删除用户，物理删除，实际应该是逻辑删除
     @Update("update t_user set status=3 where user_id=#{user_id}")
     boolean deleteUser(int userId);
+    //修改用户已经注册的标识
+    @Update("update t_user set face_register = 2 where user_id = #{userId}")
+    void updateIsFace(int userId);
 }

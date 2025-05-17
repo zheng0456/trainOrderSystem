@@ -146,4 +146,9 @@ public class UserServiceImpl implements IUserService {
     public boolean deleteUser(int userId) {
         return userMapper.deleteUser(userId);
     }
+    //修改用户已经注册的标识
+    @Override
+    public void updateIsFace(int userId) {
+        userMapper.updateIsFace(userId);
+    }
 }

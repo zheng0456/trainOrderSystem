@@ -35,4 +35,6 @@ public class UserEntity {
 //     <option value="6">港澳居民来往内地通行证</option>
 //     <option value="7">台湾居民来往大陆通行证</option>
     private int del_flag; //逻辑删除（默认为1，存在状态）
+
+    private int face_register;//是否人脸注册 1-未注册 2-已注册
 }

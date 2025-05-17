@@ -1,15 +1,19 @@
 package com.etc.trainordersys.controller;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.etc.trainordersys.entity.PassengerEntity;
 import com.etc.trainordersys.entity.RoleEntity;
 import com.etc.trainordersys.entity.UserEntity;
 import com.etc.trainordersys.service.IRoleService;
 import com.etc.trainordersys.service.IUserService;
+import com.etc.trainordersys.utils.FaceUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Delete;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -26,6 +30,48 @@ public class UserController {
     @Autowired
     @Qualifier("userService")
     IUserService userService;
+    //人脸注册
+    @PostMapping("/home/faceRegist")
+    public @ResponseBody String faceRegister(String img,HttpSession session){
+        UserEntity user = (UserEntity) session.getAttribute("user");
+        //调用工具类封装的方法进行注册
+        String resp = FaceUtils.faceRegister(img,user.getUsername(),String.valueOf(user.getUser_id()),"login_face_ticket_1");
+        //解析结果
+        JSONObject jsonObject = JSONObject.parseObject(resp);
+        //判断是否成功
+        String msg = jsonObject.get("error_msg").toString();
+        if ("SUCCESS".equals(msg)){
+            //修改用户已经注册的标识
+            userService.updateIsFace(user.getUser_id());
+            return "SUCCESS";
+        }
+        return "FAIL";
+    }
+    //人脸登录
+    //人脸注册
+    @PostMapping("/home/faceLogin")
+    public @ResponseBody String faceLogin(String img,HttpSession session){
+        //调用工具类封装的方法进行登录
+        String resp = FaceUtils.faceLogin(img,"login_face_ticket_1");
+        //解析结果
+        JSONObject jsonObject = JSONObject.parseObject(resp);
+        //判断是否成功
+        String msg = jsonObject.get("error_msg").toString();
+        if ("SUCCESS".equals(msg)){
+            //登录成功，解析json数据中的userid
+            JSONObject result = jsonObject.getJSONObject("result");
+            JSONArray userList = result.getJSONArray("user_list");
+            JSONObject info = userList.getJSONObject(0);
+            String userId = info.getString("user_id");
+            //根据userid查询用户详细
+            UserEntity user = userService.findUserById(Integer.parseInt(userId));
+            //修改用户已经注册的标识
+            userService.updateIsFace(user.getUser_id());
+            session.setAttribute("user",user);
+            return "SUCCESS";
+        }
+        return "FAIL";
+    }
 
     //登录
     @RequestMapping("/home/login")
