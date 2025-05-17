@@ -124,4 +124,32 @@ public class MyOrderServiceImpl implements IMyOrderService {
         }
         return refundTickets;
     }
+    //用户取消订单
+    @Override
+    @Transactional
+    public boolean cancelOrder(String orderNo, String trainNumber, String departureDate) {
+//        //1.根据order_no将t_order表中的order_status的值改为0，0代表已取消
+//        boolean updateOrder = myOrderMapper.updateOrder(orderNo);
+//        if (updateOrder){
+//            //2.根据order_no查询t_ticket表
+//            List<TicketEntity> tickets = myOrderMapper.showMyTrainDetail(orderNo);
+//            //3.根据trainNumber和departureDate查询t_train_schedule表的train_code
+//            Integer trainCode = myOrderMapper.selectTrainCode(trainNumber,departureDate);
+//            //4.根据trainCode和ticket中的
+//            //4.
+//            for (TicketEntity ticket:tickets){
+//                //2.3 循环修改t_ticket表中的ticket_status为6，6--已取消
+//                ticket.setTicket_status(6);
+//                boolean updateTicketStatus = myOrderMapper.updateTicketStatus(ticket.getTicket_id(),ticket.getTicket_status());
+//                if (updateTicketStatus){
+//                    //3.根据train_number,seat_type_id将t_schedule_seat_info表中的remain_nums+1
+//                    myOrderService.updateTrainSeatNum(train_number,ticket.getSeat_type_id());
+//                    //4.恢复
+//                }
+//            }
+//            return true;
+//        }
+//        return false;
+        return true;
+    }
 }

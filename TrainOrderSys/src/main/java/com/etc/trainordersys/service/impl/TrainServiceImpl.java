@@ -58,4 +58,14 @@ public class TrainServiceImpl implements ITrainService {
         }
         return true;
     }
+    //查询t_train表
+    @Override
+    public TrainEntity showEdit(Integer id) {
+        return trainMapper.showEdit(id);
+    }
+    //修改列车信息
+    @Override
+    public boolean editTrain(TrainEntity train) {
+        return trainMapper.editTrain(train);
+    }
 }

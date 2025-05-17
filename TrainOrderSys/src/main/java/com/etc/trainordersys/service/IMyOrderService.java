@@ -28,4 +28,6 @@ public interface IMyOrderService {
     List<OrderEntity> showMyHistoryTrainOrder(Integer userId,String orderNo,String startDate,String endDate);
     //查询退票订单
     List<TicketEntity> showRefundTickets(Integer userId);
+    //用户取消订单
+    boolean cancelOrder(String orderNo, String trainNumber, String departureDate);
 }

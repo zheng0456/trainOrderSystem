@@ -25,4 +25,10 @@ public interface TrainMapper {
     //将数据插入到车厢表中
     @Insert("insert into t_train_carriage values(null,#{carriage_number},#{train_code},#{carriage_type},#{seat_nums},#{emp_seats},now(),now())")
     void addCarriages(TrainCarriageEntity carriage);
+    //查询t_train表
+    @Select("select * from t_train where id=#{id}")
+    TrainEntity showEdit(Integer id);
+    //修改列车信息
+    @Update("update t_train set train_code=#{train_code},train_type=#{train_type},carriage_num=#{carriage_num},status=#{status},update_time=now() where id = #{id}")
+    boolean editTrain(TrainEntity train);
 }

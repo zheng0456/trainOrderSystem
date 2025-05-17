@@ -86,21 +86,9 @@ public class MyOrderController {
     public @ResponseBody boolean cancelOrder(@RequestParam(value = "order_no") String order_no,
                                             @RequestParam(value = "train_number") String train_number,
                                             @RequestParam(value = "departure_date") String departure_date){
-        //1.根据order_no将t_order表中的order_status的值改为0，0代表已取消
-        boolean updateOrder = myOrderService.updateOrder(order_no);
-        if (updateOrder){
-            //2.1根据order_no查询t_ticket表
-            List<TicketEntity> tickets = myOrderService.showMyTrainDetail(order_no);
-            for (TicketEntity ticket:tickets){
-                //2.2 循环修改t_ticket表中的ticket_status为6，6--已取消
-                ticket.setTicket_status(6);
-                boolean updateTicketStatus = myOrderService.updateTicketStatus(ticket.getTicket_id(),ticket.getTicket_status());
-                if (updateTicketStatus){
-                    //3.根据train_number,seat_type_id将t_schedule_seat_info表中的remain_nums+1
-                    myOrderService.updateTrainSeatNum(train_number,ticket.getSeat_type_id());
-                    //4.恢复
-                }
-            }
+        //用户取消订单
+        boolean cancelOrder = myOrderService.cancelOrder(order_no,train_number,departure_date);
+        if (cancelOrder){
             return true;
         }
         return false;

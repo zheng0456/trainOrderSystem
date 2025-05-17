@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,5 +49,25 @@ public class TrainController {
             return true;
         }
         return  false;
+    }
+    //编辑列车--1.查询选中列车的信息
+    @RequestMapping("system/train/showEdit/{id}")
+    public String showEdit(@PathVariable("id") Integer id, Model model){
+        //查询t_train表
+        TrainEntity train = trainService.showEdit(id);
+        //查询列车类型列表
+        List<TrainTypeEntity> trainType=typeService.findAllTypePageList();
+        model.addAttribute("trainType",trainType);
+        model.addAttribute("train",train);
+        return "/admin/train/edit";
+    }
+    //修改列车信息
+    @PutMapping("/system/train/edit")
+    public @ResponseBody String editTrain(@Validated TrainEntity train){
+        boolean res = trainService.editTrain(train);
+        if (res){
+            return "true";
+        }
+        return "fail";
     }
 }

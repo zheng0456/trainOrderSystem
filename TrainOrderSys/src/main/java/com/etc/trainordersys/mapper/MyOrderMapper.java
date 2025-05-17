@@ -53,16 +53,7 @@ public interface MyOrderMapper {
                     many = @Many(select = "com.etc.trainordersys.mapper.MyOrderMapper.showMyTrainDetail"))
     })
     OrderEntity showMyUnpaidOrder(Integer userId);
-    //1.根据order_no,departure_date将t_order表中的order_status的值改为0，0代表已取消
-    @Update("update t_order set order_status = 0 where order_no=#{orderNo}")
-    boolean updateOrder(String orderNo);
 
-    //2.2 循环修改t_ticket表中的ticket_status为6，6--已取消
-    @Update("update t_ticket set ticket_status = #{ticketStatus},update_time = now() where ticket_id = #{ticketId}")
-    boolean updateTicketStatus(int ticketId, int ticketStatus);
-    //3.根据train_number,seat_type_id将t_schedule_seat_info表中的remain_nums+1
-    @Update("update t_schedule_seat_info set remain_nums = remain_nums+1 where train_number=#{trainNumber} and seat_type_id =#{seatTypeId}")
-    boolean updateTrainNum(String trainNumber, int seatTypeId);
     //支付成功后，支付状态
     @Update("update t_order set payment = 1 where order_no=#{outTradeNo}")
     boolean updateOrderStatus(String outTradeNo);
@@ -86,4 +77,17 @@ public interface MyOrderMapper {
                     many = @Many(select = "com.etc.trainordersys.mapper.MyOrderMapper.showMyTrainDetail"))
     })
     List<OrderEntity> showRefundTrainOrder(Integer userId);
+    //1.根据order_no,departure_date将t_order表中的order_status的值改为0，0代表已取消
+    @Update("update t_order set order_status = 0 where order_no=#{orderNo}")
+    boolean updateOrder(String orderNo);
+
+    // 循环修改t_ticket表中的ticket_status为6，6--已取消
+    @Update("update t_ticket set ticket_status = #{ticketStatus},update_time = now() where ticket_id = #{ticketId}")
+    boolean updateTicketStatus(int ticketId, int ticketStatus);
+    //根据train_number,seat_type_id将t_schedule_seat_info表中的remain_nums+1
+    @Update("update t_schedule_seat_info set remain_nums = remain_nums+1 where train_number=#{trainNumber} and seat_type_id =#{seatTypeId}")
+    boolean updateTrainNum(String trainNumber, int seatTypeId);
+    //3.根据trainNumber和departureDate查询t_train_schedule表的train_code
+    @Select("select train_code from t_train_schedule where train_number=#{trainNumber} and departure_date=#{departureDate}")
+    Integer selectTrainCode(String trainNumber, String departureDate);
 }

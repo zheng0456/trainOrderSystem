@@ -12,5 +12,8 @@ public interface ITrainService {
     //保存添加列车
     boolean addTrain(TrainAddDTO trainAdd);
 
-
+    //查询t_train表
+    TrainEntity showEdit(Integer id);
+    //修改列车信息
+    boolean editTrain(TrainEntity train);
 }
