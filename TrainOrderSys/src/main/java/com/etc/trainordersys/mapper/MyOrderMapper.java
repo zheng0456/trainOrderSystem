@@ -80,14 +80,30 @@ public interface MyOrderMapper {
     //1.根据order_no,departure_date将t_order表中的order_status的值改为0，0代表已取消
     @Update("update t_order set order_status = 0 where order_no=#{orderNo}")
     boolean updateOrder(String orderNo);
-
-    // 循环修改t_ticket表中的ticket_status为6，6--已取消
-    @Update("update t_ticket set ticket_status = #{ticketStatus},update_time = now() where ticket_id = #{ticketId}")
-    boolean updateTicketStatus(int ticketId, int ticketStatus);
-    //根据train_number,seat_type_id将t_schedule_seat_info表中的remain_nums+1
+    //2.根据train_number,seat_type_id将t_schedule_seat_info表中的remain_nums+1
     @Update("update t_schedule_seat_info set remain_nums = remain_nums+1 where train_number=#{trainNumber} and seat_type_id =#{seatTypeId}")
     boolean updateTrainNum(String trainNumber, int seatTypeId);
     //3.根据trainNumber和departureDate查询t_train_schedule表的train_code
     @Select("select train_code from t_train_schedule where train_number=#{trainNumber} and departure_date=#{departureDate}")
     Integer selectTrainCode(String trainNumber, String departureDate);
+    //4.根据trainCode和ticket.carriage_number查询t_train_carriage表的carriage_type
+    @Select("select carriage_type from t_train_carriage where train_code=#{trainCode} and carriage_number=#{carriageNumber}")
+    Integer selectTrainCarriage(Integer trainCode, int carriageNumber);
+    //5.1无座数加1
+    @Update("update t_train_carriage set emp_seats=emp_seats+1 where train_code=#{trainCode} and carriage_number=#{carriageNumber}")
+    void updateEmpSeat(Integer trainCode, int carriageNumber);
+    //5.2相应座位类型数加1
+    @Update("update t_train_carriage set seat_nums=seat_nums+1 where train_code=#{trainCode} and carriage_number=#{carriageNumber}")
+    void updateIsSeat(Integer trainCode, int carriageNumber);
+    // 循环修改t_ticket表中的ticket_status为6，6--已取消
+    @Update("update t_ticket set ticket_status = #{ticketStatus},update_time = now() where ticket_id = #{ticketId}")
+    boolean updateTicketStatus(int ticketId, int ticketStatus);
+    //7.根据train_number,seat_type_id将t_schedule_seat_info表中的remain_nums+1
+    @Update("update t_schedule_seat_info set remain_nums=remain_nums+1 where train_number=#{trainNumber} and seat_type_id=#{seatTypeId}")
+    boolean updateTrainSeatNum(String trainNumber, int seatTypeId);
+    //8.有座情况根据seat_number，train_number和carriage_number修改t_seat表的座位状态
+    @Update("update t_seat set seat_status=2 where train_number=#{trainNumber} and number=#{seatNumber} and carriage_number=#{carriageNumber}")
+    void updateSeatStatus(int seatNumber, int carriageNumber, String trainNumber);
+    @Update("update t_seat set seat_status=2 where train_number=#{trainNumber} and line=#{seatNumber} and carriage_number=#{carriageNumber}")
+    void updateSeatStatus1(String seatNumber, int carriageNumber, String trainNumber);
 }
