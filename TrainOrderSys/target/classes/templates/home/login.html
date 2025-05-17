@@ -56,6 +56,32 @@
                 return false;
             }
         }
+        /*登录*/
+        function login(){
+            let account = $("#account").val();
+            let password = $("#password").val();
+            $.ajax({
+                url:"/home/login",
+                type:"POST",
+                data:{
+                    "account":account,
+                    "password":password
+                },
+                success:function (response){
+                    if (response=="user_page"){
+                        window.location.href="/home/index.html";
+                    }else if (response=="admin_page"){
+                        window.location.href="/admin/index.html";
+                    }else {
+                        $("#errorMsg").text(response);//将异常信息显示在span标签中
+                    }
+                },
+                error:function(response){
+                    alert(response);
+                }
+            })
+        }
+
     </script>
 </head>
 <body >
@@ -65,7 +91,7 @@
 <div class="b_wrap" >
 
     <div class="current"><span>您当前的位置：</span>
-        <a href="http://localhost:8081/index.html">首页</a> >
+        <a href="http://localhost:8080/index.html">首页</a> >
         <a href="login.html">账号登录</a></div>
     <div class="login_w clearfix">
         <div class="login">
@@ -92,44 +118,13 @@
                         </tr>
                         <tr>
                             <td>&nbsp;</td>
-                            <td>
+                            <td colspan="2" style="display: flex; gap: 0px; align-items: center;">
                                 <input type="button" name="" class="log_b" value="登录" onclick="login()">
+                                <a type="button" href="/face_login.html" name="" class="log_b">人脸登录</a>
                             </td>
-
                         </tr>
                     </table>
                 </form>
-
-
-                <script type="text/javascript" src="/home/js/jquery.js"></script>
-                <script>
-                    /*登录*/
-                    function login(){
-                        let account = $("#account").val();
-                        let password = $("#password").val();
-                        $.ajax({
-                            url:"/home/login",
-                            type:"POST",
-                            data:{
-                                "account":account,
-                                "password":password
-                            },
-                            success:function (response){
-                                if (response=="user_page"){
-                                    window.location.href="/home/index.html";
-                                }else if (response=="admin_page"){
-                                    window.location.href="/admin/index.html";
-                                }else {
-                                    $("#errorMsg").text(response);//将异常信息显示在span标签中
-                                }
-                            },
-                            error:function(response){
-                            alert(response);
-                        }
-                        })
-                    }
-                </script>
-
 
             </div>
 
