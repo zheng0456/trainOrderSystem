@@ -25,6 +25,21 @@ public class TicketAdminController {
     ITicketAdminService ticketAdminService;
     //显示车票列表
     @GetMapping("/system/ticket/list")
+    public String findAllList(Model model, @RequestParam(value = "name",required = false)String name,
+                                  @RequestParam(value = "currentPage",required = false,defaultValue = "1")Integer currentPage){
+        int pageSize=2;
+        PageHelper.startPage(currentPage,pageSize);
+        List<TicketEntity> ticketList=ticketAdminService.findAllTicketPageList(name);
+        PageInfo<TicketEntity> pageInfo=new PageInfo<>(ticketList);
+        model.addAttribute("page",pageInfo);
+        if (name!=null){
+            model.addAttribute("ticketName",name);
+        }
+        log.info("车票列表，ticketList={}",ticketList);
+        return "/admin/ticket/list";
+    }
+    //显示退票管理
+    @GetMapping("/system/ticket/refundTicket")
     public String findAllRoleList(Model model, @RequestParam(value = "name",required = false)String name,
                                   @RequestParam(value = "currentPage",required = false,defaultValue = "1")Integer currentPage){
         int pageSize=2;

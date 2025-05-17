@@ -123,8 +123,8 @@ public class UserServiceImpl implements IUserService {
     }
     //查询用户列表
     @Override
-    public List<UserEntity> findUserList(String userName) {
-        return userMapper.findUserList(userName);
+    public List<UserEntity> findUserList(String username) {
+        return userMapper.findUserList(username);
     }
     //添加用户-2.保存用户信息
     @Override

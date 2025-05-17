@@ -348,7 +348,7 @@ public class UserController {
     }
     //查询用户列表
     @RequestMapping("/system/user/list")
-    public String findUserList(Model model, @RequestParam(value="username",required=false)String userName,
+    public String findUserList(Model model, @RequestParam(value="username",required=false)String username,
                                @RequestParam(value = "currentPage",required = false,defaultValue = "1")Integer currentPage){
         //1.方法入参
         //2.每页展示的条数
@@ -356,14 +356,14 @@ public class UserController {
         //3.设置起始页和每页展示的条数
         PageHelper.startPage(currentPage,pageSize);
         //4.分页查询用户列表，如果有搜索条件就模糊查询，没有就分页查询所有用户列表
-        List<UserEntity> users=userService.findUserList(userName);
+        List<UserEntity> users=userService.findUserList(username);
         //5.封装结果集
         PageInfo<UserEntity> pageInfo =new PageInfo<>(users);
         //6.把数据保存到model中
         model.addAttribute("page",pageInfo);
         //7.如果有搜索条件，把username也保存到model中
-        if (userName!=null){
-            model.addAttribute("username",userName);
+        if (username!=null){
+            model.addAttribute("username",username);
         }
         //8.请求转发
         return "/admin/user/list";
@@ -403,4 +403,20 @@ public class UserController {
     public @ResponseBody boolean deleteUser(@RequestParam("id")int user_id){
         return userService.deleteUser(user_id);
     }
+    //显示修改密码界面
+    @GetMapping("/system/update_pwd")
+    public String show(){
+        return "/admin/user/update_pwd";
+    }
+    //修改密码
+
+
+    //退出系统
+    @PostMapping("/system/user/logoutAdmin")
+    public @ResponseBody boolean logout2(HttpSession session){
+        //销毁会话
+        session.invalidate();
+        return true;
+    }
+
 }

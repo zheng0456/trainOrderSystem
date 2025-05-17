@@ -82,7 +82,7 @@ public interface UserMapper {
             "<if test='userName!=null'> u.username like '%' #{userName} '%'</if>" +
             "</where>" +
             "</script>")
-    List<UserEntity> findUserList(String userName);
+    List<UserEntity> findUserList(String username);
     //添加用户-2.保存用户信息
     @Insert("insert into t_user values(null,#{username},#{password},#{name},#{sex},#{birthday},#{phone},#{email},#{address},#{head_pic},#{status},#{role_id},#{card_code},#{user_type},7,now(),now(),#{card_type},1,1)")
     boolean addUser(UserEntity user);

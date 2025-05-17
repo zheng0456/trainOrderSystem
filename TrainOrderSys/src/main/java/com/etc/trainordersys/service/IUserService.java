@@ -49,7 +49,7 @@ public interface IUserService {
     //修改邮箱
     boolean editEmail(String email, Integer userId);
     //查询用户列表
-    List<UserEntity> findUserList(String userName);
+    List<UserEntity> findUserList(String username);
     //添加用户-2.保存用户信息
     boolean addUser(UserEntity user);
     //显示编辑用户页面,查询选用的用户信息
