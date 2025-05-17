@@ -114,6 +114,7 @@
         <div class="top_hl"><span>欢迎来到中国梦想旅游网，让你的梦想全程免费自由行！</span> 预定热线：<b>0939-12345678</b></div>
 
         <div class="top_hr" >
+            <a href="/face_regist.html" th:if="${session.user != null}">人脸注册 <span>|</span> </a>
             <a href="https://www.12306.cn/" target="_blank">铁路12306 <span>|</span> </a>
             <a href="https://trains.ctrip.com/" target="_blank">携程网 <span>|</span> </a>
 
@@ -124,6 +125,8 @@
             <a href="javascript:void(0);" th:if="${session.user != null}" onclick="Logout()">退出</a>
             <a href="login.html" th:if="${session.user == null}"    target="_top">登录<span>|</span></a>
             <a href="register.html" th:if="${session.user == null}" target="_top">注册</a>
+            <span>|</span>
+            <a href="/ai/kefu" th:if="${session.user != null}">客服</a>
         </div>
 
     </div>
