@@ -31,4 +31,7 @@ public interface TrainMapper {
     //修改列车信息
     @Update("update t_train set train_code=#{train_code},train_type=#{train_type},carriage_num=#{carriage_num},status=#{status},update_time=now() where id = #{id}")
     boolean editTrain(TrainEntity train);
+
+    @Delete("delete  from t_train where id=#{id}")
+    int delete(int id);
 }

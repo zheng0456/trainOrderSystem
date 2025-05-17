@@ -68,4 +68,9 @@ public class TrainServiceImpl implements ITrainService {
     public boolean editTrain(TrainEntity train) {
         return trainMapper.editTrain(train);
     }
+
+    @Override
+    public String delete(int id) {
+        return trainMapper.delete(id)>0?"success":"fail";
+    }
 }

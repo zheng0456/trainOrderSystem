@@ -70,4 +70,9 @@ public class TrainController {
         }
         return "fail";
     }
+    @DeleteMapping("/system/train/deleteTrain")
+    public @ResponseBody String deleteTrain(@RequestParam("id")int id){
+        String res=trainService.delete(id);
+        return res;
+    }
 }

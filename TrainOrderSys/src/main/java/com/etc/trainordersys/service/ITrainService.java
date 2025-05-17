@@ -16,4 +16,6 @@ public interface ITrainService {
     TrainEntity showEdit(Integer id);
     //修改列车信息
     boolean editTrain(TrainEntity train);
+    //删除列车信息
+    String delete(int id);
 }
