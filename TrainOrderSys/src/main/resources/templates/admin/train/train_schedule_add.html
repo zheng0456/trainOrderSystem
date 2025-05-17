@@ -116,7 +116,7 @@
                 type:'POST',
                 data:data,
                 success:function(data){
-                    if (data){
+                    if (data=="true"){
                         alert("车次添加成功");
                         window.location.href="/system/train/train_schedule_list";
                     }else{
